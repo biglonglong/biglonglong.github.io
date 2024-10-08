@@ -1,0 +1,4 @@
+.loading-img {
+    background: url(/img/custom/avatar.png) no-repeat center center;
+    background-size: cover;
+}
