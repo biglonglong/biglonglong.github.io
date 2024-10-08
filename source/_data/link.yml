@@ -1,0 +1,27 @@
+- class_name: 友情链接
+  class_desc: 博主
+  link_list:
+    - name: aqcoder
+      link: https://blog.aqcoder.cn
+      avatar: https://blog.aqcoder.cn/img/avatar.png
+      descr: 分享知识，认识世界
+
+- class_name: 特别鸣谢
+  class_desc: 博客框架及主题
+  link_list:
+    - name: Hexo
+      link: https://hexo.io/zh-tw/
+      avatar: https://d33wubrfki0l68.cloudfront.net/6657ba50e702d84afb32fe846bed54fba1a77add/827ae/logo.svg
+      descr: 快速、簡單且強大的網誌框架
+    - name: Butterfly
+      link: https://butterfly.js.org/
+      avatar: https://butterfly.js.org/img/avatar.png
+      descr: A Simple and Card UI Design theme for Hexo
+
+# - class_name: 友链
+#   class_desc: 同道中人
+#   link_list:
+    # - name: 
+    #   link: 
+    #   avatar:
+    #   descr:
