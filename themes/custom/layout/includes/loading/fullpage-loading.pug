@@ -2,22 +2,28 @@
   .loading-bg
     div.loading-img
     .loading-image-dot
+//- preloader-fullpage-avatar
 
 script.
-  const preloader = {
-    endLoading: () => {
-      document.body.style.overflow = 'auto';
-      document.getElementById('loading-box').classList.add("loaded")
-    },
-    initLoading: () => {
-      document.body.style.overflow = '';
-      document.getElementById('loading-box').classList.remove("loaded")
-
+  (()=>{
+    const $loadingBox = document.getElementById('loading-box')
+    const $body = document.body
+    const preloader = {
+      endLoading: () => {
+        $body.style.overflow = 'auto'
+        $loadingBox.classList.add('loaded')
+      },
+      initLoading: () => {
+        $body.style.overflow = ''
+        $loadingBox.classList.remove('loaded')
+      }
     }
-  }
-  window.addEventListener('load',()=> { preloader.endLoading() })
 
-  if (!{theme.pjax && theme.pjax.enable}) {
-    document.addEventListener('pjax:send', () => { preloader.initLoading() })
-    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
-  }
+    preloader.initLoading()
+    window.addEventListener('load', preloader.endLoading)
+
+    if (!{theme.pjax && theme.pjax.enable}) {
+      btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+      btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+    }
+  })()
