@@ -1,12 +1,12 @@
 ---
 # Display name
-title: 吳健雄
+title: biglonglong
 
 # Name pronunciation (optional)
-name_pronunciation: Chien Shiung Wu
+name_pronunciation: ''
 
 # Full name (for SEO)
-first_name: Shiung Wu
+first_name: longlong
 last_name: Chien
 
 # Status emoji
@@ -24,8 +24,8 @@ role: Chief Scientist
 
 # Organizations/Affiliations to display in Biography blox
 organizations:
-  - name: OpenAI
-    url: https://openai.com/
+  - name: Dajian
+    url: https://baidu.com/
 
 # Social network links
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
@@ -38,7 +38,7 @@ profiles:
   - icon: brands/instagram
     url: https://www.instagram.com/
   - icon: brands/github
-    url: https://github.com/gcushen
+    url: https://github.com/biglonglong
   - icon: brands/linkedin
     url: https://www.linkedin.com/
   - icon: academicons/google-scholar
