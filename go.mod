@@ -1,4 +1,4 @@
-module github.com/chrede88/qubtTemplate
+module github.com/biglonglong/biglonglong.github.io
 
 go 1.23.3
 
