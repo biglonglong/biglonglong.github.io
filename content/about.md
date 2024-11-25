@@ -3,10 +3,10 @@
 type: misc
 
 # change these
-jobTitle: Blogger
 name: biglonglong
-bio: true
+jobTitle: Coder
 icon: ":coffee:"
+bio: true
 ---
 
-Add your Bio here!:+1:
+No girlfriend, no date, just me and my computer, staying up late...

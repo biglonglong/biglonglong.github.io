@@ -4,67 +4,28 @@
 
 author:
   name: biglonglong
-  image: author.png
-  greeting: "Your new Qubt site :tada:"
-  icon: ":wave:"
+  image: avatar.jpg
+  greeting: "[USTCer🎓](https://www.ustc.edu.cn/) -> noting📝 | journaling🌤 | coding💻"
+  icon: ":anger:"
 
 ############################
 ## Links
 ############################
 
 links:
-  - github: https://github.com/biglonglong/biglonglong.github.io
-  - link: https://github.com/biglonglong/biglonglong.github.io#readme
+  - email: mailto:1522262926@qq.com
+  - github: https://github.com/biglonglong
+  - rss: /index.xml
+  - resume: /resume.pdf
   # - website: 
-  # - x-twitter: 
-  # - mastodon: 
-  # - linkedin: 
-  # - instagram: 
-  # - reddit: 
-  # - telegram: 
-  # - whatsapp: 
-  # - signal: 
-  # - codepen: 
-  # - dev: 
-  # - email: 
-  # - discord: 
-  # - orcid: 
-  # - slack: 
-  # - stack-overflow: 
-  # - twitch: 
-  # - patreon: 
-  # - soundcloud: 
-  # - dribbble: 
-  # - stack-exchange: 
-  # - tiktok: 
-  # - youtube: 
-  # - keybase: 
-  # - flickr: 
-  # - tumblr: 
-  # - kickstarter: 
-  # - snapchat:
-  # - bluesky: 
-  # - bitbucket: 
-  # - bandcamp: 
-  # - etsy: 
-  # - spotify: 
-  # - pinterest: 
-  # - strava: 
-  # - untappd: 
-  # - skype: 
-  # - medium: 
-  # - foursquare: 
-  # - apple: 
-  # - amazon:
-  # - google:
-  # - paypal:
-  # - windows:
+  # - link:
+  
 
 ###############################
 ## OpenGraph & Twitter Cards
 ###############################
 
-title: biglonglong.github.io
-description: "Site build with Qubt & Hugo"
+title: 龙犊&小窝🪹~
+description: "Personal Site about Note, Journal, and Code, builded with Qubt & Hugo"
 images:
   - thumbnail.png
