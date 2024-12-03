@@ -6,7 +6,7 @@ authors:
 
 title: Git Guide
 subtitle: a collection of Git command to manage repositories.
-summary: the summary can't cut automatically, so it need to be written by self.
+summary: 一个关于使用Git和GitHub的指南，重点介绍了管理仓库的常用命令和工作流程。内容包括理解分支模型。指南还提供了初学者学习Git和GitHub的资源，并概述了初始化本地仓库和将更改推送到远程仓库的步骤。此外，还涵盖了处理合并冲突和使用标签标记特定提交的方法。
 
 cardimage: Git Guide.png
 featureimage: Git Guide.png
@@ -30,7 +30,7 @@ caption: git version control
 我希望你具有了对git和Github的基本认识后，再来看这篇文章，以作为你开发过程中的 *cheat sheet*。对于入门攻略，这里做一些推荐：
 
 - [git - the simple guide - no deep shit!](https://rogerdudler.github.io/git-guide/)
-- 
+- [Git Immersion](https://gitimmersion.com/)
 
 
 
@@ -132,7 +132,7 @@ git push origin --delete dev						# 删除远程dev分支
 
 - git tag：给当前版本哈希值取别名
 
-  ```
+  ```bash
   git tag <hashname>
   ```
 

@@ -40,13 +40,19 @@ git push origin main
 
 ## Todo List
 
-- [ ] more icons，such as redbook
-- [ ] website domain URL
-- [ ] go.mod -> hugo mod vendor
-- [ ] resume.pdf
-- [ ] more menu items
-- [ ] how to save current hugo&qubt version??
-- [ ] menu link item for many good webs
-- [ ] caption default 如何使之html化
-- [ ] tags category
+- theme
 
+  - [ ] 载入一些其他的结构，可能需要重新code源代码了
+  - [ ] 载入blog：blogmeta、xhs、BaiduNetWork、PhonePhoto
+  - [ ] 更多的icon，也意味着经营更多的平台，例如小红书、抖音等
+  - [ ] resume.pdf
+  - [ ] tags category
+- [ ] menu item：日记
+- setting
+
+  - [ ] 域名配置
+
+  - [ ] 图床配置
+
+  - [ ] 标签固定：abbrlink
+  - [ ] 本地化：go.mod -> hugo mod vendor

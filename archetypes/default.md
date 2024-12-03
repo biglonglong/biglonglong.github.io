@@ -20,27 +20,3 @@ Regarding the *Front-matter*, *title* and *image* parts can be deliberated with 
 Then，[start here.](#before-we-start) anything you want to write about, you can.
 
 Correspondingly, select one of the templates below and delete its first-level title and the other template. If not, modify the template or add a new one.
-
-
-
-# 列表教程
-
-## STEP1
-
-…
-
-## STEP2
-
-…
-
-## STEP3
-
-…
-
-…
-
-
-
-# 技术文档
-
-…
