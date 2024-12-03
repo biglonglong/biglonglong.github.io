@@ -55,4 +55,3 @@ git push origin main
   - [ ] 图床配置
 
   - [ ] 标签固定：abbrlink
-  - [ ] 本地化：go.mod -> hugo mod vendor
