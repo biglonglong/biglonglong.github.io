@@ -5,7 +5,7 @@
 author:
   name: biglonglong
   image: avatar.jpg
-  greeting: "[USTCer🎓](https://www.ustc.edu.cn/) -> noting📝 | journaling🌤 | coding💻"
+  greeting: "USTCer🎓 | noter📝 | coder💻 | beginner💪"
   icon: ":anger:"
 
 ############################
@@ -15,11 +15,10 @@ author:
 links:
   - email: mailto:1522262926@qq.com
   - github: https://github.com/biglonglong
-  - rss: /index.xml
-  - resume: /resume.pdf
-  # - website: 
-  # - link:
-  
+  - link: https://www.xiaohongshu.com/user/profile/5f39f522000000000100a829
+  - spotify: /index.xml
+  - soundcloud: https://pan.baidu.com/s/1VWiI7siC3b6wNRITmbqGpg?pwd=627k
+  # - certifications: /resume.pdf
 
 ###############################
 ## OpenGraph & Twitter Cards

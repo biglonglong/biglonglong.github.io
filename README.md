@@ -42,12 +42,8 @@ git push origin main
 
 - theme
 
-  - [ ] 载入一些其他的结构，可能需要重新code源代码了
-  - [ ] 载入blog：blogmeta、xhs、BaiduNetWork、PhonePhoto
-  - [ ] 更多的icon，也意味着经营更多的平台，例如小红书、抖音等
-  - [ ] resume.pdf
-  - [ ] tags category
-- [ ] menu item：日记
+  - [ ] home页有点单调，导入一些有趣的html结构
+  - [ ] 部署rss
 - setting
 
   - [ ] 域名配置

@@ -9,6 +9,9 @@ main:
 - name: Blog
   url: /blog/
   weight: 20
+- name: Journal
+  url: /journal/
+  weight: 30 
 - name: About
   url: /about/
-  weight: 30
+  weight: 40
