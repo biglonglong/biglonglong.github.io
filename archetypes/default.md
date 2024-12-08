@@ -11,6 +11,9 @@ summary: {the summary can't cut automatically, so it need to be written by self.
 cardimage: {title}.jpg
 featureimage: {title}.jpg
 caption: {some featureimage caption}
+
+params:
+  math: true
 ---
 
 

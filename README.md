@@ -44,7 +44,9 @@ git push origin main
 
   - [ ] home页有点单调，导入一些有趣的html结构
   - [ ] 部署rss
-  - [ ] 小红书文字迁移
+  - [ ] sitemap
+  - [ ] post: An Evolution of My Learning Methods 需要更新
+  - [ ] 目录条
 - setting
 
   - [ ] 域名配置

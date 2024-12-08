@@ -4,6 +4,7 @@
 
 baseURL: "https://biglonglong.github.io"
 title: 龙犊&小窝🪹~
+copyright: ":smile:"
 
 ############################
 ## MISC
@@ -13,3 +14,7 @@ enableEmoji: true
 disableKinds: ["taxonomy", "term"]
 languageCode: "en-us"
 enableRobotsTXT: true
+
+
+markup:
+  _merge: deep

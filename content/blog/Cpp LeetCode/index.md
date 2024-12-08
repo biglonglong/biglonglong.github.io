@@ -5,7 +5,7 @@ authors:
   - biglonglong: biglonglong.jpg
 
 title: Cpp LeetCode
-subtitle: 刷 LeetCode 算法题的 Cpp 模板记录
+subtitle: 刷 LeetCode 算法题的 Cpp 模板
 summary: Cpp算法学习与编程的综合手册，涵盖代码规范、常用工具（如STL容器、宏定义）、动态内存管理、数据结构（如结构体和链表）、以及实用算法模板（排序、二分法、双指针、哈希表等），并附有LeetCode解题技巧和代码示例，适合算法学习、面试准备和竞赛参考。
 ---
 

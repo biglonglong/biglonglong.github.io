@@ -4,6 +4,9 @@
     &copy;
     {{ now.Format "2006" }}
     {{ .Site.Params.Author.name | markdownify | emojify }}
+    {{ with .Site.Copyright }}
+      {{ . | markdownify | emojify }}
+    {{ end }}
   </p>
 
   {{/* Powered by */}}
