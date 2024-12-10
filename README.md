@@ -42,15 +42,8 @@ git push origin main
 
 - theme
 
-  - [ ] home页有点单调，导入一些有趣的html结构
-  - [ ] 部署rss
-  - [ ] sitemap
+  - [ ] home页有点单调，导入一些有趣的html结构 https://www.ariesme.com/posts/2019/add_toc_for_hugo/
+    - [ ] toc 参考:
   - [ ] post: An Evolution of My Learning Methods 需要更新
-  - [ ] 目录条
 - setting
-
   - [ ] 域名配置
-
-  - [ ] 图床配置
-
-  - [ ] 标签固定：abbrlink

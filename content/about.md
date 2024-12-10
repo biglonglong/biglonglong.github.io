@@ -4,7 +4,7 @@ type: misc
 
 # change these
 name: biglonglong
-jobTitle: USTCer🎓 | noter📝 | coder💻 | beginner💪
+jobTitle: USTCer🎓 | noter📝 | coder🧑‍💻️ | beginner💪
 icon: ":coffee:"
 bio: true
 ---

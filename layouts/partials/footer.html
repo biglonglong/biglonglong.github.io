@@ -1,19 +1,70 @@
 <div class="flex flex-col justify-center p-10">
   {{/* Copyright */}}
-  <p class="text-center text-slate-700 dark:text-slate-400">
+  <!-- <p class="text-center text-slate-700 dark:text-slate-400">
     &copy;
     {{ now.Format "2006" }}
     {{ .Site.Params.Author.name | markdownify | emojify }}
-    {{ with .Site.Copyright }}
-      {{ . | markdownify | emojify }}
-    {{ end }}
-  </p>
+  </p> -->
+
+  
+  <div class="text-center text-slate-700 dark:text-slate-400">
+    &copy;
+    2024 - <span id="year"></span>
+    By {{.Site.Params.Author.name}} 🐲
+  </div>
 
   {{/* Powered by */}}
-  {{ $default := "Published with {hugo} & {qubt}" }}
-  {{ $default = replace $default "{qubt}" "<a class=\"hover:underline hover:decoration-indigo-500 hover:text-indigo-500\" href=\"https://github.com/chrede88/qubt\" target=\"_blank\" rel=\"noopener noreferrer\">Qubt</a>" | safeHTML }}
-  {{ $default = replace $default "{hugo}" "<a class=\"hover:underline hover:decoration-indigo-500 hover:text-indigo-500\" href=\"https://gohugo.io\" target=\"_blank\" rel=\"noopener noreferrer\">Hugo</a>" | safeHTML }}
-  <p class="text-center text-sm text-slate-700 dark:text-slate-400">
+  {{ $default := "{Github} ♥️ {Qubt}" }}
+  {{ $default = replace $default "{Qubt}" "<a class=\"hover:underline hover:decoration-indigo-500 hover:text-indigo-500\" href=\"https://github.com/chrede88/qubt\" target=\"_blank\" rel=\"noopener noreferrer\">Qubt</a>" | safeHTML }}
+  {{ $default = replace $default "{Github}" "<a class=\"hover:underline hover:decoration-indigo-500 hover:text-indigo-500\" href=\"https://github.com/biglonglong\" target=\"_blank\" rel=\"noopener noreferrer\">Github</a>" | safeHTML }}
+  <div class="text-center text-slate-700 dark:text-slate-400">
     {{ $default }}
-  </p>
+  </div>
+
+  {{$scratch := newScratch}}
+  {{ range (where .Site.Pages "Kind" "page" )}}
+      {{$scratch.Add "total" .WordCount}}
+  {{ end }}
+
+  <div class="text-center text-sm text-slate-700 dark:text-slate-400">
+    在这里度过了 <span id="days">0</span> ，写下 {{$scratch.Get "total" }} 字，时间过得真快呐！
+  </div>
+
+  <!-- busuanzi -->
+  {{ if .Site.Params.busuanzi.enable }}
+  <div class="text-center text-ssm text-slate-700 dark:text-slate-400">
+    <span id="busuanzi_container_site_pv">
+      共有 <span id="busuanzi_value_site_pv"></span> 人次光临过小窝
+    </span>
+    <br/>
+    {{ end }}
+  </div>
+  
+  
+
+  <script>
+    var s0 = '{{ .Site.Params.buildDate }}';
+    s1 = new Date(s0.replace(/-/g, "/"));
+    s2 = new Date();
+    var days = s2.getTime() - s1.getTime();
+
+    var date = new Date;
+    var year = date.getFullYear();
+    document.getElementById('year').innerHTML = year;
+
+    var BootDate = new Date("{{ .Site.Params.buildDate }}");
+    function ShowRunTime(id) {
+      var NowDate = new Date();
+      var RunDateM = parseInt(NowDate - BootDate);
+      var RunDays = Math.floor(RunDateM / (24 * 3600 * 1000));
+      var RunHours = Math.floor(RunDateM % (24 * 3600 * 1000) / (3600 * 1000));
+      var RunMinutes = Math.floor(RunDateM % (24 * 3600 * 1000) % (3600 * 1000) / (60 * 1000));
+      var RunSeconds = Math.round(RunDateM % (24 * 3600 * 1000) % (3600 * 1000) % (60 * 1000) / 1000);
+      var days = RunDays + " 天 " + RunHours + " 时 " + RunMinutes + " 分 " + RunSeconds + " 秒";
+      document.getElementById(id).innerHTML = days;
+    }
+    ShowRunTime('days');
+    setInterval("ShowRunTime('days')", 1000);
+  </script>
 </div>
+

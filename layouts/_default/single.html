@@ -2,10 +2,10 @@
   {{ $featureimage := resources.GetMatch (print "**" .Params.featureimage) }}
   {{ $featuredcaption := .Params.caption }}
   {{ $date := .Date | time.Format ":date_medium" }}
-  {{ $DPT := printf "%s - %d minute read" $date .ReadingTime }}
+  {{ $readingTime := mul .ReadingTime .Site.Params.readSpeed }}
+  {{ $DPT := printf "%s - ⏳️%d minutes" $date $readingTime }}
   {{ $toc := .Params.toc | default false }}
-
-
+  
   <div class="justify-left mx-auto mt-8 flex max-w-screen-md px-4">
     <article>
       <h1 class="text-4xl font-extrabold text-slate-700 dark:text-slate-200">
@@ -15,7 +15,10 @@
         {{ .Params.subtitle | emojify }}
       </h2>
       <div class="mb-4 mt-2 text-sm text-slate-500 dark:text-slate-400">
-        {{ $DPT }}
+        {{ $DPT }} |
+        <span id="busuanzi_container_page_pv">
+          👁️<span id="busuanzi_value_page_pv"></span> times
+        </span>
       </div>
 
       {{ with $featureimage }}

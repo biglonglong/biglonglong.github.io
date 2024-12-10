@@ -50,3 +50,9 @@ markup:
     lineNumbersInTable: false
     noClasses: false
     guessSyntax: true
+
+markup:
+  _merge: deep
+
+hasCJKLanguage: true
+

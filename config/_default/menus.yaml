@@ -3,15 +3,15 @@
 ############################
 
 main:
-- name: Home
+- name: 🏠Home
   url: /
   weight: 10
-- name: Blog
+- name: 📖Blog
   url: /blog/
   weight: 20
-- name: Journal
+- name: 🌈Journal
   url: /journal/
   weight: 30 
-- name: About
+- name: 🪪About
   url: /about/
   weight: 40

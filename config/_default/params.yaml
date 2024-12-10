@@ -16,7 +16,7 @@ links:
   - email: mailto:1522262926@qq.com
   - github: https://github.com/biglonglong
   - link: https://www.xiaohongshu.com/user/profile/5f39f522000000000100a829
-  - spotify: /sitemap.xml
+  - spotify: /index.xml
   - soundcloud: https://pan.baidu.com/s/1VWiI7siC3b6wNRITmbqGpg?pwd=627k
   # - certifications: /resume.pdf
 
@@ -42,3 +42,10 @@ images:
 # This option will allow better performance, as it'll only load
 # the extra JS when needed.
 math: false
+
+buildDate: "2024-11-25T07:52:34Z"
+
+busuanzi:
+    enable: true
+
+readSpeed: 2
