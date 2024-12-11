@@ -1,0 +1,6 @@
+# Hugo stuff
+public/
+.hugo_build.lock
+
+# Apple stuff
+.DS_Store
