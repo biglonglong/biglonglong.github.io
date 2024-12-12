@@ -1,32 +1,27 @@
 ---
-title: "Cpp LeetCode"
-date: 2024-12-11T23:11:14+08:00
-lastmod: 2024-12-11T23:11:14+08:00
-author: ["author"]
-draft: false
+draft: true
 
-tags: ["tag1", "tag2"]
-description: ""
+title: "Cpp LeetCode"
+description: "刷 LeetCode 算法题的 Cpp 模板"
+date: 2024-12-03
+author: ["biglonglong"]
+
+tags: ["algorithm", "summary"]
 summary: ""
 
+math: true
 weight:
-showToc: true
-TocOpen: true
-comments: true
-
 cover:
     image: ""
     caption: ""
     alt: ""
     relative: false
     hidden: true
+
+showToc: true
+TocOpen: true
+comments: true
 ---
-
-
-
-date: 2024-12-03
-subtitle: 刷 LeetCode 算法题的 Cpp 模板
-summary: Cpp算法学习与编程的综合手册，涵盖代码规范、常用工具（如STL容器、宏定义）、动态内存管理、数据结构（如结构体和链表）、以及实用算法模板（排序、二分法、双指针、哈希表等），并附有LeetCode解题技巧和代码示例，适合算法学习、面试准备和竞赛参考。
 
 ## 代码规范
 

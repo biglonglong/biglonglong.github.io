@@ -1,7 +1,6 @@
 ---
-date: '2024-12-11'
-draft: true
 title: 'About'
+hidemeta: true
 ---
 
 something boring...

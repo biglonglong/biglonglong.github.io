@@ -6,11 +6,9 @@ copyright: "[biglonglong](https://github.com/biglonglong)🐲"
 # prioritize loading
 mainsections: ["posts", "en"]
 
-# language
+# default language page
 languageCode: en
 defaultContentLanguageInSubdir: true
-
-# default page
 defaultContentLanguage: home
 languages:
   home:
@@ -47,14 +45,18 @@ languages:
           name: 📝Posts
           url: posts
           weight: 2
+        - identifier: nav
+          name: 🌐Nav
+          url: nav
+          weight: 3
         - identifier: about
           name: 🙋‍♂️About
           url: about
-          weight: 3
+          weight: 4
         - identifier: search
           name: 🔍Search
           url: search
-          weight: 4
+          weight: 5
         
 # posts
 paginate: 7
@@ -122,7 +124,7 @@ params:
   ShowAllPagesInArchive: true
   ShowPageNums: false
   VisitCount: true
-  ShowLastMod: true
+  ShowLastMod: 
   
   socialIcons:
     - name: email

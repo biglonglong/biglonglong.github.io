@@ -1,6 +1,5 @@
 ---
 title: "📖Know"
-description: ""
 hidemeta: true
 ---
 

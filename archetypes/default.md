@@ -1,29 +1,27 @@
 ---
+draft: true
+
 title: "{{ replace .Name "-" " " | title }}"
+description: ""
 date: {{ .Date }}
-lastmod: {{ .Date }}
-author: ["author"]
-draft: false
+author: ["biglonglong"]
 
 tags: ["tag1", "tag2"]
-description: ""
 summary: ""
 
+math: false
 weight:
-showToc: true
-TocOpen: true
-comments: true
-math: true
-
 cover:
     image: ""
     caption: ""
     alt: ""
     relative: false
     hidden: true
+
+showToc: true
+TocOpen: true
+comments: true
 ---
-
-
 
 ## Before we start\.\.\.
 

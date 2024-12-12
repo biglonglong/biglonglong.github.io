@@ -1,6 +1,5 @@
 ---
 title: "🌈Journal"
-description: ""
 hidemeta: true
 ---
 

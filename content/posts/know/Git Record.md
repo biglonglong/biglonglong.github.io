@@ -1,17 +1,27 @@
 ---
-date: '2024-12-11'
-draft: true
-lastmod: '2024-12-11'
-title: 'Git Record'
-tags: ["first"]
----
+draft: false
 
-
-
+title: "Git Record"
+description: "管理 Github 仓库的 Git 命令集记录"
 date: 2024-11-26
-title: Git Record
-subtitle: 管理 Github 仓库的 Git 命令集记录
-summary: 管理仓库时的一份Git和GitHub的实用记录，涵盖从本地仓库初始化到远程仓库关联的基础操作，以及分支管理、版本回退、冲突解决等核心内容，同时提供查看历史记录、设置标签、跨平台换行符处理等技巧，帮助用户高效管理代码版本和协作开发。
+author: ["biglonglong"]
+
+tags: ["git" , "tech" , "summary"]
+summary: ""
+
+math: true
+weight:
+cover:
+    image: ""
+    caption: ""
+    alt: ""
+    relative: false
+    hidden: true
+
+showToc: true
+TocOpen: true
+comments: true
+---
 
 ## 在开始之前\.\.\.
 
