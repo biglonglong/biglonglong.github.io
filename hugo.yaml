@@ -53,10 +53,6 @@ languages:
           name: 🙋‍♂️About
           url: about
           weight: 4
-        - identifier: search
-          name: 🔍Search
-          url: search
-          weight: 5
         
 # posts
 paginate: 7
@@ -72,8 +68,9 @@ params:
   author: biglonglong # author: ["Me", "You"] # multiple authors
   images: ["images/thumbnail.png"]
 
-  defaultTheme: auto # dark, light
-  disableThemeToggle: true
+  defaultTheme: dark # dark, light
+  disableThemeToggle: false
+  disableSearch: false
   
   assets:
     disableHLJS: true

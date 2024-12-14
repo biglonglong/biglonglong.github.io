@@ -38,7 +38,7 @@
 
 button#theme-toggle {
     font-size: 26px;
-    margin: auto 4px;
+    margin: auto 0px;
 }
 
 body.dark #moon {
@@ -66,7 +66,7 @@ body:not(.dark) #sun {
 }
 
 #menu .active {
-    font-weight: 500;
+    font-weight: 675;
     border-bottom: 2px solid currentColor;
 }
 
@@ -74,7 +74,11 @@ body:not(.dark) #sun {
 .lang-switch ul,
 .logo-switches {
     display: inline-flex;
-    margin: auto 4px;
+    margin: auto 95px;
+}
+
+.search-icon {
+    margin-right: 25px;
 }
 
 .lang-switch {

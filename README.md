@@ -41,12 +41,11 @@ git push origin main
 ## Todo List
 
 - theme
-  - [ ] home页有点单调，导入一些有趣的html结构
-    - [ ] 加入comment
-    - [ ] menu: series、archive时间轴
-    - [ ] 移植标签页面到posts
-    - [ ] 404美化
-    - [ ] nav填充
-  - [ ] post更新
+  - [ ] 加入comment
+  - [ ] menu: series、archive时间轴
+  - [ ] 移植标签页面到posts   markdown style 方式
+  - [ ] 404美化
+  - [ ] checkout more from wiki of PaperMod
+  - [ ] post更新、nav填充
 - setting
   - [ ] 域名配置
