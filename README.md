@@ -44,8 +44,7 @@ git push origin main
   - [ ] 加入comment
   - [ ] menu: series、archive时间轴
   - [ ] 移植标签页面到posts   markdown style 方式
-  - [ ] 404美化
   - [ ] checkout more from wiki of PaperMod
-  - [ ] post更新、nav填充
+  - [ ] post更新、nav填充、文章：工作环境
 - setting
   - [ ] 域名配置
