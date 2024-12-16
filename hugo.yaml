@@ -198,6 +198,11 @@ minify:
 # Crawler Support
 enableRobotsTXT: true
 
+# 404 html
+redirects:
+- from: /**
+  status: 404
+  to: ./404.html
 
 ############################
 ## Social Media Embedding
