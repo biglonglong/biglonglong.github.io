@@ -2,14 +2,14 @@
 draft: false
 
 title: "Git Record"
-description: "管理 Github 仓库的 Git 命令集记录"
+description: "管理 Github 仓库时的 Git 命令集记录"
 date: 2024-11-26
 author: ["biglonglong"]
 
-tags: ["git" , "tech" , "summary"]
+tags: ["summary", "git"]
 summary: ""
 
-math: true
+math: false
 weight:
 cover:
     image: ""
@@ -25,17 +25,17 @@ comments: true
 
 ## 在开始之前\.\.\.
 
-本文基于 *git* & *Github*，记录仓库版本控制过程中的一些 *warning* 、 *Fatal* 及其 *Solution*，以防 *biglonglong* 在之后仓库管理过程中反复迷失。
+本文基于git&Github，记录仓库版本控制过程中的一些warning、Fatal及其Solution，以防biglonglong在之后仓库管理过程中反复迷失。
 
 在开始之前，你至少完成了以下基本配置：
 
 1. git安装，设置本地机器标识；
-2. Github注册，建立本地git与远程Github的 *ssh* 密钥连接；
+2. Github注册，建立本地git与远程Github的ssh密钥连接；
 3. property设置，方便git操作。
 
 简单来说，git构建多分支版本树（v1.0 -> v1.1 -> … -> v1.9 -> <分支名> -> [HEAD]，其中HEAD仅指向当前工作分支），跟踪文件的更改，具体不再多赘述。
 
-我希望你具有了对git和Github的基本认识后，再来看这篇文章，以作为你开发过程中的 *cheat sheet*。对于入门攻略，这里做一些推荐：
+我希望你具有了对git和Github的基本认识后，再来看这篇文章，以作为你开发过程中的cheat sheet。对于入门攻略，这里做一些推荐：
 
 - [git - the simple guide - no deep shit!](https://rogerdudler.github.io/git-guide/)
 - [Git Immersion](https://gitimmersion.com/)
@@ -210,19 +210,19 @@ comments: true
 
 > 现象：跨平台工作空间commit项目时**Warning:LF will be replaced by CRLF**，再次clone后文件乱码
 >
-> 原因：换行主要与CR回车`\r`、LF换行`\n`相关，文件行尾的换行符在不同编辑器和不同平台下具有不同的表示：Linux和macOS使用LF换行，而Dos和Windows使用CR LF换行，在编辑器中体现为KEY `Enter`
+> 原因：换行主要与CR回车`\r`、LF换行`\n`相关，文件行尾的换行符在不同编辑器和不同平台下具有不同的表示：Linux和macOS使用LF换行，而Dos和Windows使用CR LF换行，在编辑器中体现为KEY`Enter`
 
-- 更改`git config --global|system|local`
+- 方法一：更改`git config --global|system|local`
 
   ```bash
   # 单独开发的程序员：提交检出均不转换
-  $ git config --global core.autocrlf false
+  git config --global core.autocrlf false
   
   # 多人协作跨平台开发的window程序员：提交时转换为LF，检出时转换为CRLF
-  $ git config --global core.autocrlf true
+  git config --global core.autocrlf true
   
   # 多人协作跨平台开发的Linux程序员：提交时转换为LF，检出时不转换
-  $ git config --global core.autocrlf input
+  git config --global core.autocrlf input
   ```
 
-- 创建项目文件 *.gitattributes* 设置 *eol=crlf* 或者 *eol=lf*
+- 方法二：创建项目文件.gitattributes设置`eol=crlf`或者`eol=lf`

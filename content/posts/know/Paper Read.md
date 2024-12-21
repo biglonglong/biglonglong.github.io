@@ -6,7 +6,7 @@ description: "关于阅读文献，科研小白的入门介绍"
 date: 2024-12-07
 author: ["biglonglong"]
 
-tags: ["research", "skills"]
+tags: ["skills", "research"]
 summary: ""
 
 math: false
@@ -29,7 +29,7 @@ comments: true
 
 1. 根据导师给出的研究方向，预测搜集**关键词**及其英文。
 
-2. 从导师或师兄的领域列表、[CCF推荐](https://www.ccf.org.cn/Academic_Evaluation/By_category/)、学院认可学报得出好期刊或会议的标准，研究方向高引 | 好期刊 | 好会议的**综述、硕博论文**，了解相应**大牛**、引用列表、被引用列表，了解该方向每类**方法思想**及其优缺点，明确当下SOTA方法。
+2. 从导师或师兄的领域列表、[CCF推荐](https://www.ccf.org.cn/Academic_Evaluation/By_category/)、学院认可学报得出好期刊或会议的标准，研究方向高引 | 好期刊 | 好会议的**综述、硕博论文**，了解相应大牛、引用列表、被引用列表，了解该方向每类**方法思想**及其优缺点，明确当下SOTA方法。
 
 3. 根据综述，梳理出研究方向发展脉络。精读各方向paper+code，总结算法为什么有效（往往一个方向有效的原因是非常简洁的）
 
@@ -80,13 +80,36 @@ comments: true
 
 3. 个人的分析、评价与批评：（1）论文最主要的创意是什么？（2）创意在应用上有什么好处？（3）创意和应用上的好处是在哪些条件下才能成立？（4）论文最主要的缺点或局限是什么？（5）这些缺点或局限在应用上有什么坏处？（6）这些缺点和应用上的坏处是因为哪些因素而引入的？（7）根据这些缺点自己是否有新的idea？（8）建议学长学弟什么时候参考这篇论文的哪些部分（点子）？
 
-可以参考师兄师姐在组内的论文汇报习惯和模板！！！ 
+可以参考师兄师姐在组内的论文汇报习惯和模板！！！
 
 
 
 ## 文献工具
 
-1. [chrome](https://www.google.com/chrome/)：浏览器 - 划词翻译、倍速器、网站记录器、收藏文件夹
+1. [chrome](https://www.google.com/chrome/)：浏览器-划词翻译、倍速器、网站记录器、收藏文件夹
 2. [Zotero](https://www.zotero.org/)：文献管理
 3. [DeepL](https://www.deepl.com/zh/translator)：全局翻译
 4. [Grammarly](https://www.grammarly.com/)：语法格式修正
+
+
+
+## 环境初始化
+
+这一部分无关文献，只是biglonglong历经多次系统与设备更新，常忘旧时工作环境习惯，开发时屡被环境配置打断，甚觉苦恼，遂记录之。这里仅保留部分通用环境，其余根据具体业务diy之。
+
+> temp in E:\，program in D:\，record in USB flash drive
+
+- Google Chrome： Log in、Language Setting
+  - Extensions：OneTab、Tab Copy、GitZip for github
+  - BookMark：chatgpt、ERNIE Bot
+- Virtual Studio Code：Log in、Auto Save
+  - extensions：Python、Jupyter、C/C++、CMake、Code Runner（compiler - mingw-w64）、GitHub Copilot、Markdown All in One、Open in External App、Partial Diff、Vscode-Icons
+- Typora：Perferance、Pandoc
+- Clash：Profiles
+- Git：alias config
+- BaiduNetwork
+- DeepL
+- Everything
+- Anaconda
+- WeChat
+- Office PLUS

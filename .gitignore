@@ -2,8 +2,8 @@
 public/
 .hugo_build.lock
 
-# Dtraft stuff
-dev/
+# Draft stuff
+To be archived/
 
 # Apple stuff
 .DS_Store

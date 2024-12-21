@@ -39,12 +39,15 @@ git push origin main
 ```
 
 ## Todo List
-
 - theme
-  - [ ] 加入comment
-  - [ ] menu: series、archive时间轴
-  - [ ] 移植标签页面到posts   markdown style 方式
-  - [ ] checkout more from wiki of PaperMod
-  - [ ] post更新、nav填充、文章：工作环境
-- setting
-  - [ ] 域名配置
+    - domain：域名配置
+    - comment：评论系统
+    - menu：series、archive时间轴
+    - 404 redirect：404页面重定向到未知address
+    - tags transplant：tags移植到posts page
+    - wiki config：检查PaperMod的wiki
+- content
+    - about：补充about menu内容
+    - Drafts：整理drafts文章发布
+        - know - ROS2 Demo
+        - know - AI alchemical Tips
