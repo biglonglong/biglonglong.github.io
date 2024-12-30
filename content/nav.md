@@ -124,8 +124,41 @@ showToc: false
       </div>
     </a>
   </div>
+
+  <div class="link-box">
+    <a class="link" href="https://github.com/youngyangyang04/TechCPP" target="_blank">
+      <img src="https://code-thinking-1253855093.file.myqcloud.com/pics/20210614201246512.png" alt="icon">
+      <div>
+        <span class="name">TechCPP</span>
+        <div class="description">C++面试&C++学习指南</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="link-box">
+    <a class="link" href="https://github.com/mlabonne/llm-course" target="_blank">
+      <img src="https://avatars.githubusercontent.com/u/81252890?v=4" alt="icon">
+      <div>
+        <span class="name">llm-course</span>
+        <div class="description">Course to get into LLMs with roadmaps</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="link-box">
+    <a class="link" href="https://www.openbmb.cn/" target="_blank">
+      <img src="https://www.openbmb.cn/openbmb/img/head_logo.e9d9f3f.png" alt="icon">
+      <div>
+        <span class="name">OpenBMB</span>
+        <div class="description">让大模型飞入千家万户</div>
+      </div>
+    </a>
+  </div>
   <!-- more -->
 </div>
+
+### ToDo
+- [大语言模型(LLM)入门学习路线图，这可能会是你见过最全的大模型学习路线](https://blog.csdn.net/2401_84494441/article/details/143867081)
 
 <style>
   .links-container {
