@@ -1,0 +1,40 @@
+# ================================================================================
+# GitHub Actions Workflow: Delete Old Workflow Runs
+# ================================================================================
+# Purpose: Automatically clean up old workflow runs to save storage space
+
+name: Delete old workflow runs
+
+# Trigger on schedule: run at 00:00 on the 1st day of month.
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+
+  # Allow running workflow from Actions tab with `retain_days` and `keep_minimum_runs`
+  # Attention: the retention days of workflow `keep_minimum_runs` must be less than `retain_days`
+  workflow_dispatch:
+      inputs:
+        days:
+          description: 'Days-worth of runs to keep for each workflow'
+          required: true
+          default: '90'
+        minimum_runs:
+          description: 'Minimum runs to keep for each workflow'
+          required: true
+          default: '6'
+
+jobs:
+  del_runs:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v2
+        # https://github.com/marketplace/actions/delete-workflow-runs
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: ${{ github.event.inputs.days }}
+          keep_minimum_runs: ${{ github.event.inputs.minimum_runs }}

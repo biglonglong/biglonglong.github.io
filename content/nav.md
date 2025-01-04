@@ -1,7 +1,8 @@
 ---
-title: "🌐nav"
-hidemeta: true
 showToc: false
+hidemeta: true
+ShowBreadCrumbs: false
+noProse: true
 ---
 
 
@@ -9,191 +10,242 @@ showToc: false
 ### Friends
 
 <div class="links-container">
-  <!-- more -->
+    <div class="link-box">
+        <a class="link" href="https://www.miaoer.net/" target="_blank">
+            <img src="https://static.miaoer.net/logo/avatar.webp" alt="icon">
+            <div>
+                <span class="name">喵二</span>
+                <div class="description">缘，妙不可言</div>
+            </div>
+        </a>
+    </div>
+    <div class="link-box">
+        <a class="link" href="https://catcat.blog/" target="_blank">
+            <img src="https://catcat.blog/favicon/avatar-540.avif" alt="icon">
+            <div>
+                <span class="name">猫猫博客</span>
+                <div class="description">𝙄𝙩'𝙨 𝙩𝙝𝙚 𝙤𝙣𝙡𝙮 𝙉𝙀𝙀𝙏 𝙩𝙝𝙞𝙣𝙜 𝙩𝙤 𝙙𝙤…</div>
+            </div>
+        </a>
+    </div>
+    <div class="link-box">
+        <a class="link" href="https://blog.lmyself.top/" target="_blank">
+            <img src="https://shadownc.github.io/assets/images/logo.jpg?t=c6b98c1a-40cb-416f-8ecf-f429271faeec" alt="icon">
+            <div>
+                <span class="name">IMyself</span>
+                <div class="description">一起进步</div>
+            </div>
+        </a>
+    </div>
+    <div class="link-box">
+        <a class="link" href="https://www.cnblogs.com/lumia1998" target="_blank">
+            <img src="https://raw.githubusercontent.com/lumia1998/pic/master/blog/头像.jpg" alt="icon">
+            <div>
+                <span class="name">太陽と向日葵</span>
+                <div class="description">世界正安静下来，准备它的冬日休眠</div>
+            </div>
+        </a>
+    </div>
 </div>
+
+
 
 ### Document
 
 <div class="links-container">
-  <div class="link-box">
-    <a class="link" href="https://www.xiaolincoding.com/" target="_blank">
-      <img src="https://cdn.xiaolincoding.com/icon.webp" alt="icon">
-      <div>
-        <span class="name">小林coding</span>
-        <div class="description">图解408，让天下没有难懂的八股文</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://github.com/applenob/Cpp_Primer_Practice" target="_blank">
-      <img src="https://applenob.github.io/images/ggb.png" alt="icon">
-      <div>
-        <span class="name">Cpp_Primer_Prac</span>
-        <div class="description">C++ Primer(5th)笔记和课后练习答案</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://github.com/lizhi3158/AILearning" target="_blank">
-      <img src="https://avatars.githubusercontent.com/u/30176206?v=4" alt="icon">
-      <div>
-        <span class="name">初级-Python</span>
-        <div class="description">面向0基础编程的同学，请仔细Coding</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://liaoxuefeng.com/books/git/introduction/index.html" target="_blank">
-      <img src="https://liaoxuefeng.com/static/logo.svg" alt="icon">
-      <div>
-        <span class="name">廖雪峰Git教程</span>
-        <div class="description">史上最浅显易懂的Git教程！</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://dunwu.github.io/linux-tutorial/" target="_blank">
-      <img src="https://dunwu.github.io/linux-tutorial/images/dunwu-logo-100.png" alt="icon">
-      <div>
-        <span class="name">LINUX TUTORIAL</span>
-        <div class="description">📚 linux-tutorial 是一个 Linux 教程</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://zhangzhiwei-zzw.github.io/ROS2%E5%AD%A6%E4%B9%A0/ROS2/" target="_blank">
-      <img src="https://cdn.jsdelivr.net/gh/sun0225SUN/sun0225SUN/assets/images/coding.gif" alt="icon">
-      <div>
-        <span class="name">ROS2理论与实践</span>
-        <div class="description">快速上手ROS2，为后续进阶奠定基础</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://github.com/zhm-real/PathPlanning" target="_blank">
-      <img src="https://avatars.githubusercontent.com/u/64300713?v=4" alt="icon">
-      <div>
-        <span class="name">pathplanning</span>
-        <div class="description">path planning algor with animations</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://www.helloxiaobai.cn/" target="_blank">
-      <img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fad2ab0c3-eab8-46b6-8097-793d488a1c72%2F865c16ed-e79d-4ca3-9d7c-a470746d9276%2F%25E5%25BE%25AE%25E4%25BF%25A1%25E5%259B%25BE%25E7%2589%2587_20240813204701(1).png?table=collection&id=685149b2-7546-454e-a875-896a9543c819&t=685149b2-7546-454e-a875-896a9543c819&width=800&cache=v2" alt="icon">
-      <div>
-        <span class="name">小白说</span>
-        <div class="description">输出专业自动驾驶算法教程的开发者社区</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://github.com/BingqiangZhou/LearningOpenCV" target="_blank">
-      <img src="https://avatars.githubusercontent.com/u/34599703?v=4" alt="icon">
-      <div>
-        <span class="name">LearningOpenCV</span>
-        <div class="description">OpenCV学习笔记：C++，Python一起</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://www.huaxiaozhuan.com/" target="_blank">
-      <img src="https://avatars.githubusercontent.com/u/3395177?v=4" alt="icon">
-      <div>
-        <span class="name">AI工程师手册</span>
-        <div class="description">https://github.com/Ewenwan/MVision</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://web.qianguyihao.com/" target="_blank">
-      <img src="https://img9.doubanio.com/icon/ul39415799-6.jpg" alt="icon">
-      <div>
-        <span class="name">千古前端图文</span>
-        <div class="description">超详细的 Web 前端入门到进阶知识库</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://github.com/youngyangyang04/TechCPP" target="_blank">
-      <img src="https://code-thinking-1253855093.file.myqcloud.com/pics/20210614201246512.png" alt="icon">
-      <div>
-        <span class="name">TechCPP</span>
-        <div class="description">C++面试&C++学习指南</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://github.com/mlabonne/llm-course" target="_blank">
-      <img src="https://avatars.githubusercontent.com/u/81252890?v=4" alt="icon">
-      <div>
-        <span class="name">llm-course</span>
-        <div class="description">Course to get into LLMs with roadmaps</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://www.openbmb.cn/" target="_blank">
-      <img src="https://www.openbmb.cn/openbmb/img/head_logo.e9d9f3f.png" alt="icon">
-      <div>
-        <span class="name">OpenBMB</span>
-        <div class="description">让大模型飞入千家万户</div>
-      </div>
-    </a>
-  </div>
-  <!-- more -->
+    <div class="link-box">
+        <a class="link" href="https://www.xiaolincoding.com/" target="_blank">
+            <img src="https://cdn.xiaolincoding.com/icon.webp" alt="icon">
+            <div>
+                <span class="name">小林coding</span>
+                <div class="description">图解408，让天下没有难懂的八股文</div>
+            </div>
+        </a>
+    </div>
+    <div class="link-box">
+        <a class="link" href="https://leetcode.cn/problemset/" target="_blank">
+            <img src="https://assets.leetcode.cn/aliyun-lc-upload/uploaded_files/2021/03/73c9f099-abbe-4d94-853f-f8abffd459cd/leetcode.png"
+                alt="icon">
+            <div>
+                <span class="name">LeetCode</span>
+                <div class="description">全球极客挚爱的技术成长平台</div>
+            </div>
+        </a>
+    </div>
+    <div class="link-box">
+        <a class="link" href="https://dunwu.github.io/linux-tutorial/" target="_blank">
+            <img src="https://dunwu.github.io/linux-tutorial/images/dunwu-logo-100.png" alt="icon">
+            <div>
+                <span class="name">LINUX TUTORIAL</span>
+                <div class="description">📚 linux-tutorial 是一个 Linux 教程</div>
+            </div>
+        </a>
+    </div>
+    <div class="link-box">
+        <a class="link" href="https://web.qianguyihao.com/" target="_blank">
+            <img src="https://img.smyhvae.com/20200919-blog-bg.jpg" alt="icon">
+            <div>
+                <span class="name">千古前端图文</span>
+                <div class="description">超详细的 Web 前端入门到进阶知识库</div>
+            </div>
+        </a>
+    </div>
+    <!-- more -->
 </div>
 
-### ToDo
-- [大语言模型(LLM)入门学习路线图，这可能会是你见过最全的大模型学习路线](https://blog.csdn.net/2401_84494441/article/details/143867081)
+
+
+### [Random Study](https://csdiy.wiki/)
+
+> No one insists you read in full. If you need, read it!
+
+- [Github - notes-python3（lijin-THU）](https://github.com/lijin-THU/notes-python3)
+- [Video - C++教程从0到1（黑马程序员）](https://www.bilibili.com/video/BV1et411b73Z/)
+  - [Video- 每天5分钟了解现代C++新特性（0CCh）](https://www.bilibili.com/video/BV1644y1c7pp/?spm_id_from=333.1387.homepage.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Site - C++参考手册](https://cppreference.cn/w/)
+  - [Book - Effective C++（侯捷）](https://book.douban.com/subject/1842426/)
+  - [Site - 现代 C++ 教程: 高速上手 C++ 11/14/17/20（changkun）](https://changkun.de/modern-cpp/zh-cn/00-preface/)
+  - [Book - C++ Primer（第 5 版 中文版）](https://book.douban.com/subject/25708312/)
+  - [GitHub - Cpp\_Primer\_Practice（applenob）](https://github.com/applenob/Cpp_Primer_Practice)
+- [Blog - Cpp LeetCode（龙犊&小窝🪹~）](https://biglonglong.github.io/home/posts/know/cpp-leetcode/)
+  - [Site - 代码随想录（程序员Carl）](https://www.programmercarl.com/)
+  - [Site - 剑指offer（LeetCode专项突破）](https://leetcode.cn/problem-list/b4bIXob4/)
+- [Book - 大话数据结构（溢彩加强版）](https://book.douban.com/subject/35229404/)
+  - [MOOC - 数据结构（浙江大学 陈越、何钦铭）](https://www.icourse163.org/course/zju-93001)
+- [Github - Crash-Course-Computer-Science-Chinese（1c7）](https://github.com/1c7/Crash-Course-Computer-Science-Chinese)
+  - [Video - 深入理解计算机系统（九曲阑干）](https://www.bilibili.com/video/BV1cD4y1D7uR/)
+  - [Book - 程序员的自我修养](https://book.douban.com/subject/3652388/)
+  - [Book - 程序是怎样跑起来的](https://book.douban.com/subject/26365491/)
+  - [Github - translationCSAPP（EugeneLiu）](https://github.com/EugeneLiu/translationCSAPP)
+  - [Site - Tag: ics（Arthals' ink）](https://arthals.ink/tags/ics)
+- [Video - 操作系统原理（清华大学 向勇、陈渝）](https://www.bilibili.com/video/BV1uW411f72n/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Book - 操作系统导论（中文版）](https://itanken.github.io/ostep-chinese/)
+  - [Site - Yanyan's Wiki（南京大学 蒋炎岩）](https://jyywiki.cn/)
+  - [Book - 现代操作系统原理与实现](https://book.douban.com/subject/35208251/)
+  - [Site - ucore实验指导书](https://learningos.github.io/ucore_os_webdocs/)
+- [Site - 程序员八股文（卡码）](https://notes.kamacoder.com/bagu)
+- [Video - 线性代数的本质（3Blue1Brown）](https://www.bilibili.com/video/BV1ys411472E/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Video - 线性代数（MIT）](https://www.bilibili.com/video/BV1xS4y1L7w5/?vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Github - notes-linear-algebra（zlotus）](https://github.com/zlotus/notes-linear-algebra)
+  - [Book - 速通深度学习数学基础（卢菁）](https://book.douban.com/subject/36197583/)
+- [Video - 概率统计速成（数学强国）](https://www.bilibili.com/video/BV1TJ411y7Zp/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Video - 概率论（3Blue1Brown）](https://space.bilibili.com/88461692/lists/1528924?type=series)
+  - [Github - Statistics-note（ChanceQZ）](https://github.com/ChanceQZ/Statistics-note)
+- [Video - 微积分（矿爷）](https://www.bilibili.com/video/BV1Lt411r7NQ/?spm_id_from=333.337.search-card.all.click)
+- [AI算法工程师手册](https://www.huaxiaozhuan.com/)
+- [Video - 从函数到神经网络【白话DeepSeek】（闪客）](https://www.bilibili.com/video/BV1uGA3eLEeu/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Video - Pytorch框架与经典卷积神经网络与实战（炮哥）](https://www.bilibili.com/video/BV1e34y1M7wR/?spm_id_from=333.337.search-card.all.click)
+  - [Video - 手撕“Everything”系列，Transformer, Diffusion，LLM（happy魇）](https://www.bilibili.com/video/BV1Fw4m1C7Tq/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Video - 深度学习系列（李宏毅）](https://www.bilibili.com/video/BV1TAtwzTE1S/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+- [Github - minimind（jingyaogong）](https://github.com/jingyaogong/minimind)
+  - [Site - 先进的AI团队协作与模型创新引擎（SwanLab）](https://docs.swanlab.cn/guide_cloud/general/what-is-swanlab.html)
+  - [Github - aliyun_acp_learning（AlibabaCloudDocs）](https://github.com/AlibabaCloudDocs/aliyun_acp_learning)
+  - [Github - llm_learning（AlibabaCloudDocs）](https://github.com/AlibabaCloudDocs/llm_learning)
+- [Github - MathFoundationRL（WindyLab）](https://github.com/MathFoundationRL/Book-Mathematical-Foundation-of-Reinforcement-Learning)
+  - [Site - 蘑菇书（easy-rl）](https://datawhalechina.github.io/easy-rl/#/)
+  - [Video - 强化学习系列（李宏毅）](https://www.bilibili.com/video/BV15hw9euExZ/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Video - 一文理清强化学习RL基本原理（大白话）](https://www.bilibili.com/video/BV1rooaYVEk8/?vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Video - 一文理清强化学习PPO和GRPO算法流程（大白话）](https://www.bilibili.com/video/BV15cZYYvEhz/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Site - Transformer 强化学习（Hugging Face）](https://hugging-face.cn/docs/trl/index)
+- [Site - LangChainDocs（LangChain）](https://docs.langchain.com/)
+  - [Site - LangChain 中文教程（LangChain）](https://langchain-doc.cn/)
+  - [Github - Langchain1.0-Langgraph1.0-Learning（BrandPeng）](https://github.com/BrandPeng/Langchain1.0-Langgraph1.0-Learning)
+- [Github - RecommenderSystem（wangshusen）](https://github.com/wangshusen/RecommenderSystem)
+- [GitHub - SearchEngine（wangshusen）](https://github.com/wangshusen/SearchEngine)
+- [Site - docker、tmux、git、md、latex（Lance）](https://weiruyi.github.io/posts/工具/)
+
+
+
+### Look Around
+
+- [Video - ROS2理论与实践（赵虚左）](https://www.bilibili.com/video/BV1VB4y137ys/?vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Site - ROS2理论与实践讲义（猛狮集训营）](https://www.zhihu.com/people/41-69-11-75-42/posts)
+  - [Site - ROS理论与实践（Autolabor）](http://www.autolabor.com.cn/book/ROSTutorials/)
+- [Github - PathPlanning（zhm-real）](https://github.com/biglonglong/PathPlanning)
+- [Github - LearningOpenCV（BingqiangZhou）](https://github.com/biglonglong/LearningOpenCV)
+
+
 
 <style>
+  /* ===== 友链卡片容器 ===== */
   .links-container {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    padding: 10px; 
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(105, 105, 105, 0.2);
+    padding: 12px;
+    border-radius: 12px;
+    gap: 10px;
   }
+
+  /* ===== 单个友链卡片 ===== */
   .link-box {
     display: flex;
-    margin: 0.6%;
     max-width: 32%;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    flex: 1 1 200px;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--border);
+    background: var(--entry);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   }
+
+  .link-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px var(--accent-glow);
+    border-color: var(--accent);
+  }
+
+  /* ===== 友链内容 ===== */
   .link {
     display: flex;
+    align-items: center;
     text-align: left;
     color: var(--content);
+    text-decoration: none;
+    width: 100%;
+    gap: 10px;
   }
+
   .link img {
-    width: 30%;
-    height: auto;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    max-width: 48px;
+    flex-shrink: 0;
     border-radius: 50%;
-    margin-right: 8px;
+    object-fit: cover;
+    border: 2px solid var(--border);
+    transition: border-color 0.25s ease;
   }
+
+  .link-box:hover .link img {
+    border-color: var(--accent);
+  }
+
+  .link > div {
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+  }
+
   .link .name {
     font-size: 0.9em;
     font-weight: bold;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+
   .link .description {
     font-size: 0.75em;
     font-weight: normal;
+    color: var(--secondary);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    margin-top: 2px;
   }
 </style>

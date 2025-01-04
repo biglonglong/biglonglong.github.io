@@ -1,23 +1,19 @@
 #searchbox input {
-    padding: 4px 10px;
+    padding: 8px 14px;
     width: 100%;
     color: var(--primary);
     font-weight: bold;
     border: 2px solid var(--tertiary);
     border-radius: var(--radius);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background: var(--entry);
 }
 
+/* 聚焦时发光效果 */
 #searchbox input:focus {
-    border-color: var(--secondary);
-}
-
-#searchResults li {
-    list-style: none;
-    border-radius: var(--radius);
-    padding: 10px;
-    margin: 10px 0;
-    position: relative;
-    font-weight: 500;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+    outline: none;
 }
 
 #searchResults {
@@ -25,9 +21,31 @@
     width: 100%;
 }
 
+#searchResults li {
+    list-style: none;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    margin: 8px 0;
+    position: relative;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--entry);
+    transition: transform 0.15s ease, box-shadow 0.15s ease,
+                border-color 0.15s ease, background 0.15s ease;
+}
+
+/* 结果项 hover 高亮 */
+#searchResults li:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    transform: translateX(3px);
+    box-shadow: 0 2px 10px var(--accent-glow);
+}
+
 #searchResults li:active {
     transition: transform 0.1s;
-    transform: scale(0.98);
+    transform: scale(0.98) translateX(0);
+    box-shadow: none;
 }
 
 #searchResults a {
@@ -40,6 +58,7 @@
 }
 
 #searchResults .focus {
-    transform: scale(0.98);
-    border: 2px solid var(--tertiary);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    transform: translateX(3px);
 }

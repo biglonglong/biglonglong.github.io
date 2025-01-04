@@ -1,55 +1,56 @@
-# biglonglong.github.io
+## Overview
 
-*龙犊&amp;小窝@&lt;domain&gt;*
+这是[龙犊&小窝🪹~](https://biglonglong.github.io/home/)的网站代码源文件，基于 PaperMod，正在魔改当中...
 
-## Install
-
-```bash
-# git、nodejs、go、hugo-extended installed
-git --version
-node --version
-go version
-hugo version
-```
+如果你感兴趣，可以看看我的一些Posts。
 
 
-## Usage
 
-```bash
-hugo server --buildDrafts
-```
+## Installation and Usage
 
+### Prerequisites
 
-## Writing
+- 安装 [Git](https://git-scm.com/)
+- 安装 [Node.js](https://nodejs.org/)
+- 安装 [Go](https://go.dev/)
+- 安装 [Hugo Extended](https://gohugo.io/)
 
-```bash
-hugo new content/{post_title}.md
-# open  content/{post_title}.md in typora
-```
+### Steps
 
+1. 创建新文章：
 
-## Update
+   ```bash
+   hugo new content/{post_title}.md
+   ```
+
+   使用您喜欢的编辑器（如 [Typora](https://typora.io/)）打开并编辑新文章。
+
+2. 打开终端或命令提示符，导航到项目根目录下运行：
+
+   ```bash
+   hugo server
+   ```
+
+3. 访问 [http://localhost:1313](http://localhost:1313) 查看本地预览
+
+### Run
+
+提交并推送更改：
 
 ```bash
 git add .
-git commit -m "..."
+git commit -m "Update content"
 git push origin main
-# go to github.com run workflow
-# search for https://biglonglong.github.io
 ```
 
-## Todo List
-- theme
-    - domain：域名配置
-    - comment：评论系统
-    - menu：series、archive时间轴
-    - 404 redirect：404页面重定向到未知address
-    - tags transplant：tags移植到posts page
-    - wiki config：检查PaperMod的wiki
-- content
-    - about：补充about menu内容
-    - Drafts：整理drafts文章发布
-        - know - ROS2 Demo
-        - know - AI alchemical Tips
-    - To be archived
-        - 机器人学 矩阵论 旋转平移变换
+然后，前往 GitHub 并运行相关的工作流以完成部署。
+
+
+
+## TODO List
+
+
+## References
+
+- [adityatelange/hugo-PaperMod: A fast, clean, responsive Hugo theme.](https://github.com/adityatelange/hugo-PaperMod)
+- [Hugo PaperMod 主题精装修 | Tai's Blog](https://yunpengtai.top/posts/hugo-journey/)

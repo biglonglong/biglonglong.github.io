@@ -27,6 +27,24 @@
     .footer {
         padding: calc((var(--footer-height) - var(--gap) - 10px) / 2) var(--gap);
     }
+
+    /* 移动端代码块限制最大高度，避免撑开页面 */
+    .post-content pre code {
+        max-height: 28em;
+    }
+}
+
+/* Nav 页友链卡片：小屏全宽单列 */
+@media screen and (max-width: 600px) {
+    .link-box {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 4px 0 !important;
+    }
+
+    .links-container {
+        flex-direction: column;
+    }
 }
 
 /* footer */

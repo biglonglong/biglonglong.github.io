@@ -26,7 +26,13 @@ languages:
         imageWidth: 275
         imageHeight: 275
         buttons:
-         
+        - name: Tags
+          url: "/home/tags"
+        - name: Know
+          url: "/home/posts/know"
+        - name: Cases
+          url: "/home/posts/cases"
+
       homeInfoParams:
         Title:
         Content: >    
@@ -45,17 +51,18 @@ languages:
           name: 📝Posts
           url: posts
           weight: 2
+        - identifier: console
+          name: 📟Console
+          url: console
+          weight: 3
         - identifier: nav
           name: 🌐Nav
           url: nav
-          weight: 3
-        - identifier: about
-          name: 🙋‍♂️About
-          url: about
           weight: 4
         
 # posts
-paginate: 7
+pagination:
+  pagerSize: 7
 permalinks:
   post: "/:title/"
 
@@ -66,9 +73,9 @@ params:
   keywords: [Blog, Journal, Code]
   description: "Personal Site about Note, Journal, and Code"
   author: biglonglong # author: ["Me", "You"] # multiple authors
-  images: ["images/thumbnail.png"]
+  images: ["image/thumbnail.png"]
 
-  defaultTheme: dark # dark, light
+  defaultTheme: auto # dark, light
   disableThemeToggle: false
   disableSearch: false
   
@@ -85,13 +92,18 @@ params:
     icon: image/logo.jpg
     iconHeight: 35
 
+  terminalPassword: "DragonNest"
+  siliconApiKey: "sk-hzdomvycthcpjhpeorywgygjxmmezwriwdljigkpbisipzyg"
+  gnewsApiKey: "e942bead1767f9e68bc2bd48e0b3c739"
+  openweatherApiKey: "e6b9d8edc04a0cae91059e1fe12052d0"
+
   # card
   ShowRssButtonInSectionTermList: false
   hideSummary: false
   hidemeta: false
   
   # head
-  ShowBreadCrumbs: false
+  ShowBreadCrumbs: true
   DateFormat: "January 2, 2006"
   buildDate: "2024-11-25"
   ShowReadingTime: true
@@ -106,9 +118,20 @@ params:
   ShowCodeCopyButtons: true
 
   # comment
-  comments: false
-  twikoo:
-      version: 1.4.11
+  comments: true
+  giscus:
+    repo: "biglonglong/biglonglong.github.io"
+    repoId: "R_kgDONcOJEA"
+    category: "Announcements"
+    categoryId: "DIC_kwDONcOJEM4Cl4UA"
+    mapping: "pathname"
+    strict: "0"
+    reactionsEnabled: "1"
+    emitMetadata: "0"
+    inputPosition: "top"
+    lightTheme: "light"
+    darkTheme: "noborder_gray"
+    lang: "zh-CN"
 
   # footer
   hideFooter: false
@@ -119,26 +142,30 @@ params:
   displayFullLangName: true
   disableSpecial1stPost: false
   ShowAllPagesInArchive: true
-  ShowPageNums: false
-  VisitCount: true
-  ShowLastMod: 
+  ShowPageNums: false 
   
   socialIcons:
     - name: email
-      title: Any question
-      url: "mailto:1522262926@qq.co"
+      title: Any Question
+      url: "mailto:1522262926@qq.com"
     - name: github
       title: Clone Repository
       url: "https://github.com/biglonglong"
     - name: redbook
-      title: Share life
+      title: Daily Life
       url: "https://www.xiaohongshu.com/user/profile/5f39f522000000000100a829"
+    - name: tiktok
+      title: Thoughts and Ideas
+      url: https://www.douyin.com/user/MS4wLjABAAAA8kcYaiVKhtfSokesSBj1rbgygU-hjOlDsfNGby0j4LY
     - name: rss
-      title: Subscribe me
+      title: Subscribe Me
       url: "./index.xml"
-    - name: soundcloud
-      title: backup where
-      url: "https://pan.baidu.com/s/1VWiI7siC3b6wNRITmbqGpg?pwd=627k"
+    # - name: soundcloud
+    #   title: backup where
+    #   url: "https://pan.baidu.com/s/1wnWmn3X_gpiKWOF0bo36TQ?pwd=1234"
+    - name: easteregg
+      title: Click Downloads
+      url: "./surprise.exe"
 
   fuseOpts:
       isCaseSensitive: false
@@ -149,9 +176,13 @@ params:
       minMatchCharLength: 0
       keys: ["title", "permalink", "summary", "content"]
 
-  # analytics:
-  #     google:
-  #         SiteVerificationTag: "XYZabc"
+  analytics:
+    google:
+      SiteVerificationTag: "YhT2VbvCiIXLMLNFI1IFzovL4S7XxfVnA6KWFtq4Rm8"
+    bing:
+      SiteVerificationTag: "6D5E453DF0AD132E93E25048673A2D59"
+    yandex:
+      SiteVerificationTag: "XYZabc"
     
   # cover:
   #     hidden: true # hide everywhere but not in structured data
@@ -162,6 +193,23 @@ markup:
   goldmark:
     renderer:
       unsafe: true
+    parser:
+      autoHeadingID: true
+      autoHeadingIDType: github
+      wrapStandAloneImageWithinParagraph: false
+      attribute:
+        block: true
+        title: true
+    extensions:
+      passthrough:
+        delimiters:
+          block:
+            - ['\[', '\]']
+            - ['$$', '$$']
+          inline:
+            - ['\(', '\)']
+            - ['$', '$']
+        enable: true
   highlight:
     codeFences: true
     style: darcula
@@ -198,11 +246,15 @@ minify:
 # Crawler Support
 enableRobotsTXT: true
 
-# 404 html
+# Redirects 404 HOME
 redirects:
+- from: /
+  to: /home/console/
+  status: 200
 - from: /**
+  to: /404.html
   status: 404
-  to: ./404.html
+
 
 ############################
 ## Social Media Embedding

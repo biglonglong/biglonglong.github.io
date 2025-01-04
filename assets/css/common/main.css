@@ -10,6 +10,58 @@
     font-size: 40px;
 }
 
+/* ===== 页面内容渐显入场动效 ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 文章卡片列表逐个入场 */
+.post-entry {
+    animation: fadeInUp 0.4s ease both;
+}
+
+.post-entry:nth-child(1) { animation-delay: 0.05s; }
+.post-entry:nth-child(2) { animation-delay: 0.10s; }
+.post-entry:nth-child(3) { animation-delay: 0.15s; }
+.post-entry:nth-child(4) { animation-delay: 0.20s; }
+.post-entry:nth-child(5) { animation-delay: 0.25s; }
+.post-entry:nth-child(6) { animation-delay: 0.30s; }
+.post-entry:nth-child(7) { animation-delay: 0.35s; }
+
+/* 文章正文内容区入场 */
+.post-header,
+.post-content,
+.post-footer {
+    animation: fadeInUp 0.45s ease both;
+}
+
+.post-content  { animation-delay: 0.08s; }
+.post-footer   { animation-delay: 0.14s; }
+
+/* profile 首页入场 */
+.profile .profile_inner {
+    animation: fadeInUp 0.5s ease both;
+}
+
+/* 减弱动效：尊重用户系统设置 */
+@media (prefers-reduced-motion: reduce) {
+    .post-entry,
+    .post-header,
+    .post-content,
+    .post-footer,
+    .profile .profile_inner {
+        animation: none;
+    }
+}
+
+/* ===== 分页按钮 ===== */
 .pagination {
     display: flex;
 }
@@ -21,13 +73,20 @@
     background: var(--primary);
     border-radius: calc(36px / 2);
     padding: 0 16px;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pagination a:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px var(--accent-glow);
 }
 
 .pagination .next {
     margin-inline-start: auto;
 }
 
-
+/* ===== 社交图标（main.css 基础层） ===== */
 .social-icons a {
     display: inline-flex;
     padding: 10px;
@@ -47,20 +106,58 @@ pre {
     position: relative;
 }
 
+/* ===== Copy 按钮 ===== */
 .copy-code {
     display: none;
     position: absolute;
-    top: 4px;
-    right: 4px;
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(78, 78, 78, 0.8);
+    top: 6px;
+    right: 6px;
+    color: rgba(255, 255, 255, 0.75);
+    background: rgba(90, 90, 100, 0.7);
     border-radius: var(--radius);
-    padding: 0 5px;
-    font-size: 14px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-family: inherit;
+    letter-spacing: 0.03em;
     user-select: none;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 
 div.highlight:hover .copy-code,
 pre:hover .copy-code {
     display: block;
 }
+
+.copy-code:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: scale(1.05);
+    border-color: transparent;
+}
+
+/* ===== 列表页 Hero 标题区 ===== */
+.hero-header {
+    margin: 32px auto 32px auto;
+    padding: 36px 0 28px;
+    position: relative;
+}
+
+.hero-title {
+    font-size: 48px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 12px !important;
+}
+
+.hero-desc {
+    font-size: 16px;
+    color: var(--secondary);
+    line-height: 1.7;
+    max-width: 520px;
+    margin-top: 10px;
+}
+

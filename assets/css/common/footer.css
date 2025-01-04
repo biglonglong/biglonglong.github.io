@@ -9,7 +9,9 @@
     margin: auto;
     padding: calc((var(--footer-height) - var(--gap)) / 2) var(--gap);
     text-align: center;
-    line-height: 24px;
+    line-height: 28px;
+    /* 顶部细线分隔 */
+    border-top: 1px solid var(--border);
 }
 
 .footer span {
@@ -21,15 +23,24 @@
     white-space: nowrap;
 }
 
+/* 运行时间等行 */
+.footer div {
+    margin-top: 2px;
+    opacity: 0.85;
+}
+
 .footer a {
     color: inherit;
-    border-bottom: 1px solid var(--secondary);
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
 }
 
 .footer a:hover {
-    border-bottom: 1px solid var(--primary);
+    color: var(--accent);
+    border-bottom: 1px solid var(--accent);
 }
 
+/* ===== 回到顶部按钮 ===== */
 .top-link {
     visibility: hidden;
     position: fixed;
@@ -41,17 +52,21 @@
     height: 42px;
     padding: 12px;
     border-radius: 64px;
-    transition: visibility 0.5s, opacity 0.8s linear;
+    transition: visibility 0.5s, opacity 0.8s linear,
+                transform 0.2s ease, box-shadow 0.2s ease,
+                background 0.2s ease;
+}
+
+.top-link:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 20px var(--accent-glow);
+    background: var(--accent);
+    color: #fff;
 }
 
 .top-link,
 .top-link svg {
     filter: drop-shadow(0px 0px 0px var(--theme));
-}
-
-.footer a:hover,
-.top-link:hover {
-    color: var(--primary);
 }
 
 .top-link:focus,

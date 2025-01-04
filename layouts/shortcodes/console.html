@@ -1,0 +1,43 @@
+<div id='terminal-container'>
+    <div class='terminal-header'>
+        <div class='terminal-buttons'>
+            <span class='button-close'></span>
+            <span class='button-minimize'></span>
+            <span class='button-maximize'></span>
+        </div>
+        <div id='terminal-title'>guest@localhost: ~ (zsh)</div>
+    </div>
+    <div id='terminal-window' onclick="document.getElementById('cmd-input').focus()">
+        <div id='history-output'></div>
+        <div class='input-line'>
+            <span class='prompt-arrow'>➜</span>
+            <span class='prompt-dir'>~</span>
+            <input type='text' id='cmd-input' autocomplete='off' spellcheck='false' autofocus />
+        </div>
+    </div>
+</div>
+
+<script>
+    let password = "{{ .Site.Params.terminalPassword }}" || "";
+    let siliconApiKey = "{{ .Site.Params.siliconApiKey }}" || "";
+    let gnewsApiKey = "{{ .Site.Params.gnewsApiKey }}" || "";
+    let openweatherApiKey = "{{ .Site.Params.openweatherApiKey }}" || "";
+</script>
+
+{{- /* Searchable Console */ -}}
+{{- $fusejs := resources.Get "js/fuse.basic.min.js" }}
+{{- if not $fusejs }}
+  {{- errorf "Missing assets/js/fuse.basic.min.js – required for console search functionality." }}
+{{- end }}
+{{- $consolejs := resources.Get "js/console.js" }}
+{{- if not $consolejs }}
+  {{- errorf "Missing assets/js/console.js – main terminal logic file not found." }}
+{{- end }}
+
+{{- $consoleWithSearch := slice $fusejs $consolejs | resources.Concat "assets/js/consoleWithSearch.js" | minify }}
+{{- if not site.Params.assets.disableFingerprinting }}
+  {{- $consoleWithSearch = $consoleWithSearch | fingerprint }}
+  <script defer crossorigin="anonymous" src="{{ $consoleWithSearch.RelPermalink }}" integrity="{{ $consoleWithSearch.Data.Integrity }}"></script>
+{{- else }}
+  <script defer crossorigin="anonymous" src="{{ $consoleWithSearch.RelPermalink }}"></script>
+{{- end }}

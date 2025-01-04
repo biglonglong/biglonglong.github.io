@@ -1,3 +1,4 @@
+
 .buttons,
 .main .profile {
     display: flex;
@@ -8,36 +9,177 @@
     align-items: center;
     min-height: calc(100vh - var(--header-height) - var(--footer-height) - (var(--gap) * 2));
     text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
 .profile .profile_inner {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
+/* 头像：灰白半透明描边，配合月球质感 */
 .profile img {
     border-radius: 50%;
+    padding: 3px;
+    background: rgba(220, 220, 220, 0.45);
+    box-shadow:
+        0 0 0 3px var(--theme),
+        0 0 0 5px rgba(200, 200, 200, 0.35),
+        0 8px 28px rgba(0, 0, 0, 0.12);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    cursor: default;
+}
+
+.dark .profile img {
+    background: rgba(200, 210, 220, 0.25);
+    box-shadow:
+        0 0 0 3px var(--theme),
+        0 0 0 5px rgba(180, 195, 210, 0.3),
+        0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.profile img:hover {
+    transform: scale(1.05) rotate(1deg);
+    box-shadow:
+        0 0 0 3px var(--theme),
+        0 0 0 6px rgba(200, 200, 200, 0.5),
+        0 16px 44px rgba(0, 0, 0, 0.18);
+}
+
+.dark .profile img:hover {
+    box-shadow:
+        0 0 0 3px var(--theme),
+        0 0 0 6px rgba(180, 195, 210, 0.45),
+        0 16px 44px rgba(0, 0, 0, 0.45);
 }
 
 .buttons {
     flex-wrap: wrap;
-    max-width: 400px;
+    max-width: 440px;
+    gap: 4px;
 }
 
+/* 按钮：渐变背景 + 悬浮上移阴影 */
 .button {
     background: var(--tertiary);
-    border-radius: var(--radius);
-    margin: 8px;
+    border-radius: calc(var(--radius) * 1.5);
+    margin: 6px;
     padding: 6px;
-    transition: transform 0.1s;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.button-inner {
-    padding: 0 8px;
+.button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent-soft);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    border-radius: inherit;
+}
+
+.button:hover::before {
+    opacity: 1;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--accent-glow);
 }
 
 .button:active {
-    transform: scale(0.96);
+    transform: scale(0.96) translateY(0);
+    box-shadow: none;
+}
+
+.button-inner {
+    padding: 0 10px;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== 卫星轨道系统 ===== */
+@keyframes orbit-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+@keyframes orbit-counter {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(-360deg); }
+}
+
+/* 整体容器：以头像为圆心，留出多层轨道空间 */
+.orbit-wrap {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.orbit-wrap > img {
+    position: relative;
+    z-index: 2;
+    /* 头像尺寸由 hugo.yaml 控制（275px），这里确保居中 */
+}
+
+/* 轨道环：不再做圆形边框，改成纯定位容器；轨道圆圈由 JS 画在 canvas 上 */
+.orbit-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: none;
+}
+
+/* 每颗卫星：位置完全由 JS translate 控制 */
+.orbit-satellite {
+    position: absolute;
+    /* 尺寸由 JS 按各自 config.size 覆盖 */
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid rgba(160, 165, 200, 0.02);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    /* 强制深色，确保在浅背景上清晰 */
+    color: rgb(50, 55, 80);
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.orbit-satellite:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft), 0 0 12px var(--accent-glow);
+    color: var(--accent);
+}
+
+/* SVG 描边加粗，小尺寸下更清晰 */
+.orbit-satellite svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    stroke-width: 2.5;
+}
+
+.dark .orbit-satellite {
+    background: transparent;
+    border-color: rgba(180, 190, 230, 0.02);
+    color: rgb(210, 215, 240);
+}
+
+.dark .orbit-satellite:hover {
+    color: var(--accent);
 }

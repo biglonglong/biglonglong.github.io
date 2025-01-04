@@ -1,6 +1,7 @@
 ---
 title: "📖Know"
 hidemeta: true
+ShowBreadCrumbs: false
 ---
 
-没有女朋友，没有约会💞，我和我的电脑💻，日夜相对...
+用宏大的世界🌍🌌🌠，稀释痛苦🧂💧💔
