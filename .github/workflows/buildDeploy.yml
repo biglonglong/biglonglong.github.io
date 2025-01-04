@@ -39,9 +39,24 @@ defaults:
     shell: bash
 
 jobs:
+  # cleanup deployment
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - name: 🗑 Delete deployment
+        uses: strumwolf/delete-deployment-environment@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: github-pages
+          onlyRemoveDeployments: true
+  # https://github.com/marketplace/actions/delete-deployment-environment
+
   # Build job
   build: # name of the job. We are conditioning the next job (deploy) on the succes of this one.
     runs-on: ubuntu-latest # runner
+    needs: cleanup # only do this if the cleanup was succesfull
     steps:
       # Checkout the main branch so the action has access to the files
       - name: Checkout
