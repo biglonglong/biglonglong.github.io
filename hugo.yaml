@@ -1,0 +1,232 @@
+# basic
+baseURL: https://biglonglong.github.io
+title: 龙犊&小窝🪹~
+copyright: "[biglonglong](https://github.com/biglonglong)🐲"
+
+# prioritize loading
+mainsections: ["posts", "en"]
+
+# default language page
+languageCode: en
+defaultContentLanguageInSubdir: true
+defaultContentLanguage: home
+languages:
+  home:
+    weight: 1
+    languageName: "home"
+    title: 龙犊&小窝🪹~
+    languagedirection: # rtl
+    params: # one of two
+      profileMode:
+        enabled: true
+        title: biglonglong
+        subtitle: "USTCer🎓 | noter📝 | coder🧑‍💻️ | beginner💪"
+        imageUrl: "image/avatar.jpg"
+        imageTitle: 
+        imageWidth: 275
+        imageHeight: 275
+        buttons:
+         
+      homeInfoParams:
+        Title:
+        Content: >    
+
+    taxonomies:
+      category: categories
+      tag: tags
+      series: series
+    menu:
+      main:
+        - identifier: home
+          name: 🏠Home
+          url: /home
+          weight: 1
+        - identifier: posts
+          name: 📝Posts
+          url: posts
+          weight: 2
+        - identifier: nav
+          name: 🌐Nav
+          url: nav
+          weight: 3
+        - identifier: about
+          name: 🙋‍♂️About
+          url: about
+          weight: 4
+        
+# posts
+paginate: 7
+permalinks:
+  post: "/:title/"
+
+params:
+  # to enable google analytics, opengraph, twitter-cards and schema.
+  env: production
+  title: 龙犊&小窝🪹~
+  keywords: [Blog, Journal, Code]
+  description: "Personal Site about Note, Journal, and Code"
+  author: biglonglong # author: ["Me", "You"] # multiple authors
+  images: ["images/thumbnail.png"]
+
+  defaultTheme: dark # dark, light
+  disableThemeToggle: false
+  disableSearch: false
+  
+  assets:
+    disableHLJS: true
+    favicon: "image/icon.png"
+    favicon16x16: "image/icon.png"
+    favicon32x32: "image/icon.png"
+    apple_touch_icon: "image/icon.png"
+    safari_pinned_tab: "image/icon.png"
+
+  label:
+    text: "龙犊&小窝🪹~"
+    icon: image/logo.jpg
+    iconHeight: 35
+
+  # card
+  ShowRssButtonInSectionTermList: false
+  hideSummary: false
+  hidemeta: false
+  
+  # head
+  ShowBreadCrumbs: false
+  DateFormat: "January 2, 2006"
+  buildDate: "2024-11-25"
+  ShowReadingTime: true
+  ShowWordCount: false
+
+  # toc
+  showtoc: true
+  tocopen: true
+  disableScrollToTop: false
+
+  # content
+  ShowCodeCopyButtons: true
+
+  # comment
+  comments: false
+  twikoo:
+      version: 1.4.11
+
+  # footer
+  hideFooter: false
+  ShowPostNavLinks: true
+  ShowShareButtons: false
+
+  # other
+  displayFullLangName: true
+  disableSpecial1stPost: false
+  ShowAllPagesInArchive: true
+  ShowPageNums: false
+  VisitCount: true
+  ShowLastMod: 
+  
+  socialIcons:
+    - name: email
+      title: Any question
+      url: "mailto:1522262926@qq.co"
+    - name: github
+      title: Clone Repository
+      url: "https://github.com/biglonglong"
+    - name: redbook
+      title: Share life
+      url: "https://www.xiaohongshu.com/user/profile/5f39f522000000000100a829"
+    - name: rss
+      title: Subscribe me
+      url: "./index.xml"
+    - name: soundcloud
+      title: backup where
+      url: "https://pan.baidu.com/s/1VWiI7siC3b6wNRITmbqGpg?pwd=627k"
+
+  fuseOpts:
+      isCaseSensitive: false
+      shouldSort: true
+      location: 0
+      distance: 1000
+      threshold: 0.4
+      minMatchCharLength: 0
+      keys: ["title", "permalink", "summary", "content"]
+
+  # analytics:
+  #     google:
+  #         SiteVerificationTag: "XYZabc"
+    
+  # cover:
+  #     hidden: true # hide everywhere but not in structured data
+  #     hiddenInList: true # hide on list pages and home
+  #     hiddenInSingle: true # hide on single page
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    codeFences: true
+    style: darcula
+    noClasses: false
+    # guessSyntax: true
+    # lineNos: true
+    # anchorLineNos: true
+
+
+############################
+## Website Performance
+############################
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+
+# Character Support
+enableInlineShortcodes: true
+enableEmoji: true 
+hasCJKLanguage: true
+
+# Build
+buildDrafts: false
+buildFuture: false
+buildExpired: false
+
+# webFile compression
+minify:
+  disableXML: true
+  minifyOutput: false
+
+# Crawler Support
+enableRobotsTXT: true
+
+# 404 html
+redirects:
+- from: /**
+  status: 404
+  to: ./404.html
+
+############################
+## Social Media Embedding
+############################
+# services:
+#   instagram:
+#     disableInlineCSS: true
+#   twitter:
+#     disableInlineCSS: true
+
+# privacy:
+#   vimeo:
+#     disabled: false
+#     simple: true
+
+#   twitter:
+#     disabled: false
+#     enableDNT: true
+#     simple: true
+
+#   instagram:
+#     disabled: false
+#     simple: true
+
+#   youtube:
+#     disabled: false
+#     privacyEnhanced: true

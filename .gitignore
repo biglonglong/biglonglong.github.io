@@ -1,0 +1,9 @@
+# Hugo stuff
+public/
+.hugo_build.lock
+
+# Draft stuff
+To be archived/
+
+# Apple stuff
+.DS_Store

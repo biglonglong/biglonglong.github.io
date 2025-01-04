@@ -1,0 +1,9 @@
+
+.post-content img[loading="lazy"]:active {
+    transform: scale(1.382);
+}
+
+.post-content img[loading="lazy"] {
+    width: 100%;
+    height: auto;
+}
