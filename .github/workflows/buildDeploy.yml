@@ -1,6 +1,6 @@
 # Sample workflow for building and deploying a Hugo site to GitHub Pages
 # Go to Settings -> Pages -> Build and deployment -> Set the Source to "Github Actions".
-name: Build & Deploy Hugo site to Pages
+name: Build & Clean & Deploy Hugo site to Pages
 
 # Will fire when a new release is published
 on:

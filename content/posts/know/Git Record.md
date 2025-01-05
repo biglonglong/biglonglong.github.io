@@ -25,20 +25,13 @@ comments: true
 
 ## 在开始之前\.\.\.
 
-本文基于git&Github，记录仓库版本控制过程中的一些warning、Fatal及其Solution，以防biglonglong在之后仓库管理过程中反复迷失。
+简单来说，git构建多分支版本树（v1.0 -> v1.1 -> … -> v1.9 -> \<branch\> -> [HEAD]，其中HEAD仅指向当前工作分支），跟踪文件的更改。本文记录仓库版本控制过程中的一些warning、Fatal及其Solution，以防biglonglong在之后仓库管理过程中反复迷失。
 
-在开始之前，你至少完成了以下基本配置：
-
-1. git安装，设置本地机器标识；
-2. Github注册，建立本地git与远程Github的ssh密钥连接；
-3. property设置，方便git操作。
-
-简单来说，git构建多分支版本树（v1.0 -> v1.1 -> … -> v1.9 -> <分支名> -> [HEAD]，其中HEAD仅指向当前工作分支），跟踪文件的更改，具体不再多赘述。
-
-我希望你具有了对git和Github的基本认识后，再来看这篇文章，以作为你开发过程中的cheat sheet。对于入门攻略，这里做一些推荐：
+我希望你具有了对git和Github的基本认识后，再来看这篇文章，以作为你开发过程中的Q&A。对于入门攻略，这里做一些推荐：
 
 - [git - the simple guide - no deep shit!](https://rogerdudler.github.io/git-guide/)
 - [Git Immersion](https://gitimmersion.com/)
+- [简介 - Git教程 - 廖雪峰的官方网站](https://liaoxuefeng.com/books/git/introduction/index.html)
 
 
 
@@ -220,12 +213,14 @@ comments: true
   ```bash
   git add .
   git commit --amend -m "refresh recent commit"
+  git push --force-with-lease origin main
   # 强制回退被覆盖的提交
   git reflog
   git reset --hard <hash>
   ```
-
   
+
+
 
 ## 冷知识
 

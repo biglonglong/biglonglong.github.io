@@ -46,11 +46,11 @@ showToc: false
   </div>
 
   <div class="link-box">
-    <a class="link" href="https://liaoxuefeng.com/books/git/introduction/index.html" target="_blank">
-      <img src="https://liaoxuefeng.com/static/logo.svg" alt="icon">
+    <a class="link" href="https://leetcode.cn/problemset/" target="_blank">
+      <img src="https://leetcode.com/static/images/LeetCode_Sharing.png" alt="icon">
       <div>
-        <span class="name">廖雪峰Git教程</span>
-        <div class="description">史上最浅显易懂的Git教程！</div>
+        <span class="name">LeetCode</span>
+        <div class="description">全球极客挚爱的技术成长平台</div>
       </div>
     </a>
   </div>
@@ -61,16 +61,6 @@ showToc: false
       <div>
         <span class="name">LINUX TUTORIAL</span>
         <div class="description">📚 linux-tutorial 是一个 Linux 教程</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://zhangzhiwei-zzw.github.io/ROS2%E5%AD%A6%E4%B9%A0/ROS2/" target="_blank">
-      <img src="https://cdn.jsdelivr.net/gh/sun0225SUN/sun0225SUN/assets/images/coding.gif" alt="icon">
-      <div>
-        <span class="name">ROS2理论与实践</span>
-        <div class="description">快速上手ROS2，为后续进阶奠定基础</div>
       </div>
     </a>
   </div>
@@ -125,40 +115,19 @@ showToc: false
     </a>
   </div>
 
-  <div class="link-box">
-    <a class="link" href="https://github.com/youngyangyang04/TechCPP" target="_blank">
-      <img src="https://code-thinking-1253855093.file.myqcloud.com/pics/20210614201246512.png" alt="icon">
-      <div>
-        <span class="name">TechCPP</span>
-        <div class="description">C++面试&C++学习指南</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://github.com/mlabonne/llm-course" target="_blank">
-      <img src="https://avatars.githubusercontent.com/u/81252890?v=4" alt="icon">
-      <div>
-        <span class="name">llm-course</span>
-        <div class="description">Course to get into LLMs with roadmaps</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://www.openbmb.cn/" target="_blank">
-      <img src="https://www.openbmb.cn/openbmb/img/head_logo.e9d9f3f.png" alt="icon">
-      <div>
-        <span class="name">OpenBMB</span>
-        <div class="description">让大模型飞入千家万户</div>
-      </div>
-    </a>
-  </div>
   <!-- more -->
+
 </div>
 
 ### ToDo
-- [大语言模型(LLM)入门学习路线图，这可能会是你见过最全的大模型学习路线](https://blog.csdn.net/2401_84494441/article/details/143867081)
+- [大语言模型(LLM)入门学习路线图](https://blog.csdn.net/2401_84494441/article/details/143867081)
+- [ROS2的学习经验](https://blog.csdn.net/qq_64079631/article/details/133621574)
+- [硕士研究生阶段如何学习slam机器人？](https://www.zhihu.com/question/396119527)
+- [huihut/interview: 📚 C/C++ 技术面试基础知识总结.](https://github.com/huihut/interview)
+  - [youngyangyang04/TechCPP: 【C++面试&C++学习指南】](https://github.com/youngyangyang04/TechCPP)
+  - [CodeTop 面试题目总结](https://codetop.cc/home)
+
+
 
 <style>
   .links-container {

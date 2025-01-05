@@ -23,7 +23,10 @@ TocOpen: true
 comments: true
 ---
 
-> 来自[ROS2理论与实践](https://www.bilibili.com/video/BV1VB4y137ys/?spm_id_from=333.337.search-card.all.click)。事实上，作者也学习过ROS1，但由于工作需求、未来发展等原因，遂从头学起ROS2，理论方面ROS1和ROS2区别不大，但ROS2面向对象编程，而ROS1面向过程，ROS1选手可访问[biglonglong/ROS1demo: Some demos for ROS1 basic operation](https://github.com/biglonglong/ROS1demo)。
+## 在开始之前\.\.\.
+
+来自[ROS2理论与实践](https://m.bilibili.com/video/BV1VB4y137ys) | [ROS2讲义](https://www.bilibili.com/read/readlist/rl752994?spm_id_from=333.1369.opus.module_collection.click)。事实上，作者也学习过ROS1，但由于工作需求、未来发展等原因，遂从头学起ROS2，理论方面ROS1和ROS2区别不大，但ROS2面向对象编程，而ROS1面向过程，ROS1选手可参考[biglonglong/ROS1demo: Some demos for ROS1 basic operation](https://github.com/biglonglong/ROS1demo)。
+
 
 ## 文件系统
 
@@ -1943,12 +1946,6 @@ int main(int argc, char * argv[]) {
   - [ROS Index](https://index.ros.org/)
 - [Questions - ROS Answers](https://answers.ros.org/questions/)
 - [ROS Discourse](https://discourse.ros.org/)
-
-
-
-
-
-
 
 
 

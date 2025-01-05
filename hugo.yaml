@@ -66,7 +66,7 @@ params:
   keywords: [Blog, Journal, Code]
   description: "Personal Site about Note, Journal, and Code"
   author: biglonglong # author: ["Me", "You"] # multiple authors
-  images: ["images/thumbnail.png"]
+  images: ["image/thumbnail.png"]
 
   defaultTheme: dark # dark, light
   disableThemeToggle: false

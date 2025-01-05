@@ -36,9 +36,7 @@ comments: true
     - 反向传播（back propagation）：LOSS(Mean-squared-error,Cross-entropy)' gradient chain
     - 学习率（learning rate）： $ \textbf{w|b}$ updated by $\alpha \Delta \textbf{w|b}$
 
-
-
-## Word2Vec
+### Word2Vec
 
 使用滑动窗口上下文，将词汇经过神经网络映射到连续向量空间，包含词相似度和词之间的关系
 
@@ -46,9 +44,9 @@ comments: true
 - Sub-sampling：平衡常见词和罕见词的采样概率
 - soft sliding window：提高泛化能力
 
-![Word2Vec](./img/Word2Vec.png)
+![Word2Vec](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/Word2Vec.png)
 
-## simpleRNN
+### simpleRNN
 
 处理序列数据，通过循环连接允许信息在序列的各个时间步之间传递，每个时间步的输出取决于当前时刻的输入和上一时刻的隐藏状态，这种隐藏状态包含了上文信息
 
@@ -56,41 +54,41 @@ comments: true
 - gradient vanish or explode：接受了太长时间步的信息
 - no parallel：序列计算方式，训练较慢
 
-![simpleRNN](./img/simpleRNN.png)
+![simpleRNN](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/simpleRNN.png)
 
-## LSTM
+### LSTM
 
 门控RNN结构，遗忘门（forget gate to）淡化过去的时间步信息，输入门（input gate）得到当前时间步信息，输出门（output gate）激活当前时间步信息，解决了梯度问题
 
-![LSTM](./img/LSTM.png)
+![LSTM](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/LSTM.png)
 
-## GRU
+### GRU
 
 门控RNN结构，重置门$r_t$（reset gate）用于激活过去的时间步信息，更新门$z_t$（update gate）用于平衡过去和当前时间步信息的权重，解决了梯度问题，降低了结构复杂性
 
-![GRU](./img/GRU.png)
+![GRU](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/GRU.png)
 
-## Bid RNN
+### Bid RNN
 
 考虑当前时间步下上文和下文的信息
 
-![Bid_RNNs](./img/Bid_RNNs.png)
+![Bid_RNNs](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/Bid_RNNs.png)
 
-## CNN
+### CNN
 
 通过卷积操作获取局部信息
 
-![CNN](./img/CNN.png)
+![CNN](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/CNN.png)
 
-## Attention
+### Attention
 
 动态分配不同时间步的权重以突出重要时间步信息，解决了信息瓶颈、梯度消失、可解释性问题
 
 - Scores：e = $s^TWh_i$、$v^Ttanh(W_1h_i + W_2s)$
 
-![Attention](./img/Attention.png)
+![Attention](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/Attention.png)
 
-## Transformer
+### Transformer
 
 ，解决了并行计算的问题，但模型复杂、超参敏感、优化困难
 
@@ -102,9 +100,9 @@ comments: true
   - …
 - Output：linear -> softmax -> corss entropy
 
-![Transformer](./img/Transformer.png)
+![Transformer](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/Transformer.png)
 
-## PLM
+### PLM
 
 迁移学习范式(transfer learning)：Model Based(Large -scale Unlabeled Data) -> Model Fine-tuning(Task-specific Training Data) -> Final Model(Data)
 
@@ -147,7 +145,7 @@ comments: true
 > trainer.evaluate()
 > ```
 
-### Prompt learning
+#### Prompt learning
 
 不再微调模型的结构和参数（困难），只是“无脑”地堆叠体量，这样的模型居然能够根据输入的Prompt(Input + Template )产生特定任务的模型调整，这一点着实迷惑，但确实体现了这是“机器智能”的雏形。
 
@@ -157,10 +155,16 @@ Prompt构造也是比较玄学的，目前也在探索研究中！下面几点�
 - Template：为了引导模型生成所需的输出而设计的输入格式或结构，这些模板可以帮助模型更好地理解任务要求，并生成更准确和相关的结果，包括约束、结构化、embedding预测等
 - Verbalizer：将模型输出的标签映射到自然语言词汇，如知识扩充
 
-### Delta Tuning
+#### Delta Tuning
 
 微调模型的一小部分
 
 - Addition-based：在模型中添加一些小模型结构，训练过程中仅改变这部分参数；或者在隐层中添加一些soft token
 - Specification-based：只微调模型参数中的特定部分，如bias
 - Reparameterization-based：参数降维
+
+
+
+## 参考文献
+
+- [OpenBMB - 让大模型飞入千家万户](https://www.openbmb.cn/community/course)

@@ -48,8 +48,6 @@ git push origin main
     - wiki config：检查PaperMod的wiki
 - content
     - about：补充about menu内容
-    - Drafts：整理drafts文章发布
-        - know - ROS2 Demo
+    - Drafts：
         - know - AI alchemical Tips
-    - To be archived
-        - 机器人学 矩阵论 旋转平移变换
+        - know - Math Base
