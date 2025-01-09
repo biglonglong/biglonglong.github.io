@@ -3,14 +3,14 @@ draft: false
 
 title: "ROS2 Demo"
 description: "机器人开发套件 ROS2 的理论与实践"
-date: 2024-12-13
+date: 2024-01-06
 author: ["biglonglong"]
 
 tags: ["summary", "ros2", "cpp", "python"]
 summary: ""
 
 math: false
-weight:
+weight: 2
 cover:
     image: ""
     caption: ""
@@ -25,46 +25,45 @@ comments: true
 
 ## 在开始之前\.\.\.
 
-来自[ROS2理论与实践](https://m.bilibili.com/video/BV1VB4y137ys) | [ROS2讲义](https://www.bilibili.com/read/readlist/rl752994?spm_id_from=333.1369.opus.module_collection.click)。事实上，作者也学习过ROS1，但由于工作需求、未来发展等原因，遂从头学起ROS2，理论方面ROS1和ROS2区别不大，但ROS2面向对象编程，而ROS1面向过程，ROS1选手可参考[biglonglong/ROS1demo: Some demos for ROS1 basic operation](https://github.com/biglonglong/ROS1demo)。
-
-
-## 文件系统
-
-```txt
-WorkSpace --- 自定义的工作空间。
-    |--- build：存储中间文件的目录，该目录下会为每一个功能包创建一个单独子目录。
-    |--- install：安装目录，该目录下会为每一个功能包创建一个单独子目录。
-    |--- log：日志目录，用于存储日志文件。
-    |--- src：用于存储功能包源码的目录。
-        |-- C++功能包
-            |-- package.xml：包信息，比如:包名、版本、作者、依赖项。
-            |-- CMakeLists.txt：配置编译规则，比如源文件、依赖项、目标文件。
-            |-- src：C++源文件目录。
-            |-- include：头文件目录。
-            |-- msg：消息接口文件目录。
-            |-- srv：服务接口文件目录。
-            |-- action：动作接口文件目录。
-        |-- Python功能包
-            |-- package.xml：包信息，比如:包名、版本、作者、依赖项。
-            |-- setup.py：与C++功能包的CMakeLists.txt类似。
-            |-- setup.cfg：功能包基本配置文件。
-            |-- resource：资源目录。
-            |-- test：存储测试相关文件。
-            |-- 功能包同名目录：Python源文件目录。
-		  --------------------------------------------
-		  |-- C++或Python功能包
-            |-- launch：存储launch文件。
-            |-- rviz：存储rviz2配置相关文件。
-            |-- urdf：存储机器人建模文件。
-            |-- params：存储参数文件。
-            |-- world：存储仿真环境相关文件。
-            |-- map：存储导航所需地图文件。
-            |-- ......
-```
+来自[ROS2理论与实践](https://m.bilibili.com/video/BV1VB4y137ys) | [ROS2讲义](https://www.zhihu.com/people/41-69-11-75-42/posts)。事实上，作者也学习过ROS1，但由于工作需求、未来发展等原因，遂从头学起ROS2，理论方面ROS1和ROS2区别不大，但ROS2面向对象编程，而ROS1面向过程，ROS1选手可参考[biglonglong/ROS1demo: Some demos for ROS1 basic operation](https://github.com/biglonglong/ROS1demo)。
 
 
 
 ## 流程
+
+0. 文件系统
+
+   ```txt
+   WorkSpace --- 自定义的工作空间。
+       |--- build：存储中间文件的目录，该目录下会为每一个功能包创建一个单独子目录。
+       |--- install：安装目录，该目录下会为每一个功能包创建一个单独子目录。
+       |--- log：日志目录，用于存储日志文件。
+       |--- src：用于存储功能包源码的目录。
+           |-- C++功能包
+               |-- package.xml：包信息，比如:包名、版本、作者、依赖项。
+               |-- CMakeLists.txt：配置编译规则，比如源文件、依赖项、目标文件。
+               |-- src：C++源文件目录。
+               |-- include：头文件目录。
+               |-- msg：消息接口文件目录。
+               |-- srv：服务接口文件目录。
+               |-- action：动作接口文件目录。
+           |-- Python功能包
+               |-- package.xml：包信息，比如:包名、版本、作者、依赖项。
+               |-- setup.py：与C++功能包的CMakeLists.txt类似。
+               |-- setup.cfg：功能包基本配置文件。
+               |-- resource：资源目录。
+               |-- test：存储测试相关文件。
+               |-- 功能包同名目录：Python源文件目录。
+   		  --------------------------------------------
+   		  |-- C++或Python功能包
+               |-- launch：存储launch文件。
+               |-- rviz：存储rviz2配置相关文件。
+               |-- urdf：存储机器人建模文件。
+               |-- params：存储参数文件。
+               |-- world：存储仿真环境相关文件。
+               |-- map：存储导航所需地图文件。
+               |-- ......
+   ```
 
 1. 创建工作空间
 
@@ -75,7 +74,7 @@ WorkSpace --- 自定义的工作空间。
    # build、install、log、src belong to [workspace_name]
    ```
 
-2. 创建功能包
+2. 创建功能包，功能包下创建launch、rviz、urdf、meshes等目录
 
    ```bash
    cd [workspace_name]/src
@@ -102,10 +101,17 @@ WorkSpace --- 自定义的工作空间。
      ```xml
      <!---添加所需依赖--->
      <depend>rclcpp</depend>
+     
+     <!---仿真所需依赖--->
+     <exec_depend>rviz2</exec_depend>
+     <exec_depend>xacro</exec_depend>
+     <exec_depend>robot_state_publisher</exec_depend>
+     <exec_depend>joint_state_publisher</exec_depend>
+     <exec_depend>ros2launch</exec_depend>
      ```
-
+     
      - cpp修改`CMakeLists.txt`：例如
-
+     
      
      ```txt
      # 引入外部依赖包
@@ -121,6 +127,12 @@ WorkSpace --- 自定义的工作空间。
      # 定义安装规则
      install(TARGETS [program_name]
        DESTINATION lib/${PROJECT_NAME})
+     
+     # 安装launch、rviz、urdf、meshes、worlds、maps、config等目录
+     install(
+       DIRECTORY launch rviz urdf meshes worlds maps confi
+       DESTINATION share/${PROJECT_NAME}  
+     )
      ```
      
      - py修改`setup.py`，例如
@@ -128,6 +140,10 @@ WorkSpace --- 自定义的工作空间。
      
      ```py
      entry_points={
+         data_files=[
+             # 安装launch目录
+             ('share/' + package_name, glob("launch/*.launch.py")),
+         ]
          'console_scripts': [
              # 映射源文件与可执行文件
              '[program_name] = [package_name].[program_name]:main'
@@ -150,46 +166,8 @@ WorkSpace --- 自定义的工作空间。
 
 通信对象的构建依赖于**节点**，每个节点对应某单一**功能模块**，单个**可执行文件**可以包含多个节点，具有相同**话题**的节点可以关联**通信**
 
-### 模板
-
 > bug：检查cpp、py、package.xml、CMakeLists.txt、`colcon build`、`source ./install/setup.bash`
 >
-
-```cpp
-#include "rclcpp/rclcpp.hpp"
-
-class MyNode: public rclcpp::Node{
-public:
-    MyNode():Node("node_name"){
-        RCLCPP_INFO(this->get_logger(),"demo print");
-    }
-
-};
-int main(int argc, char *argv[]) {
-    // init Context()
-    rclcpp::init(argc,argv);
-    auto node = std::make_shared<MyNode>();
-    // free Context()
-    rclcpp::shutdown();
-    return 0;
-}
-```
-
-```python
-import rclpy
-from rclpy.node import Node
-
-class MyNode(Node):
-    def __init__(self):
-        super().__init__("node_name")
-        self.get_logger().info("demo print")
-def main():
-    # init Context()
-    rclpy.init()
-    node = MyNode() 
-    # free Context()
-    rclpy.shutdown()
-```
 
 ### 话题
 
@@ -231,8 +209,11 @@ class PublishClass : public rclcpp::Node {
 };
 
 int main(int argc, char * argv[]) {
+    // init Context()
     rclcpp::init(argc, argv);
+    // generate Node object()
     rclcpp::spin(std::make_shared<PublishClass>());
+    // free Context()
     rclcpp::shutdown();
     return 0;
 }
@@ -498,6 +479,7 @@ int64 num
 int64 sum
 ---
 float64 progress
+# modify package.xml & CamkeLists.txt...
 ```
 
 ```cpp
@@ -1179,43 +1161,41 @@ record   录制 bag 文件数据；
 reindex  重建 bag 的元数据文件。
 ```
 
-> 源代码录制和回放 – >
-> 
 > ```cpp
 > #include "rclcpp/rclcpp.hpp"
 > #include "rosbag2_cpp/writer.hpp"
 > #include "geometry_msgs/msg/twist.hpp"
 > class BagRecorder : public rclcpp::Node {
 > public:
->       BagRecorder() : Node("bag_recorder") {
->            writer_ = std::make_unique<rosbag2_cpp::Writer>();
+>    BagRecorder() : Node("bag_recorder") {
+>         writer_ = std::make_unique<rosbag2_cpp::Writer>();
 >            writer_->open("my_bag");
 >            subscription_ = create_subscription<geometry_msgs::msg::Twist>(
 >            "/turtle1/cmd_vel", 10, std::bind(&BagRecorder::topic_callback, this, _1));
 >       }
-> private:
+>    private:
 >     void topic_callback(std::shared_ptr<rclcpp::SerializedMessage> msg) const {
->           rclcpp::Time time_stamp = this->now();
+>        rclcpp::Time time_stamp = this->now();
 >           writer_->write(msg, "/turtle1/cmd_vel", "geometry_msgs/msg/Twist", time_stamp);
 >        }
 >        rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr subscription_;
 >       std::unique_ptr<rosbag2_cpp::Writer> writer_;
-> };
->   
->   int main(int argc, char * argv[]) {
->     rclcpp::init(argc, argv);
->     rclcpp::spin(std::make_shared<BagRecorder>());
+>    };
+>    
+> int main(int argc, char * argv[]) {
+>    rclcpp::init(argc, argv);
+>    rclcpp::spin(std::make_shared<BagRecorder>());
 >     rclcpp::shutdown();
 >       return 0;
->   }
->   ----------------------------------------------------------------------
+>    }
+>    ----------------------------------------------------------------------
 >   #include "rclcpp/rclcpp.hpp"
-> #include "rosbag2_cpp/reader.hpp"
-> #include "geometry_msgs/msg/twist.hpp"
+>   #include "rosbag2_cpp/reader.hpp"
+>   #include "geometry_msgs/msg/twist.hpp"
 > class BagPlayer : public rclcpp::Node {
 > public:
->     BagPlayer() : Node("bag_player") {
->         reader_ = std::make_unique<rosbag2_cpp::Reader>();
+>  BagPlayer() : Node("bag_player") {
+>      reader_ = std::make_unique<rosbag2_cpp::Reader>();
 >         reader_->open("my_bag");
 >            while (reader_->has_next()) {
 >             geometry_msgs::msg::Twist twist = reader_->read_next<geometry_msgs::msg::Twist>();
@@ -1226,9 +1206,9 @@ reindex  重建 bag 的元数据文件。
 >    private:
 >     	std::unique_ptr<rosbag2_cpp::Reader> reader_;
 >    };
-> 
+>    
 >    int main(int argc, char const *argv[]) {
->     rclcpp::init(argc,argv);
+>  rclcpp::init(argc,argv);
 >     rclcpp::spin(std::make_shared<BagPlayer>());
 >     rclcpp::shutdown();
 >        return 0;
@@ -1238,14 +1218,17 @@ reindex  重建 bag 的元数据文件。
 ### 图形化
 
 1. rqt：具有与ros2命令相同作用的图形化工具
-2. rviz2：通信数据的可视化工具
-3. gazebo：环境仿真
+
+2. rviz2：通信消息可视化
+
+   ```bash
+   ros2 run rviz2 rviz2 -d [config]
+   ```
 
 ### launch
 
-批量运行节点，编辑后记得配置 CMakeLists.txt或setup.py……
-
 ```python
+# 批量运行节点
 from launch import LaunchDescription
 from launch_ros.actions import Node
 # 获取功能包下share目录路径-------
@@ -1360,61 +1343,14 @@ def generate_launch_description():
 >
 > 一些先进功能包：NAV2、OpenCV、MoveIt、Autoware、PX4、microROS…
 
-### 分布式
-
-以DDS域ID机制划分通信网络，实现主机间通信策略；默认域ID为0，只要**保证在同一网络中**即可实现分布式通信
-
-```bash
-# 将节点划分到域6，该节点不可与其他域节点通信
-export ROS_DOMAIN_ID=6
-# 0<= ROS_DOMAIN_ID <= 101, 每个域ID内节点数要求<=120(域101内节点数要求<=54)
-```
-
-### 时间API
-
-- `Rate`：创建频率，常用于设置while频率
-- `Time`：创建时间戳，常用于控制时间的功能
-- `Duration`：创建时间差，多用于计算时间戳
-
-### 元功能包
-
-打包多个功能包为一个虚包，里面没有实质性内容，但依赖于被打包的功能包，用于方便用户安装。
-
-```bash
-# 创建一个空包
-ros2 pkg create metadata_pkg
-```
-
-```xml
-<!--- 修改 package.xml 文件，添加执行时所依赖的包 --->
-<?xml version="1.0"?>
-<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
-<package format="3">
-  <name>metadata</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="longlong@todo.todo">longlong</maintainer>
-  <license>TODO: License declaration</license>
-
-  <buildtool_depend>ament_cmake</buildtool_depend>
-
-   <!--- 添加执行时所依赖的包名 --->
-  <exec_depend>base_interface</exec_depend>
-
-  <export>
-    <build_type>ament_cmake</build_type>
-  </export>
-</package>
-```
-
 ### 重名问题
 
-设备 -> 工作空间 -> 功能包 -> 节点 -> 话题，都可能存在重名；下面介绍如何使用命令和源文件解决，[launch](# launch)部分也介绍了如何解决重名问题
+设备 -> 工作空间 -> 功能包 -> 节点 -> 话题，都可能存在重名；下面使用命令和源码解决，[launch](# launch)部分也介绍了如何解决重名问题
 
 #### 功能包重名
 
 - 同一工作空间下不允许功能包重名
-- 不同工作空间下功能包重名会产生功能包覆盖，这与`~/.bashrc`中不同工作空间的`setup.bash`文件的加载顺序有关，先加载会被覆盖（ROS自带功能包优先加载）
+- 不同工作空间下功能包重名会产生功能包覆盖，这与`~/.bashrc`中不同工作空间的`setup.bash`文件的加载顺序有关，先加载会被覆盖（ROS自带功能包优先加载易被覆盖）
 - 在实际工作中，要求避免功能包重名
 
 #### 节点重名
@@ -1429,27 +1365,26 @@ ros2 pkg create metadata_pkg
     ros2 run [package_name] [program_name] --ros-args --remap __name:=[new_node_name]
     ```
 
-    ```cpp
+    ```code
+    // cpp
     Node (const std::string &node_name,...)
-    ```
-
-    ```python
+    # python
     Node(node_name,...)
     ```
-
+  
   - 命名空间，如`/namespace1`
-
+  
     ```bash
     ros2 run [package_name] [program_name] --ros-args --remap __ns:=[namespace]
     ```
-
-    ```cpp
+  
+    ```code
+    // cpp
     Node (const std::string &node_name, const std::string &namespace_, const NodeOptions &options=NodeOptions())
-    ```
-
-    ```python
+    # python
     Node(node_name, namespace=None,...)
     ```
+    
 
 #### 话题重名
 
@@ -1514,8 +1449,15 @@ point:
 
 1. `tf2_ros`
    1. static_transform_publisher：该节点用于广播静态坐标变换；
+   
+      ```bash
+      ros2 run tf2_ros static_transform_publisher --x [x] --y [y] --z [z] --yaw [yaw] --pitch [pitch] --roll [roll] --frame-id [frame_id] --child-frame-id [child_frame_id]
+      ```
+   
    2. tf2_monitor：该节点用于打印所有或特定坐标系的发布频率与网络延迟；
+   
    3. tf2_echo：该节点用于打印特定坐标系的平移旋转关系。
+   
 2. `tf2_tools`
    1. view_frames：该节点可以生成显示坐标系关系的 pdf 文件，该文件包含树形结构的坐标系图谱。
 
@@ -1619,12 +1561,6 @@ def main():
 if __name__ == '__main__':
     main()
 ```
-
-> 命令静态广播 – > 
->
-> ```bash
-> ros2 run tf2_ros static_transform_publisher --x [x] --y [y] --z [z] --yaw [yaw] --pitch [pitch] --roll [roll] --frame-id [frame_id] --child-frame-id [child_frame_id]
-> ```
 
 #### 动态tf广播
 
@@ -1938,6 +1874,39 @@ int main(int argc, char * argv[]) {
 }
 ```
 
+### turtlebot3
+
+```bash
+# Start
+sudo apt install ros-humble-gazebo-*
+sudo apt install ros-humble-cartographer
+sudo apt install ros-humble-cartographer-ros
+sudo apt install ros-humble-navigation2
+sudo apt install ros-humble-nav2-bringup
+sudo apt install ros-humble-turtlebot3*
+sudo apt install ros-humble-teleop-twist-keyboard
+```
+
+```bash
+# Demo
+export TURTLEBOT3_MODEL=[burger|waffle|waffle_pi]
+source /usr/share/gazebo/setup.sh
+ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
+ros2 run turtlebot3_teleop teleop_keyboard || ros2 run turtlebot3_gazebo turtlebot3_drive
+```
+
+```bash
+# Rviz
+ros2 launch turtlebot3_fake_node turtlebot3_fake_node.launch.py ||ros2 launch turtlebot3_bringup rviz2.launch.py
+```
+
+```bash
+# Map Nav
+ros2 launch turtlebot3_cartographer cartographer.launch.py use_sim_time:=true
+ros2 run nav2_map_server map_saver_cli -f ./maps/map
+ros2 launch turtlebot3_navigation2 navigation2.launch.py use_sim_time:=true map:=./maps/map.yaml
+```
+
 
 
 ## 社区
@@ -1947,109 +1916,55 @@ int main(int argc, char * argv[]) {
 - [Questions - ROS Answers](https://answers.ros.org/questions/)
 - [ROS Discourse](https://discourse.ros.org/)
 
-
-
-## 业务分析
-
-- 节点分析
-- 话题分析
-- 网络分析
-
-### URDF
-
-- rviz2 载入 urdf
-
-```python
-from launch import LaunchDescription
-from launch_ros.actions import Node
-import os
-from ament_index_python.packages import get_package_share_directory
-from launch_ros.parameter_descriptions import ParameterValue
-from launch.substitutions import Command,LaunchConfiguration
-from launch.actions import DeclareLaunchArgument
-
-#示例： ros2 launch cpp06_urdf display.launch.py model:=`ros2 pkg prefix --share cpp06_urdf`/urdf/urdf/demo01_helloworld.urdf
-def generate_launch_description():
-
-    cpp06_urdf_dir = get_package_share_directory("cpp06_urdf")
-    default_model_path = os.path.join(cpp06_urdf_dir,"urdf/urdf","demo01_helloworld.urdf")
-    default_rviz_path = os.path.join(cpp06_urdf_dir,"rviz","display.rviz")
-    model = DeclareLaunchArgument(name="model", default_value=default_model_path)
-
-    # 加载机器人模型
-    # 1.启动 robot_state_publisher 节点并以参数方式加载 urdf 文件
-    robot_description = ParameterValue(Command(["xacro ",LaunchConfiguration("model")]))
-    robot_state_publisher = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        parameters=[{"robot_description": robot_description}]
-    )
-    # 2.启动 joint_state_publisher 节点发布非固定关节状态
-    joint_state_publisher = Node(
-        package="joint_state_publisher",
-        executable="joint_state_publisher"
-    )
-    # rviz2 节点
-    rviz2 = Node(
-        package="rviz2",
-        executable="rviz2"
-        # arguments=["-d", default_rviz_path]
-    )
-    return LaunchDescription([
-        model,
-        robot_state_publisher,
-        joint_state_publisher,
-        rviz2
-    ])
-```
+业务关注三个分析：节点、话题、网络
 
 
 
-### turtlebot3
+## 其他
 
-#### Start
+### 时间API
+
+- `Rate`：创建频率，常用于设置while频率
+- `Time`：创建时间戳，常用于控制时间的功能
+- `Duration`：创建时间差，多用于计算时间戳
+
+### 分布式
+
+以DDS域ID机制划分通信网络，实现主机间通信策略；默认域ID为0，只要**保证在同一网络中**即可实现分布式通信
 
 ```bash
-sudo apt install ros-humble-turtlebot3
-sudo apt install ros-humble-turtlebot3-simulations
+# 将节点划分到域6，该节点不可与其他域节点通信
+export ROS_DOMAIN_ID=6
+# 0<= ROS_DOMAIN_ID <= 101, 每个域ID内节点数要求<=120(域101内节点数要求<=54)
 ```
 
-#### Demo
+### 元功能包
+
+打包多个功能包为一个虚包，里面没有实质性内容，但依赖于被打包的功能包，用于方便用户安装。
 
 ```bash
-export TURTLEBOT3_MODEL=[burger|waffle|waffle_pi]
-source /usr/share/gazebo/setup.sh
-ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
-ros2 run turtlebot3_teleop teleop_keyboard
-	ros2 run turtlebot3_gazebo turtlebot3_drive
+# 创建一个空包
+ros2 pkg create metadata_pkg
 ```
 
-#### Rviz
+```xml
+<!--- 修改 package.xml 文件，添加执行时所依赖的包 --->
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>metadata</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
+  <maintainer email="longlong@todo.todo">longlong</maintainer>
+  <license>TODO: License declaration</license>
 
-```bash
-ros2 launch turtlebot3_fake_node turtlebot3_fake_node.launch.py
-	ros2 launch turtlebot3_bringup rviz2.launch.py
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+   <!--- 添加执行时所依赖的包名 --->
+  <exec_depend>base_interface</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
 ```
-
-#### Map Nav
-
-```bash
-ros2 launch turtlebot3_cartographer cartographer.launch.py use_sim_time:=true
-ros2 run nav2_map_server map_saver_cli -f ./maps/map
-ros2 launch turtlebot3_navigation2 navigation2.launch.py use_sim_time:=true map:=./maps/map.yaml
-```
-
-
-
-
-
-![](http://www.autolabor.com.cn/book/ROSTutorials/assets/02_%E5%AF%BC%E8%88%AA%E5%AE%98%E6%96%B9%E6%9E%B6%E6%9E%84.png)
-
--  `cartographer`：a 2D SLAM；build a **map** of the environment and simultaneously estimates the platform’s 2D **pose**. The localization is based on a **laser scan** and the **odometry** of the robot.
-
-  ![](https://ros2-industrial-workshop.readthedocs.io/en/latest/_images/high_level_system_overview.png)
-
-- `navigataion`：a control system that enables a robot to autonomously reach a goal state；Given a current **pose**, a **map**, and a **goal**, the navigation system generates a **plan** to reach the goal, and outputs commands to autonomously **drive** the robot.
-
-  ![](https://ros2-industrial-workshop.readthedocs.io/en/latest/_images/navigation_overview.png)
-

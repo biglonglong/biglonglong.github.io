@@ -91,7 +91,7 @@ params:
   hidemeta: false
   
   # head
-  ShowBreadCrumbs: false
+  ShowBreadCrumbs: true
   DateFormat: "January 2, 2006"
   buildDate: "2024-11-25"
   ShowReadingTime: true
