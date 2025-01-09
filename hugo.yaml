@@ -26,6 +26,10 @@ languages:
         imageWidth: 275
         imageHeight: 275
         buttons:
+        - name: Know 
+          url: "/home/posts/know"
+        - name: Journal
+          url: "/home/posts/journal"
          
       homeInfoParams:
         Title:
@@ -68,7 +72,7 @@ params:
   author: biglonglong # author: ["Me", "You"] # multiple authors
   images: ["image/thumbnail.png"]
 
-  defaultTheme: dark # dark, light
+  defaultTheme: auto # dark, light
   disableThemeToggle: false
   disableSearch: false
   
@@ -106,9 +110,20 @@ params:
   ShowCodeCopyButtons: true
 
   # comment
-  comments: false
-  twikoo:
-      version: 1.4.11
+  comments: true
+  giscus:
+    repo: "biglonglong/biglonglong.github.io"
+    repoId: "R_kgDONcOJEA"
+    category: "Announcements"
+    categoryId: "DIC_kwDONcOJEM4Cl4UA"
+    mapping: "pathname"
+    strict: "0"
+    reactionsEnabled: "1"
+    emitMetadata: "0"
+    inputPosition: "top"
+    lightTheme: "light"
+    darkTheme: "noborder_gray"
+    lang: "zh-CN"
 
   # footer
   hideFooter: false
@@ -119,9 +134,7 @@ params:
   displayFullLangName: true
   disableSpecial1stPost: false
   ShowAllPagesInArchive: true
-  ShowPageNums: false
-  VisitCount: true
-  ShowLastMod: 
+  ShowPageNums: false 
   
   socialIcons:
     - name: email
@@ -149,9 +162,13 @@ params:
       minMatchCharLength: 0
       keys: ["title", "permalink", "summary", "content"]
 
-  # analytics:
-  #     google:
-  #         SiteVerificationTag: "XYZabc"
+  analytics:
+    google:
+      SiteVerificationTag: "XYZabc"
+    bing:
+      SiteVerificationTag: "XYZabc"
+    yandex:
+      SiteVerificationTag: "XYZabc"
     
   # cover:
   #     hidden: true # hide everywhere but not in structured data
