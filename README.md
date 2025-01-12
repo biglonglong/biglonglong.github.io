@@ -44,6 +44,7 @@ git push origin main
     - menu：series、archive时间轴
     - 404 redirect：404页面重定向到未知address
     - tags transplant：tags移植到posts page
+    - Search Console
 - content
     - about：补充about menu内容
     - Drafts：

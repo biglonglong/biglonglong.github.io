@@ -2,15 +2,15 @@
 draft: false
 
 title: "ROS2 Simulation"
-description: "完整工具链————从仿真到导航"
-date: 2024-01-09
+description: "ROS2 轮式机器人工具链—从仿真到导航"
+date: 2024-01-12
 author: ["biglonglong"]
 
 tags: ["summary", "ros2", "gazebo", "navigation"]
 summary: ""
 
 math: false
-weight: 1
+weight: 3
 cover:
     image: ""
     caption: ""
@@ -39,14 +39,17 @@ comments: true
 
 ## 建模与仿真
 
-通过这一节对机器人的建模与仿真，我们可以得到机器人结构关系、机器人控制以及传感器信息，
+通过这一节对机器人的建模与仿真，我们可以得到机器人结构tf、机器人控制与传感器信息
+
+rqt计算图如下：
 
 ![](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/robot_rosgraph.png)
 
-为之后 讨论如何根据机器人结构关系和传感器信息来控制机器人完成任务 做准备
+机器人部件tf_tree如下：
 
-### urdf：机器人建模
+![](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/robot_frames.png)
 
+一份urdf-gazebo-rviz的launch示例如下：
 
 ```python
 from launch import LaunchDescription
@@ -62,16 +65,15 @@ from launch.event_handlers import OnProcessExit
 from launch.actions import RegisterEventHandler
 
 def generate_launch_description():
-    default_package_dir = get_package_share_directory("urdfDemo")
-    default_rviz_path = os.path.join(default_package_dir,"rviz","config.rviz")
-    default_model_path = os.path.join(default_package_dir,"urdf/xacro","model.xacro")
-    default_world_path = os.path.join(default_package_dir,"worlds","room.world")
+    default_package_dir = get_package_share_directory("[package_name]")
+    default_rviz_path = os.path.join(default_package_dir,"rviz","[config].rviz")
+    default_model_path = os.path.join(default_package_dir,"urdf/xacro","[model].xacro")
+    default_world_path = os.path.join(default_package_dir,"worlds","[env].world")
 
     model = DeclareLaunchArgument(name="model", default_value=default_model_path)
     world = DeclareLaunchArgument(name="world", default_value=default_world_path)
     
-    # robot_state_publisher
-    robot_description = ParameterValue(Command(["xacro ",LaunchConfiguration("model")]), value_type=str)
+    robot_description = ParameterValue(Command(["xacro ",LaunchConfiguration("model")]))
     robot_state_publisher = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
@@ -106,7 +108,7 @@ def generate_launch_description():
     action_spawn_entity = Node(
         package="gazebo_ros",
         executable="spawn_entity.py",
-        arguments=["-topic", "/robot_description", "-entity", "model", ]
+        arguments=["-topic", "/robot_description", "-entity", "[model_name]", ]
     )
 
     action_load_joint_state_controller = ExecuteProcess(
@@ -142,15 +144,20 @@ def generate_launch_description():
         ),
         # rviz2,
     ])
-# 几个要注意的点：
-# - 可在~/.gazebo载入gazebo模型仿真
-# - robot_state_publisher发布机器人固定关节部件frame和静态tf，活动关节部件需要joint_state_publisher发布动态tf。然而，Gazebo中自发布joint_states，且活动关节需要配置，与joint_state_publisher冲突
-# - frame建议使用常用名称，因为功能包内部可能存在多处引用
 ```
 
 ```bash
-ros2 launch [package] display.launch.py model:=`ros2 pkg prefix --share [package]`/urdf/urdf/robot.urdf
+ros2 launch [package] [gazebo_sim].launch.py model:=`ros2 pkg prefix --share [package]`/urdf/urdf/[model].urdf
 ```
+
+几个要注意的点：
+
+- robot_state_publisher发布机器人固定关节部件的static tf，活动关节部件需要joint_state_publisher发布joint states对应dynamic tf。然而，Gazebo与joint_state_publisher冲突，其根据urdf-gazebo标签导入活动关节配置生成对应dynamic tf。
+- 可在~/.gazebo载入gazebo可加载模型用于仿真
+
+- 由于功能包内部可能存在多处base_frame_id，建议frame_id使用常用名称
+
+### urdf：机器人建模
 
 #### urdf
 
@@ -275,9 +282,10 @@ ros2 launch [package] display.launch.py model:=`ros2 pkg prefix --share [package
 #### xacro
 
 > - `xacro`：功能包，转化xacro文件为urdf文件
-> - collision：子标签，如果机器人link是标准的几何体形状，和link的 visual 属性设置一致即可
-> - inertial：子标签，惯性矩阵需结合link的质量与外形参数动态生成，标准球体、圆柱与立方体的惯性矩阵公式封装在inertialhead.xacro
-> - gazebo：子标签，配置gazebo颜色、摩擦、刚度系数等等，**添加各传感器的仿真插件**（具体见[gazebo：环境仿真](# gazebo：环境仿真)）
+
+- collision：link子标签，如果机器人link是标准的几何体形状，和link的 visual 属性设置一致即可
+- inertial：link子标签，惯性矩阵需结合link的质量与外形参数动态生成，标准球体、圆柱与立方体的惯性矩阵公式封装在inertialhead.xacro
+- gazebo：robot子标签，配置gazebo颜色、摩擦、刚度系数等等，**添加各传感器的仿真插件**（具体见[gazebo：环境仿真](# gazebo：环境仿真)），其需要reference到link
 
 ```xml
 <robot name="model" xmlns:xacro="http://wiki.ros.org/xacro">
@@ -286,10 +294,10 @@ ros2 launch [package] display.launch.py model:=`ros2 pkg prefix --share [package
     <xacro:include filename="camera.xacro" />
     <xacro:include filename="laser.xacro" />
 
-    <xacro:include filename="plugins/move.xacro" />
-    <!-- <xacro:gazebo_control_plugin  /> -->
     <xacro:include filename="ros2_control.xacro" /> 
     <xacro:robot_ros2_control />
+    <xacro:include filename="plugins/move.xacro" />
+    <!-- <xacro:gazebo_control_plugin  /> -->
     
     <xacro:include filename="plugins/laser.xacro" />
     <xacro:gazebo_laser_plugin />
@@ -793,7 +801,7 @@ ros2 launch [package] display.launch.py model:=`ros2 pkg prefix --share [package
 
 #### ros2_control
 
-一个控制器框架，封装了数据接口和控制器算法，用于硬件集成—**实体机器人的传感器与机器人tf**的配置。与上面的gazebo插件具有类似的作用，只是数据接口做了统一
+一个数据接口和控制器算法框架，用于硬件集成—**实体机器人的控制器与机器人tf**的配置。与上面的gazebo插件具有类似的作用，只是数据接口做了统一
 
 ![](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/robot_ros2_control.jpg)
 
@@ -880,7 +888,7 @@ controller_manager:
       type: effort_controllers/JointGroupEffortController
     robot_diff_drive_controller:
       type: diff_drive_controller/DiffDriveController
-    
+
 robot_effort_controller:
   ros__parameters:
     joints:
@@ -921,17 +929,13 @@ robot_diff_drive_controller:
     #velocity_rolling_window_size: 10
 ```
 
-仿真后tf
-
-![](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/robot_frames.png)
 
 
+如何根据机器人结构关系和传感器信息来控制机器人完成任务，包括SLAM和Navigation
 
 ## SLAM
 
-即时**定位**与**地图构建**，使机器人在未知环境中通过传感器（如激光雷达、摄像头、IMU、超声波传感器和GPS），进行数据采集、特征提取、数据关联、位置估计和地图更新，从而构建环境地图并确定自身位置
-
-- `map.yaml`，保存地图的配置：
+即时**定位**与**地图构建**，使机器人在未知环境中通过传感器（如激光雷达、摄像头、IMU、超声波传感器和GPS），进行数据采集、特征提取、数据关联、位置估计和地图更新，从而确定自身位置并构建环境地图—`map.yaml`，yaml内容如下：
 
 |                 | 单位为m                                               |
 | --------------- | ----------------------------------------------------- |
@@ -949,7 +953,7 @@ robot_diff_drive_controller:
 # 启动机器人仿真
 ros2 launch slam_toolbox online_async_launch.py use_sim_time:=true				# 建图
 ros2 run teleop_twist_keyboard teleop_twist_keyboard 							# 控制运动
-ros2 run nav2_map_server map_saver_cli -f map									# 保存地图
+ros2 run nav2_map_server map_saver_cli -f maps/map								# 保存地图
 ```
 
 - `cartographer`
@@ -960,15 +964,63 @@ ros2 run nav2_map_server map_saver_cli -f map									# 保存地图
 
 导航框架，基于SLAM、目标点、激光雷达和摄像头，提供**路径规划**、**路径跟踪**、**障碍物避**让和**恢复行为**等功能，使机器人能够在复杂环境中根据**目标点/路点/障碍物**实现自主导航
 
-- `Navagation 2`
+- `Navagation 2`：一个launch示例`nav2_bringup`
 
 ![](https://ros2-industrial-workshop.readthedocs.io/en/latest/_images/navigation_overview.png)
 
-**使用说明参考nav2_bringup**，下面给出其yaml配置
+一份nav2_bringup/bring_up.launch.py示例如下：
+
+```python
+# 启动机器人仿真
+from launch import LaunchDescription
+from launch_ros.actions import Node
+import os
+from ament_index_python.packages import get_package_share_directory
+from launch.substitutions import LaunchConfiguration
+from launch.actions import DeclareLaunchArgument,IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+
+def generate_launch_description():
+    default_package_dir = get_package_share_directory('[package_name]')
+    nav2_bringup_dir = get_package_share_directory('nav2_bringup')
+    default_rviz_path = os.path.join(nav2_bringup_dir,'rviz','nav2_default_view.rviz')
+    
+    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+    map_yaml_path = LaunchConfiguration('map', default=os.path.join(default_package_dir, 'maps', 'map.yaml'))
+    nav2_param_path = LaunchConfiguration('params_file', 
+                            default=os.path.join(default_package_dir, 'config', '[nav2_params].yaml'))
+
+    return LaunchDescription([
+        DeclareLaunchArgument('use_sim_time', default_value=use_sim_time,
+                                             description='Use simulation (Gazebo) clock if true'),
+        DeclareLaunchArgument('map', default_value=map_yaml_path,
+                                             description='Full path to map file to load'),
+        DeclareLaunchArgument('params_file', default_value=nav2_param_path,
+                                             description='Full path to param file to load'),
+
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [nav2_bringup_dir, '/launch', '/bringup_launch.py']),
+            launch_arguments={
+                'use_sim_time': use_sim_time,
+                'map': map_yaml_path,
+                'params_file': nav2_param_path}.items(),
+        ),
+
+        Node(
+            package='rviz2',
+            executable='rviz2',
+            arguments=['-d', default_rviz_path],
+            parameters=[{'use_sim_time': use_sim_time}],
+            output='screen'
+        ),
+    ])
+```
+
+`cp /opt/ros/humble/share/nav2_bringup/params/nav2_params.yaml src/robot_navigation/config/`
 
 ```bash
-# topic、frame、robot_radius、controller_server:FollowPath、costmap:inflation_radius、xy_goal_tolerance
-# cp /opt/ros/humble/share/nav2_bringup/params/nav2_params.yaml src/robot_navigation/config/
+# 关注topic、frame、robot_radius、controller_server:FollowPath、costmap:inflation_radius、xy_goal_tolerance
 amcl:
   ros__parameters:
     use_sim_time: True
@@ -1321,59 +1373,11 @@ velocity_smoother:
     velocity_timeout: 1.0
 ```
 
-下面给出nav2启动launch
+初始化位姿，nav2 包中amcl需要初始位姿估计才能运行，否则无法发布tf【map -> odom】
+
+`ros2 topic pub /initialpose geometry_msgs/msg/PoseWithCovarianceStamped "{header: {frame_id: map}}" --once`
 
 ```python
-# 启动机器人仿真
-from launch import LaunchDescription
-from launch_ros.actions import Node
-import os
-from ament_index_python.packages import get_package_share_directory
-from launch.substitutions import LaunchConfiguration
-from launch.actions import DeclareLaunchArgument,IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-
-def generate_launch_description():
-    default_package_dir = get_package_share_directory('robot_navigation')
-    nav2_bringup_dir = get_package_share_directory('nav2_bringup')
-    default_rviz_path = os.path.join(nav2_bringup_dir,'rviz','nav2_default_view.rviz')
-    
-    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-    map_yaml_path = LaunchConfiguration('map', default=os.path.join(default_package_dir, 'maps', 'map.yaml'))
-    nav2_param_path = LaunchConfiguration('params_file', 
-                            default=os.path.join(default_package_dir, 'config', 'nav2_params.yaml'))
-
-    return LaunchDescription([
-        DeclareLaunchArgument('use_sim_time', default_value=use_sim_time,
-                                             description='Use simulation (Gazebo) clock if true'),
-        DeclareLaunchArgument('map', default_value=map_yaml_path,
-                                             description='Full path to map file to load'),
-        DeclareLaunchArgument('params_file', default_value=nav2_param_path,
-                                             description='Full path to param file to load'),
-
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [nav2_bringup_dir, '/launch', '/bringup_launch.py']),
-            launch_arguments={
-                'use_sim_time': use_sim_time,
-                'map': map_yaml_path,
-                'params_file': nav2_param_path}.items(),
-        ),
-
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            arguments=['-d', default_rviz_path],
-            parameters=[{'use_sim_time': use_sim_time}],
-            output='screen'
-        ),
-    ])
-```
-
-初始化位姿（nav2 包中amcl需要初始位姿估计才能运行，否则无法发布tf【map -> odom】）
-
-```python
-# ros2 topic pub /initialpose geometry_msgs/msg/PoseWithCovarianceStamped "{header: {frame_id: map}}" --once
 from geometry_msgs.msg import PoseStamped
 from nav2_simple_commander.robot_navigator import BasicNavigator
 import rclpy
@@ -1438,8 +1442,9 @@ if __name__ == '__main__':
 
 动作通信发布目标点
 
+`ros2 action send_goal /navigate_to_pose nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: map}, pose: {position: {x: 2.0, y: 1.0}}}}" --feedback`
+
 ```python
-# ros2 action send_goal /navigate_to_pose nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: map}, pose: {position: {x: 2.0, y: 1.0}}}}" --feedback
 from geometry_msgs.msg import PoseStamped
 from nav2_simple_commander.robot_navigator import BasicNavigator
 import rclpy
@@ -1521,6 +1526,8 @@ if __name__ == '__main__':
 
 
 ## Demo
+
+yaml多点导航
 
 ```bash
 import rclpy
