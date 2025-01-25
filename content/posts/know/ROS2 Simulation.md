@@ -953,7 +953,7 @@ robot_diff_drive_controller:
 # 启动机器人仿真
 ros2 launch slam_toolbox online_async_launch.py use_sim_time:=true				# 建图
 ros2 run teleop_twist_keyboard teleop_twist_keyboard 							# 控制运动
-ros2 run nav2_map_server map_saver_cli -f maps/map								# 保存地图
+ros2 run nav2_map_server map_saver_cli -f ./maps/map								# 保存地图
 ```
 
 - `cartographer`

@@ -26,11 +26,11 @@ languages:
         imageWidth: 275
         imageHeight: 275
         buttons:
-        - name: Know 
+        - name: Tags
+          url: "/home/tags"
+        - name: Know
           url: "/home/posts/know"
-        - name: Journal
-          url: "/home/posts/journal"
-         
+
       homeInfoParams:
         Title:
         Content: >    
@@ -219,7 +219,7 @@ enableRobotsTXT: true
 redirects:
 - from: /**
   status: 404
-  to: ./404.html
+  to: /home/404.html
 
 ############################
 ## Social Media Embedding
