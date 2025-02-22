@@ -15,12 +15,23 @@ showToc: false
 ### Document
 
 <div class="links-container">
+
   <div class="link-box">
     <a class="link" href="https://www.xiaolincoding.com/" target="_blank">
       <img src="https://cdn.xiaolincoding.com/icon.webp" alt="icon">
       <div>
         <span class="name">小林coding</span>
         <div class="description">图解408，让天下没有难懂的八股文</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="link-box">
+    <a class="link" href="https://leetcode.cn/problemset/" target="_blank">
+      <img src="https://leetcode.com/static/images/LeetCode_Sharing.png" alt="icon">
+      <div>
+        <span class="name">LeetCode</span>
+        <div class="description">全球极客挚爱的技术成长平台</div>
       </div>
     </a>
   </div>
@@ -46,16 +57,6 @@ showToc: false
   </div>
 
   <div class="link-box">
-    <a class="link" href="https://leetcode.cn/problemset/" target="_blank">
-      <img src="https://leetcode.com/static/images/LeetCode_Sharing.png" alt="icon">
-      <div>
-        <span class="name">LeetCode</span>
-        <div class="description">全球极客挚爱的技术成长平台</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
     <a class="link" href="https://dunwu.github.io/linux-tutorial/" target="_blank">
       <img src="https://dunwu.github.io/linux-tutorial/images/dunwu-logo-100.png" alt="icon">
       <div>
@@ -65,67 +66,26 @@ showToc: false
     </a>
   </div>
 
-  <div class="link-box">
-    <a class="link" href="https://github.com/zhm-real/PathPlanning" target="_blank">
-      <img src="https://avatars.githubusercontent.com/u/64300713?v=4" alt="icon">
-      <div>
-        <span class="name">pathplanning</span>
-        <div class="description">path planning algor with animations</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://www.helloxiaobai.cn/" target="_blank">
-      <img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2Fad2ab0c3-eab8-46b6-8097-793d488a1c72%2F865c16ed-e79d-4ca3-9d7c-a470746d9276%2F%25E5%25BE%25AE%25E4%25BF%25A1%25E5%259B%25BE%25E7%2589%2587_20240813204701(1).png?table=collection&id=685149b2-7546-454e-a875-896a9543c819&t=685149b2-7546-454e-a875-896a9543c819&width=800&cache=v2" alt="icon">
-      <div>
-        <span class="name">小白说</span>
-        <div class="description">输出专业自动驾驶算法教程的开发者社区</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://github.com/BingqiangZhou/LearningOpenCV" target="_blank">
-      <img src="https://avatars.githubusercontent.com/u/34599703?v=4" alt="icon">
-      <div>
-        <span class="name">LearningOpenCV</span>
-        <div class="description">OpenCV学习笔记：C++，Python一起</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://www.huaxiaozhuan.com/" target="_blank">
-      <img src="https://avatars.githubusercontent.com/u/3395177?v=4" alt="icon">
-      <div>
-        <span class="name">AI工程师手册</span>
-        <div class="description">https://github.com/Ewenwan/MVision</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="link-box">
-    <a class="link" href="https://web.qianguyihao.com/" target="_blank">
-      <img src="https://img9.doubanio.com/icon/ul39415799-6.jpg" alt="icon">
-      <div>
-        <span class="name">千古前端图文</span>
-        <div class="description">超详细的 Web 前端入门到进阶知识库</div>
-      </div>
-    </a>
-  </div>
-
   <!-- more -->
 
 </div>
 
-### ToDo
+### Algorithm
+- [zhm-real/PathPlanning: Common used path planning algorithms with animations.](https://github.com/zhm-real/PathPlanning)
+- [🧙关于我们🧙 | 自动驾驶小白说](https://www.helloxiaobai.cn/about)
+- [AI算法工程师手册](https://www.huaxiaozhuan.com/)
+
+### Framework
+- [BingqiangZhou/LearningOpenCV: OpenCV学习笔记](https://github.com/BingqiangZhou/LearningOpenCV)
+- [前言 | 千古前端图文教程](https://web.qianguyihao.com/)
+
+### Study
 - [大语言模型(LLM)入门学习路线图](https://blog.csdn.net/2401_84494441/article/details/143867081)
 - [ROS2的学习经验](https://blog.csdn.net/qq_64079631/article/details/133621574)
-- [硕士研究生阶段如何学习slam机器人？](https://www.zhihu.com/question/396119527)
-- [huihut/interview: 📚 C/C++ 技术面试基础知识总结.](https://github.com/huihut/interview)
-  - [youngyangyang04/TechCPP: 【C++面试&C++学习指南】](https://github.com/youngyangyang04/TechCPP)
-  - [CodeTop 面试题目总结](https://codetop.cc/home)
+- [校招｜C++后台开发学习路线（已签腾讯sp，附学习资料） - 知乎](https://zhuanlan.zhihu.com/p/61457047)
+- [GitHub - applenob/Cpp\_Primer\_Practice: 搞定C++:punch:](https://github.com/applenob/Cpp_Primer_Practice)
+- [youngyangyang04/TechCPP: 【C++面试&C++学习指南】](https://github.com/youngyangyang04/TechCPP)
+- [huihut/interview: 📚 C/C++ 技术面试基础知识总结.](https://interview.huihut.com/#/)
 
 
 

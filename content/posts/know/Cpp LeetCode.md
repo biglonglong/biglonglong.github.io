@@ -31,7 +31,7 @@ comments: true
 
 ## 排序
 
-1. bubble_sort
+1. bubble sort
 
 ```cpp
 //逐个冒出当前最大值
@@ -513,7 +513,7 @@ void setZeroes(vector<vector<int>>& matrix) {
 
 ```cpp
 int rangeSum(vector<int>& vec, int i, int j) {
-    for(int i=0; i<vec.size(); i++) vec[i]+=vec[i-1];
+    for(int i=1; i<vec.size(); i++) vec[i]+=vec[i-1];
     if(i==0) return vec[j];
     else return vec[j]-vec[i-1];
 }
@@ -3603,3 +3603,10 @@ int bitCount(int n) {
 - 反码：为降低电路难度（转减法为加法），利用同余思想，对负数原码其余位取反，恰好符号位可参与运算
 - 补码：为解决0的编码问题，对负数反码加一，模数自增
 ```
+
+
+
+## 参考文献
+
+- [代码随想录](https://www.programmercarl.com/)
+- [CodeTop 面试题目总结](https://codetop.cc/home)
