@@ -40,11 +40,6 @@ git push origin main
 
 ## Todo List
 - theme
-    - domain：域名配置
     - 404 redirect
-    - Search Console
 - content
     - about：补充about menu内容
-    - Drafts：
-        - know - AI alchemical Tips
-        - know - Math Base

@@ -282,6 +282,33 @@ vector<int> searchRange(vector<int>& nums, int target) {
 }
 ```
 
+3. [构造升序区间](https://leetcode.cn/problems/search-in-rotated-sorted-array-ii/description/)
+
+```cpp
+bool search(vector<int>& nums, int target) {
+    int mid, size=nums.size(), left=0, right=size-1;
+    while(left<=right) {
+        mid=left+(right-left)/2;
+        if(nums[mid]==target) return true;
+        if(nums[mid]==nums[left] && nums[mid]==nums[right]) {
+            left++;
+            right--;
+        }
+        else if(nums[mid]>=nums[left]) {
+            if(target>=nums[left] && target<nums[mid])
+                right=mid-1;
+            else left=mid+1;
+        }
+        else {
+            if(target<=nums[right] && target>nums[mid])
+                left=mid+1;
+            else right=mid-1;
+        }
+    }
+    return false;
+}
+```
+
 
 
 ## 双指针
@@ -3231,11 +3258,11 @@ int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
      };
      void dijsktra(const vector<list<pair<int, int>>> grid, int n, int start, int end) {
          vector<int> minDist(n+1, INT_MAX);
-         vector<bool> visited(n+1, false);
          priority_queue<pair<int, int>, vector<pair<int, int>>, mycomparison> pq;
-         vector<int> parent(n+1, -1);
+         //vector<int> parent(n+1, -1);
          minDist[start]=0;
          pq.push({start, 0});
+         vector<bool> visited(n+1, false);
          
          while(!pq.empty()) {
              pair<int, int> closeP=pq.top();
@@ -3245,7 +3272,7 @@ int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
                  for(pair<int, int> neighbor : grid[closeP.first]) {
                      if(!visited[neighbor.first] && minDist[closeP.first]+neighbor.second<minDist[neighbor.first]) {
                          minDist[neighbor.first]=minDist[closeP.first]+neighbor.second;
-                         parent[neighbor.first]=closeP.first;
+                         //parent[neighbor.first]=closeP.first;
                          pq.push({neighbor.first, minDist[neighbor.first]});
                      }
                  }
@@ -3605,8 +3632,3 @@ int bitCount(int n) {
 ```
 
 
-
-## 参考文献
-
-- [代码随想录](https://www.programmercarl.com/)
-- [CodeTop 面试题目总结](https://codetop.cc/home)
