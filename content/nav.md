@@ -76,6 +76,7 @@ showToc: false
 - [Github - AILearning（lizhi3158）](https://github.com/lizhi3158/AILearning)
 - [Video - C++教程从0到1（黑马程序员）](https://www.bilibili.com/video/BV1et411b73Z/)
   - [Book - C++ Primer（第 5 版 中文版）](https://book.douban.com/subject/25708312/)
+  - [Site - C++参考手册](https://cppreference.cn/w/)
   - [GitHub - Cpp\_Primer\_Practice（applenob）](https://github.com/applenob/Cpp_Primer_Practice)
 - [Blog - Cpp LeetCode（龙犊&小窝🪹~）](https://biglonglong.github.io/home/posts/know/cpp-leetcode/)
   - [Site - 代码随想录（程序员Carl）](https://www.programmercarl.com/)
