@@ -1,7 +1,7 @@
 ---
 draft: false
 
-title: "C++从0到1"
+title: "Cpp from 0 to 1"
 description: "菜鸟程序员的C++速成/计算机科班从新做“人”"
 date: 2025-03-28
 author: ["biglonglong"]
@@ -10,7 +10,7 @@ tags: ["summary", "cpp"]
 summary: ""
 
 math: false
-weight:
+weight: 10
 cover:
     image: ""
     caption: ""
@@ -1268,9 +1268,17 @@ private:
 
 # C++ STL
 
+标准数据结构和算法，**容器**和**算法**之间通过**迭代器**进行无缝连接，还有**仿函数**、**适配器**和**空间配置器**。
+
 ## 容器
 
+string、vector、deque、stack、queue、list、set、pair、map
+
+构造、赋值、存取、插入、删除、修改、属性
+
 ## 算法
+
+遍历、比较、查找、排序、拷贝、替换、交换、算数、集合
 
 ## 函数对象
 
@@ -1294,27 +1302,9 @@ myAdd(10, 10);
 // myAdd.count
 ```
 
-### 算术
+加法plus、减法minus、乘法multiplies、除法divides、取模modulus、取反negate
 
-* `template<class T> T plus<T>`                //加法仿函数
-* `template<class T> T minus<T>`              //减法仿函数
-* `template<class T> T multiplies<T>`    //乘法仿函数
-* `template<class T> T divides<T>`         //除法仿函数
-* `template<class T> T modulus<T>`         //取模仿函数
-* `template<class T> T negate<T>`           //一元，取反仿函数
+等于equal_to、不等于not_equal_to、大于greater、大于等于greater_equal、小于less、小于等于less_equal
 
-### 关系
-
-* `template<class T> bool equal_to<T>`                    //等于
-* `template<class T> bool not_equal_to<T>`            //不等于
-* `template<class T> bool greater<T>`                      //大于
-* `template<class T> bool greater_equal<T>`          //大于等于
-* `template<class T> bool less<T>`                           //小于
-* `template<class T> bool less_equal<T>`               //小于等于
-
-### 逻辑
-
-- `template<class T> bool logical_and<T>`              //逻辑与
-- `template<class T> bool logical_or<T>`                //逻辑或
-- `template<class T> bool logical_not<T>`              //逻辑非
+与logical_and、或logical_or、非logical_not
 
