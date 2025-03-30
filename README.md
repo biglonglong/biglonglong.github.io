@@ -1,41 +1,65 @@
-# biglonglong.github.io
+## Overview
 
-[龙犊&小窝🪹~](https://biglonglong.github.io/home/)
+这是[龙犊&小窝🪹~](https://biglonglong.github.io/home/)的网站代码源文件，基于 PaperMod，正在魔改当中...
 
-## Install
+如果你感兴趣，可以看看我的一些Posts。
 
-```bash
-# git、nodejs、go、hugo-extended installed
-git --version
-node --version
-go version
-hugo version
-```
-
-
-## Usage
-
-```bash
-hugo server --buildDrafts
-```
+- [Overview](#overview)
+- [Installation and Usage](#installation-and-usage)
+  - [Prerequisites](#prerequisites)
+  - [Steps](#steps)
+  - [Run](#run)
+- [TODO List](#todo-list)
+- [References](#references)
 
 
-## Writing
 
-```bash
-hugo new content/{post_title}.md
-# open  content/{post_title}.md in typora
-```
+## Installation and Usage
 
+### Prerequisites
 
-## Update
+- 安装 [Git](https://git-scm.com/)
+- 安装 [Node.js](https://nodejs.org/)
+- 安装 [Go](https://go.dev/)
+- 安装 [Hugo Extended](https://gohugo.io/)
+
+### Steps
+
+1. 创建新文章：
+
+   ```bash
+   hugo new content/{post_title}.md
+   ```
+
+   使用您喜欢的编辑器（如 [Typora](https://typora.io/)）打开并编辑新文章。
+
+2. 打开终端或命令提示符，导航到项目根目录下运行：
+
+   ```bash
+   hugo server
+   ```
+
+3. 访问 [http://localhost:1313](http://localhost:1313) 查看本地预览
+
+### Run
+
+提交并推送更改：
 
 ```bash
 git add .
-git commit -m "..."
+git commit -m "Update content"
 git push origin main
-# go to github.com run workflow
 ```
 
-## Todo List
-- about：补充about menu内容
+然后，前往 GitHub 并运行相关的工作流以完成部署。
+
+
+
+## TODO List
+- [ ] 补充网站 `about` 栏目的内容
+
+
+
+## References
+
+- [adityatelange/hugo-PaperMod: A fast, clean, responsive Hugo theme.](https://github.com/adityatelange/hugo-PaperMod)
