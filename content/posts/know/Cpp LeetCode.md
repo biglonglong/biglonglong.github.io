@@ -10,7 +10,7 @@ tags: ["summary", "leetcode", "algorithm", "cpp"]
 summary: ""
 
 math: false
-weight: 3
+weight: 1
 cover:
     image: ""
     caption: ""
@@ -23,9 +23,9 @@ TocOpen: true
 comments: true
 ---
 
-## 模拟技法
+## 模拟
 
-- 排列的特性 - [下一个排列](https://leetcode.cn/problems/next-permutation/)
+- [排列的特性 - 下一个排列](https://leetcode.cn/problems/next-permutation/)
 
 
 
@@ -3630,5 +3630,4 @@ int bitCount(int n) {
 - 反码：为降低电路难度（转减法为加法），利用同余思想，对负数原码其余位取反，恰好符号位可参与运算
 - 补码：为解决0的编码问题，对负数反码加一，模数自增
 ```
-
 

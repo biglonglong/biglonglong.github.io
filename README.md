@@ -57,9 +57,11 @@ git push origin main
 
 ## TODO List
 - [ ] 补充网站 `about` 栏目的内容
+- [ ] 网站装修
 
 
 
 ## References
 
 - [adityatelange/hugo-PaperMod: A fast, clean, responsive Hugo theme.](https://github.com/adityatelange/hugo-PaperMod)
+- [Hugo PaperMod 主题精装修 | Tai's Blog](https://yunpengtai.top/posts/hugo-journey/)

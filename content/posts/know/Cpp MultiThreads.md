@@ -6,7 +6,7 @@ description: "Cpp 的多线程编程"
 date: 2025-02-17
 author: ["biglonglong"]
 
-tags: ["summary", "MultiThreads", "cpp"]
+tags: ["summary", "multi threads", "cpp"]
 summary: ""
 
 math: false
@@ -27,7 +27,7 @@ comments: true
 
 多线程相关操作，Linux选择使用的是POSIX标准，而Windows自己搞了一套系统调用，称为Win32 API，意味着Linux与Windows存在标准差异，直接导致能在Linux中运行的程序未必能在Windows中运行。
 
- C++11之前，编写多线程相关代码为保证兼容性，需要借助条件编译，分别实现两份代码，根据不同平台编译不同的代码，非常麻烦。
+C++11之前，编写多线程相关代码为保证兼容性，需要借助条件编译，分别实现两份代码，根据不同平台编译不同的代码，非常麻烦。
 
 ```cpp
 // 确保平台兼容性
@@ -65,7 +65,7 @@ C++11中加入了线程库标准，其中包含了线程、互斥锁、条件变
 
 
 
-## thread
+## 线程
 
 线程库：`#include <thread>`，先创建线程对象，可以关联一个线程，用来控制该线程以及获取线程的状态。 
 
@@ -157,7 +157,7 @@ t3.join();
 
 
 
-## mutex
+## 锁
 
 互斥量库：`#include <mutex>`，多个线程可以同时访问和操作共享资源。但当多个线程同时读写这些共享资源（多为全局变量）时，可能会产生数据不一致或冲突的情况。
 
@@ -292,7 +292,7 @@ int main() {
 
 
 
-## condition_variable
+## 条件变量
 
 条件变量库：`#include <condition_variable>`、`#include <condition_variable_any>` ，实现线程间的条件变量和线程同步，它提供了**等待**和**通知**的机制，使得线程可以等待某个条件成立时被唤醒，或者在满足某个条件时通知其他等待的线程。其提供了以下几个函数用于等待和通知线程： 
 
@@ -340,8 +340,6 @@ int main() {
     return 0;
 }
 ```
-
-### example
 
 用C++实现两个线程交替打印一个1-100的奇偶数字
 
@@ -516,16 +514,9 @@ int main(void){
 
 
 
-## future
+## 异步调用
 
 
 
-## atomic
-
-
-
-## 参考文献
-
-- [【C++】多线程编程图文详解](https://blog.csdn.net/weixin_45031801/article/details/142705048)
-- 
+## 原子操作
 

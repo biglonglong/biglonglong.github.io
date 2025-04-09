@@ -10,7 +10,7 @@ tags: ["summary", "ros2", "gazebo", "navigation"]
 summary: ""
 
 math: false
-weight: 3
+weight:
 cover:
     image: ""
     caption: ""
@@ -23,7 +23,7 @@ TocOpen: true
 comments: true
 ---
 
-## 在开始之前\.\.\.
+## 前言
 
 经过第一轮 ROS2 入门的学习，基本掌握了如何在各节点之间进行信息通信，但要构建一个完整的机器人系统仍有很长的路要走。
 
@@ -31,9 +31,7 @@ comments: true
 
 一种更合适的策略是：让机器人研发者专注于自己擅长的领域，其他模块则直接复用相关领域更专业研发团队的实现，当然自身的研究也可以被他人继续复用。这种基于“复用”的分工协作，遵循了不重复发明轮子的原则，显然是可以大大提高机器人的研发效率的，尤其是随着机器人硬件越来越丰富，软件库越来越庞大，这种复用性和模块化开发需求也愈发强烈。”
 
-因此，接下来，我们需要具备调用功能包搭建机器人软件层的能力，再进一步，是深入自己感兴趣的领域，研究底层算法以优化机器人系统性能！到这里，[鱼香ROS机器人](https://fishros.com/)是一个不错的参考，当然，还包括ROS2的各个社区。
-
-- [Welcome to ROS 2 workshop! — ROS 2 workshop documentation](https://ros2-industrial-workshop.readthedocs.io/en/latest/)
+因此，接下来，我们需要具备调用功能包搭建机器人软件层的能力，再进一步，是深入自己感兴趣的领域，研究底层算法以优化机器人系统性能！到这里，[鱼香ROS机器人](https://fishros.com/)是一个不错的参考，当然，还包括ROS2的各个社区，如[Welcome to ROS 2 workshop! — ROS 2 workshop documentation](https://ros2-industrial-workshop.readthedocs.io/en/latest/)
 
 
 

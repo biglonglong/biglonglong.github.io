@@ -103,7 +103,7 @@ comments: true
   - Extensions：OneTab、Tab Copy、GitZip for github
   - BookMark：chatgpt、ERNIE Bot
 - Virtual Studio Code：Log in、Auto Save
-  - extensions：Python、Jupyter、C/C++、CMake、Code Runner（compiler - mingw-w64）、GitHub Copilot、Markdown All in One、Open in External App、Partial Diff、Vscode-Icons
+  - extensions：Python、Jupyter、C/C++（Format on Save）、CMake、Code Runner（compiler - mingw-w64）、GitHub Copilot、Markdown All in One、Open in External App、Partial Diff、Vscode-Icons
 - Typora：Perferance、Pandoc
 - Clash：Profiles
 - Git：alias config

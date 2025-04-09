@@ -2,7 +2,7 @@
 draft: false
 
 title: "Cpp from 0 to 1"
-description: "菜鸟程序员的C++速成/计算机科班从新做“人”"
+description: "菜鸟程序员的C++速成/计算机科班重新做“人”"
 date: 2025-03-28
 author: ["biglonglong"]
 
@@ -10,7 +10,7 @@ tags: ["summary", "cpp"]
 summary: ""
 
 math: false
-weight: 10
+weight:
 cover:
     image: ""
     caption: ""
@@ -22,8 +22,6 @@ showToc: true
 TocOpen: true
 comments: true
 ---
-
-
 
 # C++基础入门
 

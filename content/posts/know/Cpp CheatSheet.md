@@ -2,7 +2,7 @@
 draft: false
 
 title: "Cpp CheatSheet"
-description: "一些解决算法题的 Cpp 基础知识"
+description: "代码规范和一些写算法题的常用 Cpp 结构"
 date: 2024-07-11
 author: ["biglonglong"]
 
@@ -25,28 +25,134 @@ comments: true
 
 ## 代码规范
 
-1. 变量命名：统一为小驼峰命名法（第一个单词首字母小写，其他单词首字母大写）
+1. 命名
 
-   ```cpp
-   int myAge;
+   - 变量和函数：小驼峰命名法
+
+      ```cpp
+      int myAge;
+      ```
+
+   - 类：大驼峰命名法，其文件同名
+
+   - 文件：下划线命名
+
+2. Git 提交信息
+
+   - 修改模块 + `: ` + 修改描述
+   - 以`, `分隔多个修改模块
+
+3. 注释：小写英文描述
+
+4. 格式：clange-format
+
+   ```.clang-format
+   ---
+   # Base style to inherit from (e.g., LLVM, Google, Mozilla, WebKit)
+   BasedOnStyle: LLVM
+   Language: Cpp  # Applies to C++ (can be set to C, Java, JavaScript, etc.)
+   
+   # Alignment
+   AlignAfterOpenBracket: Align      # Align parameters after open bracket
+   AlignConsecutiveAssignments: true # Align multiple assignments in a row
+   AlignConsecutiveDeclarations: true # Align consecutive declarations
+   AlignEscapedNewlines: Right       # Align escaped newlines to the right
+   AlignOperands: true               # Align binary operators
+   AlignTrailingComments: true       # Align comments that follow code
+   
+   # Access modifiers (public/private/protected) indentation in classes
+   AccessModifierOffset: -1
+   
+   # Braces and breaking
+   BreakBeforeBraces: Attach         # Place braces on new lines (e.g., Allman, Attach)
+   AlwaysBreakBeforeMultilineStrings: false
+   AlwaysBreakTemplateDeclarations: Yes
+   BreakBeforeBinaryOperators: None  # Place binary operators after line breaks
+   BreakBeforeTernaryOperators: true
+   BreakConstructorInitializers: BeforeColon
+   BreakInheritanceList: BeforeColon
+   BreakStringLiterals: true         # Allow breaking long string literals
+   
+   # Short constructs
+   AllowShortBlocksOnASingleLine: false
+   AllowShortCaseLabelsOnASingleLine: false
+   AllowShortFunctionsOnASingleLine: Inline
+   AllowShortIfStatementsOnASingleLine: false
+   AllowShortLoopsOnASingleLine: false
+   
+   # Indentation
+   IndentCaseLabels: true
+   IndentWidth: 4
+   TabWidth: 4
+   UseTab: Never                    # Can be: Never, ForIndentation, Always
+   ConstructorInitializerIndentWidth: 4
+   ContinuationIndentWidth: 4
+   
+   # Column limits
+   ColumnLimit: 100                # Max line length
+   PenaltyBreakAssignment: 2
+   PenaltyBreakBeforeFirstCallParameter: 19
+   PenaltyBreakComment: 300
+   PenaltyBreakFirstLessLess: 120
+   PenaltyBreakString: 1000
+   PenaltyExcessCharacter: 1000000
+   
+   # Includes
+   IncludeBlocks: Preserve         # Can be: Preserve, Merge, Regroup
+   IncludeCategories:
+     - Regex:           '^<.*\.h>'
+       Priority:        1
+       SortPriority:    0
+       CaseSensitive:   false
+     - Regex:           '^".*\.h"'
+       Priority:        2
+       SortPriority:    0
+       CaseSensitive:   false
+   SortIncludes: true              # Sort #includes
+   IncludeIsMainRegex: '(Test)?$'
+   
+   # Spaces
+   SpaceAfterCStyleCast: true
+   SpaceAfterTemplateKeyword: true
+   SpaceBeforeAssignmentOperators: true
+   SpaceBeforeCpp11BracedList: false
+   SpaceBeforeCtorInitializerColon: true
+   SpaceBeforeInheritanceColon: true
+   SpaceBeforeParens: ControlStatements # Can be: Never, ControlStatements, Always
+   SpaceInEmptyBlock: false
+   
+   # Comment formatting
+   CommentPragmas: '^ IWYU pragma:'   # Regex to match comment pragmas
+   FixNamespaceComments: true         # Add comments for closing namespaces
+   ReflowComments: false              # Disable automatic wrapping of long comments
+   
+   # C++11 and beyond
+   AllowAllParametersOfDeclarationOnNextLine: false
+   Cpp11BracedListStyle: true
+   Standard: Latest                  # Set language standard (e.g., Cpp11, Cpp17, Latest)
+   
+   # Namespaces
+   NamespaceIndentation: All         # Indent contents of namespaces
+   CompactNamespaces: false
+   
+   # Macros and preprocessor
+   MacroBlockBegin: ''
+   MacroBlockEnd: ''
+   IndentPPDirectives: AfterHash     # Options: None, AfterHash, BeforeHash
+   
+   # Sorting
+   SortUsingDeclarations: true       # Sort 'using' declarations
+   
+   # Experimental
+   DerivePointerAlignment: false
+   PointerAlignment: Right            # Can be Left, Right, Middle
+   KeepEmptyLinesAtTheStartOfBlocks: true
+   
+   # Misc
+   EmptyLineAfterAccessModifier: Never
+   EmptyLineBeforeAccessModifier: Never
+   ...
    ```
-
-2. 代码空格
-
-   - 分隔符后空格;算术表达式紧贴
-
-     ```cpp
-     int i, j;
-     for(int fastIndex=0; fastIndex<nums.size(); fastIndex++)
-     ```
-
-   - 大括号和函数保持同一行，与控制语句（while，if，for）前空格
-
-     ```cpp
-     while(n) {
-         n--;
-     }
-     ```
 
 
 

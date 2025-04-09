@@ -10,7 +10,7 @@ tags: ["summary", "git"]
 summary: ""
 
 math: false
-weight:
+weight: 2
 cover:
     image: ""
     caption: ""
@@ -23,15 +23,19 @@ TocOpen: true
 comments: true
 ---
 
-## 在开始之前\.\.\.
+## 前言
 
-简单来说，git构建多分支版本树（v1.0 -> v1.1 -> … -> v1.9 -> \<branch\> -> [HEAD]，其中HEAD仅指向当前工作分支），跟踪文件的更改。本文记录仓库版本控制过程中的一些warning、Fatal及其Solution，以防biglonglong在之后仓库管理过程中反复迷失。
+Git 是一个分布式版本控制系统，用于高效地管理代码版本和协作开发。它通过构建多分支版本树来跟踪文件的更改，支持暂存、提交、分支、合并、回退等操作。Git 的核心功能包括版本管理、分支开发、冲突解决和历史记录查看。
 
-我希望你具有了对git和Github的基本认识后，再来看这篇文章，以作为你开发过程中的Q&A。对于入门攻略，这里做一些推荐：
+不管怎么样，Git 千变万化，这里给出一些入门攻略推荐，也供日后实践参考：
 
 - [git - the simple guide - no deep shit!](https://rogerdudler.github.io/git-guide/)
 - [Git Immersion](https://gitimmersion.com/)
 - [简介 - Git教程 - 廖雪峰的官方网站](https://liaoxuefeng.com/books/git/introduction/index.html)
+
+### 基本概念
+
+- HEAD：当前分支最新提交
 
 
 

@@ -10,7 +10,7 @@ tags: ["summary", "ros2", "cpp", "python"]
 summary: ""
 
 math: false
-weight: 1
+weight:
 cover:
     image: ""
     caption: ""
@@ -23,7 +23,7 @@ TocOpen: true
 comments: true
 ---
 
-## 在开始之前\.\.\.
+## 前言
 
 来自[ROS2理论与实践](https://m.bilibili.com/video/BV1VB4y137ys) | [ROS2讲义](https://www.zhihu.com/people/41-69-11-75-42/posts)。事实上，作者也学习过ROS1，但由于工作需求、未来发展等原因，遂从头学起ROS2，理论方面ROS1和ROS2区别不大，但ROS2面向对象编程，而ROS1面向过程，ROS1选手可参考[biglonglong/ROS1demo: Some demos for ROS1 basic operation](https://github.com/biglonglong/ROS1demo)。
 
