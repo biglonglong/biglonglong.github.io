@@ -90,26 +90,3 @@ comments: true
 2. [Zotero](https://www.zotero.org/)：文献管理
 3. [DeepL](https://www.deepl.com/zh/translator)：全局翻译
 4. [Grammarly](https://www.grammarly.com/)：语法格式修正
-
-
-
-## 环境初始化
-
-这一部分无关文献，只是biglonglong历经多次系统与设备更新，常忘旧时工作环境习惯，开发时屡被环境配置打断，甚觉苦恼，遂记录之。这里仅保留部分通用环境，其余根据具体业务diy之。
-
-> temp in E:\，program in D:\，record in USB flash drive
-
-- Google Chrome： Log in、Language Setting
-  - Extensions：OneTab、Tab Copy、GitZip for github
-  - BookMark：chatgpt、ERNIE Bot
-- Virtual Studio Code：Log in、Auto Save
-  - extensions：Python、Jupyter、C/C++（Format on Save）、CMake、Code Runner（compiler - mingw-w64）、GitHub Copilot、Markdown All in One、Open in External App、Partial Diff、Vscode-Icons
-- Typora：Perferance、Pandoc
-- Clash：Profiles
-- Git：alias config
-- BaiduNetwork
-- DeepL
-- Everything
-- Anaconda
-- WeChat
-- Office PLUS
