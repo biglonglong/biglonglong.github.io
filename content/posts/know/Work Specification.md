@@ -1,3 +1,28 @@
+---
+draft: false
+
+title: "Work Specification"
+description: "代码规范、README规范、Git Msg规范、装机必备"
+date: 2024-04-13
+author: ["biglonglong"]
+
+tags: ["summary", "specification", "cpp"]
+summary: ""
+
+math: false
+weight:
+cover:
+    image: ""
+    caption: ""
+    alt: ""
+    relative: false
+    hidden: true
+
+showToc: true
+TocOpen: true
+comments: true
+---
+
 ## 系统初始化
 
 ### Windows
@@ -10,7 +35,7 @@
 
 - [Google Chrome](https://www.google.com/chrome/)：log in、setting
   - Extensions：划词翻译、OneTab、Tab Copy、GitZip for github
-  - BookMark：AIs([ChatGPT](https://chatgpt.com/)、[Claude](https://claude.ai/new)、[Microsoft Copilot](https://copilot.microsoft.com/)、[DeepSeek](https://chat.deepseek.com/)、[文心一言](https://yiyan.baidu.com/))、[GitHub](https://github.com/)、[龙犊&小窝🪹~](https://biglonglong.github.io/home/)、[LeetCode](https://leetcode.cn/)、
+  - BookMark：AIs([ChatGPT](https://chatgpt.com/)、[Claude](https://claude.ai/new)、[Microsoft Copilot](https://copilot.microsoft.com/)、[DeepSeek](https://chat.deepseek.com/)、[文心一言](https://yiyan.baidu.com/))、[GitHub](https://github.com/)、[龙犊&小窝🪹~](https://biglonglong.github.io/home/)、[LeetCode](https://leetcode.cn/)、[小林coding](https://xiaolincoding.com/)
 
 - [VS Code](https://code.visualstudio.com/)：log in、save on focusChange
   - Extensions：Remote SSH、Python、Jupyter、C/C++（Format on Save）、CMake Tools、Code Runner（compiler-mingw-w64）、GitHub Copilot、Markdown All in One、Open in External App、Partial Diff、Vscode-Icons
@@ -117,20 +142,17 @@ sudo apt install language-pack-zh-hans
 
   ```yaml
   ---
-  # Base style to inherit from (e.g., LLVM, Google, Mozilla, WebKit)
-  BasedOnStyle: LLVM
+  BasedOnStyle: LLVM  # Base style to inherit from (e.g., LLVM, Google, Mozilla, WebKit)
   Language: Cpp  # Applies to C++ (can be set to C, Java, JavaScript, etc.)
   
   # Alignment
   AlignAfterOpenBracket: Align      # Align parameters after open bracket
-  AlignConsecutiveAssignments: true # Align multiple assignments in a row
-  AlignConsecutiveDeclarations: true # Align consecutive declarations
   AlignEscapedNewlines: Right       # Align escaped newlines to the right
   AlignOperands: true               # Align binary operators
   AlignTrailingComments: true       # Align comments that follow code
   
   # Access modifiers (public/private/protected) indentation in classes
-  AccessModifierOffset: -1
+  AccessModifierOffset: -4
   
   # Braces and breaking
   BreakBeforeBraces: Attach         # Place braces on new lines (e.g., Allman, Attach)
@@ -143,11 +165,11 @@ sudo apt install language-pack-zh-hans
   BreakStringLiterals: true         # Allow breaking long string literals
   
   # Short constructs
-  AllowShortBlocksOnASingleLine: false
+  AllowShortBlocksOnASingleLine: true
   AllowShortCaseLabelsOnASingleLine: false
   AllowShortFunctionsOnASingleLine: Inline
-  AllowShortIfStatementsOnASingleLine: false
-  AllowShortLoopsOnASingleLine: false
+  AllowShortIfStatementsOnASingleLine: true
+  AllowShortLoopsOnASingleLine: true
   
   # Indentation
   IndentCaseLabels: true
@@ -221,6 +243,7 @@ sudo apt install language-pack-zh-hans
   EmptyLineAfterAccessModifier: Never
   EmptyLineBeforeAccessModifier: Never
   ...
+  
   ```
 
 
