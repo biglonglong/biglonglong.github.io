@@ -38,7 +38,7 @@ comments: true
   - BookMark：AIs([ChatGPT](https://chatgpt.com/)、[Claude](https://claude.ai/new)、[Microsoft Copilot](https://copilot.microsoft.com/)、[DeepSeek](https://chat.deepseek.com/)、[文心一言](https://yiyan.baidu.com/))、[GitHub](https://github.com/)、[龙犊&小窝🪹~](https://biglonglong.github.io/home/)、[LeetCode](https://leetcode.cn/)、[小林coding](https://xiaolincoding.com/)
 
 - [VS Code](https://code.visualstudio.com/)：log in、save on focusChange
-  - Extensions：Remote SSH、Python、Jupyter、C/C++（Format on Save）、CMake Tools、Code Runner（compiler-mingw-w64）、GitHub Copilot、Markdown All in One、Open in External App、Partial Diff、Vscode-Icons
+  - Extensions：Remote SSH、Python、Jupyter、C/C++（Format on Save、mingw-w64）、CMake Tools、Black Formatter、GitHub Copilot、Markdown All in One、Open in External App、Partial Diff、Vscode-Icons
 
 - [Typora](https://github.com/shuhongfan/TyporaCrack)：[Pandoc](https://pandoc.org/installing.html)、perferance
 - [Clash](https://github.com/clashdownload/Clash?tab=readme-ov-file)：profiles

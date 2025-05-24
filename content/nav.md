@@ -75,8 +75,8 @@ showToc: false
 
 - [Github - AILearning（lizhi3158）](https://github.com/lizhi3158/AILearning)
 - [Video - C++教程从0到1（黑马程序员）](https://www.bilibili.com/video/BV1et411b73Z/)
-  - [Book - C++ Primer（第 5 版 中文版）](https://book.douban.com/subject/25708312/)
   - [Site - C++参考手册](https://cppreference.cn/w/)
+  - [Book - C++ Primer（第 5 版 中文版）](https://book.douban.com/subject/25708312/)
   - [GitHub - Cpp\_Primer\_Practice（applenob）](https://github.com/applenob/Cpp_Primer_Practice)
 - [Blog - Cpp LeetCode（龙犊&小窝🪹~）](https://biglonglong.github.io/home/posts/know/cpp-leetcode/)
   - [Site - 代码随想录（程序员Carl）](https://www.programmercarl.com/)
@@ -85,9 +85,10 @@ showToc: false
   - [MOOC - 数据结构（浙江大学 陈越、何钦铭）](https://www.icourse163.org/course/zju-93001)
 - [Github - Crash-Course-Computer-Science-Chinese（1c7）](https://github.com/1c7/Crash-Course-Computer-Science-Chinese)
   - [Video - 深入理解计算机系统（九曲阑干）](https://www.bilibili.com/video/BV1cD4y1D7uR/)
-  - [Book - Computer Systems: A Programmer's Perspective（第3版 中文版）](https://book.douban.com/subject/26912767/)
+  - [Book - 程序员的自我修养](https://book.douban.com/subject/3652388/)
   - [Github - translationCSAPP（EugeneLiu）](https://github.com/EugeneLiu/translationCSAPP)
   - [Blog - Tag: ics（Arthals' ink）](https://arthals.ink/tags/ics)
+  - [Book - Computer Systems: A Programmer's Perspective（第3版 中文版）](https://book.douban.com/subject/26912767/)
 
 
 
