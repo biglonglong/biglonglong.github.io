@@ -86,18 +86,14 @@ showToc: false
 - [Github - Crash-Course-Computer-Science-Chinese（1c7）](https://github.com/1c7/Crash-Course-Computer-Science-Chinese)
   - [Video - 深入理解计算机系统（九曲阑干）](https://www.bilibili.com/video/BV1cD4y1D7uR/)
   - [Book - 程序员的自我修养](https://book.douban.com/subject/3652388/)
+  - [Book - 程序是怎样跑起来的](https://book.douban.com/subject/26365491/)
   - [Github - translationCSAPP（EugeneLiu）](https://github.com/EugeneLiu/translationCSAPP)
   - [Blog - Tag: ics（Arthals' ink）](https://arthals.ink/tags/ics)
-  - [Book - Computer Systems: A Programmer's Perspective（第3版 中文版）](https://book.douban.com/subject/26912767/)
-
-
-
-
-### Study ING
-
-- [Book - 程序员的自我修养](https://book.douban.com/subject/3652388/)
-- [Site CSAPP重点解读](https://fengmuzi2003.gitbook.io/csapp3e)
-
+- [Video - 操作系统原理（清华大学 向勇、陈渝）](https://www.bilibili.com/video/BV1uW411f72n/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Book - 操作系统导论（中文版）](https://itanken.github.io/ostep-chinese/)
+  - [Site - Yanyan's Wiki（南京大学 蒋炎岩）](https://jyywiki.cn/)
+  - [Book - 现代操作系统原理与实现](https://book.douban.com/subject/35208251/)
+  - [Site - ucore实验指导书](https://learningos.github.io/ucore_os_webdocs/)
 
 
 
@@ -112,6 +108,7 @@ showToc: false
 - [huihut/interview: 📚 C/C++ 技术面试基础知识总结.](https://interview.huihut.com/#/)
 - [zhm-real/PathPlanning: Common used path planning algorithms with animations.](https://github.com/zhm-real/PathPlanning)
 - [🧙关于我们🧙 | 自动驾驶小白说](https://www.helloxiaobai.cn/about)
+- 百度 Apollo
 - [AI算法工程师手册](https://www.huaxiaozhuan.com/)
 
 
