@@ -139,7 +139,7 @@ params:
   socialIcons:
     - name: email
       title: Any question
-      url: "mailto:1522262926@qq.co"
+      url: "mailto:1522262926@qq.com"
     - name: github
       title: Clone Repository
       url: "https://github.com/biglonglong"
