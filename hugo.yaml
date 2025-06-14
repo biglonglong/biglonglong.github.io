@@ -144,8 +144,11 @@ params:
       title: Clone Repository
       url: "https://github.com/biglonglong"
     - name: redbook
-      title: Share life
+      title: Daily life
       url: "https://www.xiaohongshu.com/user/profile/5f39f522000000000100a829"
+    - name: tiktok
+      title: Thoughts and ideas
+      url: https://www.douyin.com/user/MS4wLjABAAAA8kcYaiVKhtfSokesSBj1rbgygU-hjOlDsfNGby0j4LY
     - name: rss
       title: Subscribe me
       url: "./index.xml"
