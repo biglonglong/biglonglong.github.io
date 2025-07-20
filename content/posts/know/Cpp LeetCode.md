@@ -23,6 +23,8 @@ TocOpen: true
 comments: true
 ---
 
+
+
 ## 模拟
 
 - [排列的特性 - 下一个排列](https://leetcode.cn/problems/next-permutation/)

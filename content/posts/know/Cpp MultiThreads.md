@@ -23,6 +23,8 @@ TocOpen: true
 comments: true
 ---
 
+
+
 ## 前言
 
 多线程相关操作，Linux选择使用的是POSIX标准，而Windows自己搞了一套系统调用，称为Win32 API，意味着Linux与Windows存在标准差异，直接导致能在Linux中运行的程序未必能在Windows中运行。
