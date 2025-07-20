@@ -182,6 +182,23 @@ markup:
   goldmark:
     renderer:
       unsafe: true
+    parser:
+      autoHeadingID: true
+      autoHeadingIDType: github
+      wrapStandAloneImageWithinParagraph: false
+      attribute:
+        block: true
+        title: true
+    extensions:
+      passthrough:
+        delimiters:
+          block:
+            - ['\[', '\]']
+            - ['$$', '$$']
+          inline:
+            - ['\(', '\)']
+            - ['$', '$']
+        enable: true
   highlight:
     codeFences: true
     style: darcula

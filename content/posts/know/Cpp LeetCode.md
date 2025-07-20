@@ -10,7 +10,7 @@ tags: ["summary", "leetcode", "algorithm", "cpp"]
 summary: ""
 
 math: false
-weight: 1
+weight: 103
 cover:
     image: ""
     caption: ""

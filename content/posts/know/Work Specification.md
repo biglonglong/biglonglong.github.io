@@ -27,15 +27,15 @@ comments: true
 
 ### Windows
 
-| 磁盘分区        | 用途               |
-| --------------- | ------------------ |
-| `D:\`           | 应用程序           |
-| `E:\`           | 数据缓存、临时文件 |
-| USB flash drive | 便携资料           |
+| 磁盘分区          | 用途               |
+| ----------------- | ------------------ |
+| `D:\`             | 应用程序           |
+| `E:\`             | 数据缓存、临时文件 |
+| `USB flash drive` | 便携资料           |
 
 - [Google Chrome](https://www.google.com/chrome/)：log in、setting
-  - Extensions：划词翻译、OneTab、Tab Copy、GitZip for github
-  - BookMark：AIs([ChatGPT](https://chatgpt.com/)、[Claude](https://claude.ai/new)、[Microsoft Copilot](https://copilot.microsoft.com/)、[DeepSeek](https://chat.deepseek.com/)、[文心一言](https://yiyan.baidu.com/))、[GitHub](https://github.com/)、[龙犊&小窝🪹~](https://biglonglong.github.io/home/)、[LeetCode](https://leetcode.cn/)、[小林coding](https://xiaolincoding.com/)
+  - Extensions：划词翻译、OneTab、Global Speed、Tab Copy、GitZip for github
+  - BookMark：[龙犊&小窝🪹~](https://biglonglong.github.io/home/)、[LeetCode](https://leetcode.cn/)、[GitHub](https://github.com/)、AIs([ChatGPT](https://chatgpt.com/)、[Claude](https://claude.ai/new)、[Microsoft Copilot](https://copilot.microsoft.com/)、[DeepSeek](https://chat.deepseek.com/)、[文心一言](https://yiyan.baidu.com/))
 
 - [VS Code](https://code.visualstudio.com/)：log in、save on focusChange
   - Extensions：Remote SSH、Python、Jupyter、C/C++（Format on Save、mingw-w64）、CMake Tools、Black Formatter、GitHub Copilot、Markdown All in One、Open in External App、Partial Diff、Vscode-Icons
@@ -104,9 +104,7 @@ sudo apt install language-pack-zh-hans
 
 
 
-## 代码规范
-
-> [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html)
+## [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html)
 
 - 命名
 
@@ -248,13 +246,7 @@ sudo apt install language-pack-zh-hans
 
 
 
-## Commit Msg
-
-> [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
->
-> 校验提交格式：[commitlint](https://commitlint.js.org/)
->
-> 自动生成changelog：[README | semantic-release](https://semantic-release.gitbook.io/semantic-release)
+## [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 ```bash
 <type>[(optional scope)][!]: <description>
@@ -288,6 +280,10 @@ sudo apt install language-pack-zh-hans
 - body：解释本次Commit更多细节
 
 - footer：关联 issue、标记 breaking change
+
+> 校验提交格式：[commitlint](https://commitlint.js.org/)
+>
+> 自动生成changelog：[README | semantic-release](https://semantic-release.gitbook.io/semantic-release)
 
 
 

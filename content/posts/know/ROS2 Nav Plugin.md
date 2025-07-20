@@ -10,7 +10,7 @@ tags: ["summary", "ros2", "navigation", "plugin"]
 summary: ""
 
 math: true
-weight: 3
+weight: 204
 cover:
     image: ""
     caption: ""
@@ -27,7 +27,7 @@ comments: true
 
 动态加载和卸载插件（`ClassLoader`加载动态链接库--抽象类子类），如控制器、传感器、规划器，下图所示：
 
-![](https://ros2-industrial-workshop.readthedocs.io/en/latest/_images/navigation_overview.png)
+<img src="https://ros2-industrial-workshop.readthedocs.io/en/latest/_images/navigation_overview.png" style="zoom: 33%;" />
 
 几个规划消息：
 
@@ -97,15 +97,15 @@ pose:
 
 
 $$
-row.index = \frac{y-info.origin.y}{info.resolution}
+\text{row}.\text{index} = \frac{\text{y}-\text{info}.\text{origin}.\text{y}}{\text{info}.\text{resolution}}
 $$
 
 $$
-col.index = \frac{x-info.origin.x}{info.resolution}
+\text{col}.\text{index} = \frac{\text{x}-\text{info}.\text{origin}.\text{x}}{\text{info}.\text{resolution}}
 $$
 
 $$
-occupied.status = data[row.index*map.width + col.index]
+\text{occupied}.\text{status} = \text{data}[\text{row}.\text{index}*\text{map}.\text{width} + \text{col}.\text{index}]
 $$
 
 more to check：[Nav2 中文网](https://nav2.fishros.com/)

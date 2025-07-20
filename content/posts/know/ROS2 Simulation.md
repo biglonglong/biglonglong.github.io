@@ -10,7 +10,7 @@ tags: ["summary", "ros2", "gazebo", "navigation"]
 summary: ""
 
 math: false
-weight:
+weight: 203
 cover:
     image: ""
     caption: ""
@@ -41,11 +41,11 @@ comments: true
 
 rqt计算图如下：
 
-![](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/robot_rosgraph.png)
+<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/robot_rosgraph.png" style="zoom: 33%;" />
 
 机器人部件tf_tree如下：
 
-![](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/robot_frames.png)
+<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/robot_frames.png" style="zoom:33%;" />
 
 一份urdf-gazebo-rviz的launch示例如下：
 
@@ -801,7 +801,7 @@ ros2 launch [package] [gazebo_sim].launch.py model:=`ros2 pkg prefix --share [pa
 
 一个数据接口和控制器算法框架，用于硬件集成—**实体机器人的控制器与机器人tf**的配置。与上面的gazebo插件具有类似的作用，只是数据接口做了统一
 
-![](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/robot_ros2_control.jpg)
+<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/robot_ros2_control.jpg" style="zoom:33%;" />
 
 框架下常用的控制器管理命令：
 
@@ -964,7 +964,7 @@ ros2 run nav2_map_server map_saver_cli -f ./maps/map								# 保存地图
 
 - `Navagation 2`：一个launch示例`nav2_bringup`
 
-![](https://ros2-industrial-workshop.readthedocs.io/en/latest/_images/navigation_overview.png)
+<img src="https://ros2-industrial-workshop.readthedocs.io/en/latest/_images/navigation_overview.png" style="zoom:33%;" />
 
 一份nav2_bringup/bring_up.launch.py示例如下：
 

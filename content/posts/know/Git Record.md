@@ -10,7 +10,7 @@ tags: ["summary", "git"]
 summary: ""
 
 math: false
-weight: 2
+weight: 
 cover:
     image: ""
     caption: ""

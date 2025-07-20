@@ -9,8 +9,8 @@ author: ["biglonglong"]
 tags: ["summary", "八股文", "c"]
 summary: ""
 
-math: false
-weight:
+math: true
+weight: 301
 cover:
     image: ""
     caption: ""
@@ -50,11 +50,11 @@ gcc -o hello hello.c
 - 链接：与其他提前编译好的可重定位目标文件（如库函数等）合并成一个可执行目标文件
 
 $$
-Editor						\xrightarrow{hello.c}
-Pre\text{-}processor(cpp)  \xrightarrow{hello.i}
-Compiler(ccl)  \xrightarrow{hello.s}
-Assembler(as)  \xrightarrow{hello.o} \xrightarrow{printf.o}
-Linker(ld)		\xrightarrow{hello}
+\text{Editor} \xrightarrow{hello.c}
+\text{Pre-processor(cpp)} \xrightarrow{hello.i}
+\text{Compiler(ccl)} \xrightarrow{hello.s} \\
+\text{Assembler(as)} \xrightarrow{hello.o} \xrightarrow{printf.o}
+\text{Linker(ld)} \xrightarrow{hello}
 $$
 
 此时就可以将生成的`hello`加载到内存中执行了！
@@ -194,7 +194,7 @@ gcc -m64 -o hello64 hello.c
 当对系统某一部分加速时，被加速部分的占比和加速程序是影响整体系统性能的关键因素，其中$\alpha$为被加速部分的占比，k为部分加速比，S为整体加速比。
 $$
 \begin{equation}
-    S = \frac{T_{old}}{T_{new}} = \frac{1}{(1 - \alpha) + \frac{\alpha}{k}}
+S = \frac{T_{old}}{T_{new}} = \frac{1}{(1 - \alpha) + \frac{\alpha}{k}}
 \end{equation}
 $$
 提高部件性能，可以提高系统总体的计算能力，一般可以通过：
@@ -211,7 +211,7 @@ $$
 
 每条指令运行的时钟周期数，忽略启动指令时的流水线冗余，假设指令C~i~条，插入气泡C~b~条，则：
 $$
-CPI=\frac{C_i+C_b}{C_i}=1+\frac{C_b}{C_i}
+CPI = \frac{C_i + C_b}{C_i} = 1 + \frac{C_b}{C_i}
 $$
 其中C~b~/C~i~主要取决于平均指令插入气泡数（包括加载指令的数据冒险、跳转和返回指令的控制冒险）
 
@@ -441,10 +441,14 @@ int main() {
 
 > 补码将符号位引入计算，解决了整型中负数和减法运算的问题，统一为加法电路，从程序员的角度来看，==以二进制形式判断整型的变化就不会出错==。
 >
-> 为了方便识别负数的补码，有原码、反码和补码的转换规则如下：
-> $$
-> 原码 \xrightarrow{除符号位取反} 反码 \xrightarrow{加一} 补码 \xrightarrow{除符号位取反}\xrightarrow{加一} 原码（1\underbrace{0 \ldots 0}_{\text{w-1}}除外，表示最小负数）
-> $$
+
+为了方便识别负数的补码，有原码、反码和补码的转换规则如下：
+$$
+原码 \xrightarrow{除符号位取反}
+反码 \xrightarrow{加一} 
+补码 \xrightarrow{除符号位取反} \xrightarrow{加一} \\ 
+原码（1\underbrace{0 \ldots 0}_{\text{w-1}}除外，表示最小负数）
+$$
 
 
 #### 转换
@@ -467,10 +471,10 @@ int main() {
 
 - 无符号数相加溢出，溢出位1且被舍弃，即$2^w$
   $$
-  x+^{u}_{w}y=
+  x + ^{u}_{w}y =
   \begin{cases}
-      x+y\quad \quad \quad \quad x+y<2^w\\
-      x+y-2^w\quad 2^w \leq x+y<2^{w+1}
+      x + y & x + y < 2^w \\
+      x + y - 2^w & 2^w \leq x + y < 2^{w+1}
   \end{cases}
   $$
   ```cpp
@@ -482,11 +486,11 @@ int main() {
   
 - 有符号数相加溢出，溢出时改变了符号位，产生两倍偏置
   $$
-  x+^{t}_{w}y=
+  x + ^{t}_{w}y=
   \begin{cases}
-      x+y-2^w\quad \quad 2^{w-1} \leq x+y\\
-      x+y\quad \quad \quad \quad -2^{w-1} \leq x+y<2^{w-1}\\
-      x+y+2^w\quad \quad x+y<-2^{w-1}
+      x + y - 2^w & 2^{w-1} \leq x + y \\
+      x + y & -2^{w-1} \leq x + y < 2^{w-1} \\
+      x + y + 2^w & x + y < -2^{w-1}
   \end{cases}
   $$
   ```cpp
@@ -500,25 +504,22 @@ int main() {
 
 减去一个数等价于加上它的相反数：
 $$
-\forall x, y, \quad y - x \equiv y + (-x) \\
-
+\forall x, y \quad y - x \equiv y + (-x) \\
 -^{u}_{w}x =
 \begin{cases}
-x & x = 0 \\
-2^w - x & x \geq 0
+    x & x = 0 \\
+    2^w - x & x \geq 0
 \end{cases}
-
-\quad \quad
-
+\quad
 -^{t}_{w}x =
 \begin{cases}
--x & x > -2^{w-1} \\
--2^{w-1} & x = -2^{w-1}
+    -x & x > -2^{w-1} \\
+    -2^{w-1} & x = -2^{w-1}
 \end{cases}
 $$
 由于补码的性质，通过下面方式得到相反数：
 $$
-补码 \xrightarrow{位取反}\xrightarrow{加一} 相反数补码
+补码 \xrightarrow{位取反} \xrightarrow{加一} 相反数补码
 $$
 
 无符号数的减法同样通过这样的方式计算。
@@ -530,8 +531,12 @@ $$
 乘法等价于被乘数关于乘数各位的逻辑左移之和
 $$
 x \cdot 2^k \rightarrow x \ll k  \\
-\textit{e.g.：}x \cdot 14 \rightarrow x \cdot (2^3+2^2+2^1) \rightarrow (x \ll 3)+(x \ll 2)+(x \ll 1) \\
-\rightarrow x \cdot (16-2) \rightarrow (x<<4)-(x<<1)
+\textit{e.g.：}
+x \cdot 14 \rightarrow
+x \cdot (2^3+2^2+2^1) \rightarrow
+(x \ll 3)+(x \ll 2)+(x \ll 1) \rightarrow \\
+x \cdot (16-2) \rightarrow
+(x<<4)-(x<<1)
 $$
 
 ##### 除法
@@ -540,14 +545,16 @@ $$
 
 除法等价于被除数关于除数各位的算数右移之和，但无法表示所有除数
 $$
-x/2^k \rightarrow x \gg k \\
-\textit{e.g.：}-12340/16 \rightarrow -12340 \gg 4 \\
+x / 2^k \rightarrow x \gg k \\
+\textit{e.g.：}
+-12340 / 16 \rightarrow
+-12340 \gg 4
 $$
 由于除法总是向下舍入，为了使结果总是朝着0的方向舍入，补码负数被除数加入偏置$2^k-1$
 $$
-(x+2^k-1)/2^k \\
-
-\rightarrow (-12340+15) \gg 4 \rightarrow (-12340 + 1 \ll k-1) \gg k
+(x + 2^k - 1) / 2^k \\
+\rightarrow (-12340 + 15) \gg 4
+\rightarrow (-12340 + 1 \ll k - 1) \gg k
 $$
 
 ### 浮点型
@@ -1237,7 +1244,7 @@ int dlclose(void *handle);
 
 #### 加载
 
-![](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD.png)
+<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD.png" style="zoom: 50%;" />
 
 - 由于数据段地址对齐要求，代码段和数据段之间存在间隙
 - 为了防止程序被攻击，分配栈、共享库和堆地址时，链接器使用地址空间随机化策略
@@ -1295,7 +1302,7 @@ int dlclose(void *handle);
 
 直到该异常处理程序发出异常，再次进入内核模式，内核再次发生进程调度，回到用户模式运行原进程；
 
-<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2.png" alt="上下文切换" style="zoom:67%;" />
+<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2.png" alt="上下文切换" style="zoom: 50%;" />
 
 进程的切换需要保持状态（上下文），包括：目的寄存器、浮点寄存器、程序寄存器、用户栈、状态寄存器、内核栈和各种内核数据结构（页表、进程表、文件信息表）
 

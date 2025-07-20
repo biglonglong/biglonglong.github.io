@@ -10,7 +10,7 @@ tags: ["summary", "algorithm", "cpp"]
 summary: ""
 
 math: false
-weight:
+weight: 102
 cover:
     image: ""
     caption: ""
