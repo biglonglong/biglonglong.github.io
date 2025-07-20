@@ -1,6 +1,11 @@
+.post-content img {
+    cursor: zoom-in;
+    transition: transform 0.2s ease;
+}
 
-.post-content img[loading="lazy"]:active {
+.post-content img:active {
     transform: scale(1.382);
+    cursor: zoom-out;
 }
 
 .post-content img[loading="lazy"] {
