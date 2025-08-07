@@ -239,25 +239,78 @@ git rebase --abort
 
 
 
-## 冷知识
+## 热知识
 
-### CRLF换行符
+### CR/LF 换行符
 
-现象：跨平台工作空间commit项目时**Warning:LF will be replaced by CRLF**，再次clone后文件乱码
+现象：跨平台工作空间提交项目时，**Warning:LF will be replaced by CRLF**，再次clone后文件乱码
 
-原因：换行主要与CR回车`\r`、LF换行`\n`相关，文件行尾的换行符在不同编辑器和不同平台下具有不同的表示：Linux和macOS使用LF换行，而Dos和Windows使用CR LF换行，在编辑器中体现为KEY`Enter`
+原因：换行符主要与CR回车`\r`、LF换行`\n`相关，在不同编辑器和不同平台下具有不同的表示：Linux使用LF换行，而Dos和Windows使用CR LF换行，在编辑器中体现为`Enter`键
 
-- 方法一：更改`git config --global|system|local`
+- 方法一：更改`git config --[system|global|local]`
 
   ```bash
-  # 单独开发的程序员：提交检出均不转换
-  git config --global core.autocrlf false
-  
-  # 多人协作跨平台开发的window程序员：提交时转换为LF，检出时转换为CRLF
+  # Windows devs: LF on commit, CRLF on checkout
   git config --global core.autocrlf true
   
-  # 多人协作跨平台开发的Linux程序员：提交时转换为LF，检出时不转换
+  # Linux devs: LF on commit, no conversion on checkout
   git config --global core.autocrlf input
   ```
+  
+- 方法二：创建项目文件`.gitattributes`
 
-- 方法二：创建项目文件.gitattributes设置`eol=crlf`或者`eol=lf`
+  ```bash
+  # Windows devs: LF on commit, CRLF on checkout for text
+  * text=auto eol=crlf
+  
+  # Linux devs: LF on commit, no conversion on checkout for text
+  * text=auto eol=lf
+  ```
+
+检查当前`git`工具换行符转换配置：
+
+```bash
+git config --[system|global|local] core.autocrlf
+# If true:		LF <-> CRLF on commit or checkout
+# If false:		No conversion
+# If input:		CRLF -> LF on commit, no conversion on checkout
+# If no output:	Uses Git default behavior (system-dependent)
+
+git config --[system|global|local] core.safecrlf
+# If true:		Reject commits with mixed line endings
+# If warn:		Allow but warn about mixed line endings 
+# If false:		Disable line ending checks
+```
+
+使用`vim`命令切换文件中的换行符：
+
+```bash
+# Check line ending type
+:set ff?
+# fileformat=dos    CRLF (Windows format)
+# fileformat=unix   LF (Linux/Unix format)
+
+# Change line ending type
+:set ff=unix
+# Convert to LF (Unix format)
+:set ff=dos 
+# Convert to CRLF (Windows format)
+```
+
+### Tab 制表符
+
+现象：跨平台工作空间提交项目后，代码**层次不齐**
+
+原因：制表符只与Tab制表`\t`有关，其显示宽度由编辑器或平台决定：一般Windows默认1个Tab=4个空格，而Linux里1个Tab=8个空格，同时编辑器（如VS Code、QQ等）支持**自动将Tab转换为若干空格**。
+
+- 方法：统一编辑器Tab长度为4个空格，确保代码在不同环境下显示一致且美观
+
+  ```bash
+  # vim
+  vim /etc/vim/vimrc
+  # set tabstop=4
+  
+  # gedit
+  # adjust settings
+  ```
+

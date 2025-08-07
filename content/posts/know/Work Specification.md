@@ -25,7 +25,7 @@ comments: true
 
 
 
-## 系统初始化
+## System Init
 
 ### Windows
 
@@ -35,28 +35,66 @@ comments: true
 | `E:\`             | 数据缓存、临时文件 |
 | `USB flash drive` | 便携资料           |
 
-- [Google Chrome](https://www.google.com/chrome/)：log in、setting
-  - Extensions：划词翻译、OneTab、Global Speed、Tab Copy、GitZip for github
-  - BookMark：[龙犊&小窝🪹~](https://biglonglong.github.io/home/)、[LeetCode](https://leetcode.cn/)、[GitHub](https://github.com/)、AIs([ChatGPT](https://chatgpt.com/)、[Claude](https://claude.ai/new)、[Microsoft Copilot](https://copilot.microsoft.com/)、[DeepSeek](https://chat.deepseek.com/)、[文心一言](https://yiyan.baidu.com/))
+- [ ] [Clash](https://github.com/clashdownload/Clash?tab=readme-ov-file)：profiles
+- [ ] [Google Chrome](https://www.google.com/chrome/)：Default browser、log in、turn on Sync（Extensions、BookMark）、search engine setting
 
-- [VS Code](https://code.visualstudio.com/)：log in、save on focusChange
-  - Extensions：Remote SSH、Python、Jupyter、C/C++（Format on Save、mingw-w64）、CMake Tools、Black Formatter、GitHub Copilot、Markdown All in One、Open in External App、Partial Diff、Vscode-Icons
+- [ ] [VS Code](https://code.visualstudio.com/)：log in、Backup and Sync Settings
 
-- [Typora](https://github.com/shuhongfan/TyporaCrack)：[Pandoc](https://pandoc.org/installing.html)、perferance
-- [Clash](https://github.com/clashdownload/Clash?tab=readme-ov-file)：profiles
-- [Git for Windows](https://git-scm.com/downloads/win)：SSH key、alias config
-- [WSL + Ubuntu](https://learn.microsoft.com/zh-cn/windows/wsl/install)
-- [Anaconda](https://www.anaconda.com/download)
-- [Node.js + npm](https://nodejs.org/en)
-- [Office Tool Plus](https://otp.landian.vip/zh-cn/#google_vignette)
-- [BaiduNetwork](https://pan.baidu.com/download#win)
-- [Wechat](https://weixin.qq.com/)
+- [ ] [Typora](https://github.com/shuhongfan/TyporaCrack)：[Pandoc](https://pandoc.org/installing.html)、perferance
+
+- [ ] [Git for Windows](https://git-scm.com/downloads/win)：SSH key、alias config（autocrlf）
+
+  ```.gitconfig
+  [core]
+  	safecrlf = true
+  	autocrlf = !!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+  [alias]
+  	st = status
+      br = branch
+      co = checkout
+      pl = pull --rebase
+      cm = commit
+      last = log -1 HEAD
+      hist = log --pretty=format:\"%C(yellow)%h %C(blue)%ad %C(reset)%s %C(green)[%cn] %C(red)%d\" --decorate --date=short
+      latest = for-each-ref --sort=-committerdate --format='%(committerdate:short) %(refname:short) [%(committername)]'
+      type = cat-file -t
+      dump = cat-file -p
+  ```
+  
+- [ ] [WSL + Ubuntu](https://learn.microsoft.com/zh-cn/windows/wsl/install)
+
+- [ ] [Anaconda](https://www.anaconda.com/download)
+
+- [ ] [hugo](https://github.com/gohugoio/hugo)
+
+- [ ] [Office Tool Plus](https://otp.landian.vip/zh-cn/#google_vignette)
+
+- [ ] [BaiduNetwork](https://pan.baidu.com/download#win)
+
+- [ ] [QQ](https://im.qq.com/index/) for transmission
 
 ### Linux (Ubuntu)
+
+| **挂载点**  | **分区大小** | **文件系统** | **用途**               | **备注**                                                    |
+| :---------- | :----------- | :----------- | :--------------------- | :---------------------------------------------------------- |
+| `/boot/efi` | SSD 512MB    | FAT32        | UEFI启动分区           | 必需分区，所有操作系统共享（双系统时注意不要格式化）        |
+| `/`         | SSD 100GB    | ext4         | 系统核心文件           | 系统程序、库文件等。建议最低50GB，开发/游戏用户可增至150GB  |
+| `/home`     | SSD 剩余     | ext4         | 用户配置文件、桌面数据 | 用户文档、软件配置、.config等。SSD加速日常操作              |
+| 未分配      | SSD 可选     | -            | 预留未来扩展           | 可保留10-20GB，后续用于扩容或临时快照                       |
+| `/mnt/data` | HDD 全部     | ext4/NTFS    | 大文件存储             | 电影、下载、游戏库、备份等。NTFS格式可兼容Windows双系统访问 |
+| swap分区    | HDD 可选     | swap         | 内存交换空间           | 内存≥16GB时可省略；≤8GB建议分配8-16GB                       |
 
 ```bash
 # install vim
 sudo apt install vim
+
+# vim Tab
+vim /etc/vim/vimrc
+# set tabstop=4
+
+# gedit Tab
+# adjust settings
 
 # update install source
 sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
@@ -94,12 +132,20 @@ git config --global user.name "<your name>"
 git config --global user.email "<your email>"
 
 # install input method
-sudo apt install fcitx5 fcitx5-config-qt fcitx5-chinese-addons
+sudo apt remove --purge fcitx
+sudo apt autoremove
+sudo apt install fcitx5 fcitx5-configtool fcitx5-chinese-addons
+fcitx5-configtool
 
-# read English and write Chinese
-export LANG=en_US
-xdg-user-dirs-gtk-update
-sudo apt install language-pack-zh-hans
+# config input method
+vim ~/.profile
+# export GTK_IM_MODULE=fcitx
+# export QT_IM_MODULE=fcitx
+# export XMODIFIERS=@im=fcitx
+# # fcitx5 &
+
+# auto-start fcitx5
+sudo apt install gnome-tweaks
 
 # install VScode ....
 ```
@@ -355,7 +401,55 @@ This repository describes some guidelines, [simple introduction]
 
 
 
-## 博文
+## Research
+
+从领域内综述和硕博论文开始，掌握**各类方法核心思想及其优缺点**，梳理研究方向发展脉络，明确当下**SOTA方法**，今天要读的是：
+
+> [Work Title - Author](https://biglonglong.github.io/)
+>
+> []: 
+
+### Introduction
+
+了解论文的 Abstract & Conclusion，明确论文解决的问题及其潜在工业应用价值，快速评估其创新性和实用性，确定是否有继续读下去的必要；
+
+结合Introduction & Figures，确定论文核心思想；
+
+### Base
+
+查找相关资料，了解论文的主要假设，主要公式、基线方法；
+
+### Approach
+
+论文核心方案的实现或创新点；
+
+### Result
+
+#### Scene
+
+#### Evaluation
+
+#### Effect
+
+### Discussion
+
+讨论与局限性
+
+### Opinion
+
+”文章内容、结构、方法为什么有效“的总结与改进
+
+### Writing
+
+#### Structure
+
+#### Phrase
+
+### Code
+
+
+
+## Blog
 
 ### 前言
 

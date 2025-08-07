@@ -94,6 +94,15 @@ showToc: false
   - [Site - Yanyan's Wiki（南京大学 蒋炎岩）](https://jyywiki.cn/)
   - [Book - 现代操作系统原理与实现](https://book.douban.com/subject/35208251/)
   - [Site - ucore实验指导书](https://learningos.github.io/ucore_os_webdocs/)
+- [Video - Pytorch框架与经典卷积神经网络与实战（炮哥）](https://www.bilibili.com/video/BV1e34y1M7wR/?spm_id_from=333.337.search-card.all.click)
+  - [Video - 快速带你入门深度学习与实战（炮哥）](https://www.bilibili.com/video/BV1eP411w7Re/?spm_id_from=333.1387.homepage.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+
+- [Video - ROS2理论与实践（赵虚左）](https://www.bilibili.com/video/BV1VB4y137ys/?vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Site - ROS2理论与实践讲义（猛狮集训营）](https://www.zhihu.com/people/41-69-11-75-42/posts)
+  - [Site - ROS理论与实践（Autolabor）](http://www.autolabor.com.cn/book/ROSTutorials/)
+
+- [Github - PathPlanning（zhm-real）](https://github.com/biglonglong/PathPlanning)
+- [Github - LearningOpenCV（BingqiangZhou）](https://github.com/biglonglong/LearningOpenCV)
 
 
 
@@ -106,7 +115,6 @@ showToc: false
 - [CodeTop 面试题目总结](https://codetop.cc/home)
 - [youngyangyang04/TechCPP: 【C++面试&C++学习指南】](https://github.com/youngyangyang04/TechCPP)
 - [huihut/interview: 📚 C/C++ 技术面试基础知识总结.](https://interview.huihut.com/#/)
-- [zhm-real/PathPlanning: Common used path planning algorithms with animations.](https://github.com/zhm-real/PathPlanning)
 - [🧙关于我们🧙 | 自动驾驶小白说](https://www.helloxiaobai.cn/about)
 - 百度 Apollo
 - [AI算法工程师手册](https://www.huaxiaozhuan.com/)
