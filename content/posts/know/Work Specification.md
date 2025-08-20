@@ -405,25 +405,26 @@ This repository describes some guidelines, [simple introduction]
 
 从领域内综述和硕博论文开始，掌握**各类方法核心思想及其优缺点**，梳理研究方向发展脉络，明确当下**SOTA方法**，今天要读的是：
 
-> [Work Title - Author](https://biglonglong.github.io/)
+> [Name - Author.etc](https://arxiv.org/abs/...)
 >
-> []: 
+> [Repo]: https://github.com/…
+> [Hugging Face]: https://huggingface.co/…
 
-### Introduction
+### Introduction（yellow）
 
 了解论文的 Abstract & Conclusion，明确论文解决的问题及其潜在工业应用价值，快速评估其创新性和实用性，确定是否有继续读下去的必要；
 
 结合Introduction & Figures，确定论文核心思想；
 
-### Base
+### Base（orange）
 
 查找相关资料，了解论文的主要假设，主要公式、基线方法；
 
-### Approach
+### Approach（red）
 
 论文核心方案的实现或创新点；
 
-### Result
+### Result（blue）
 
 #### Scene
 
@@ -431,15 +432,15 @@ This repository describes some guidelines, [simple introduction]
 
 #### Effect
 
-### Discussion
+### Discussion（purple）
 
 讨论与局限性
 
-### Opinion
+### Opinion（comment）
 
 ”文章内容、结构、方法为什么有效“的总结与改进
 
-### Writing
+### Writing（green）
 
 #### Structure
 
@@ -458,3 +459,4 @@ This repository describes some guidelines, [simple introduction]
 ### 正文标题2
 
 ### …
+

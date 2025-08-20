@@ -10,7 +10,7 @@ tags: ["summary", "git"]
 summary: ""
 
 math: false
-weight: 
+weight: 401
 cover:
     image: ""
     caption: ""
@@ -55,6 +55,7 @@ Git 是一个分布式版本控制系统，用于高效地管理代码版本历�
 
    ```bash
    git clone <remoteAdress>
+   git submodule update --init --recursive   # 初始化和更新子模块
    ```
 
 3. 检查仓库状态（`status`），对本地仓库内容进行暂存（`add`）并提交
@@ -86,6 +87,7 @@ Git 是一个分布式版本控制系统，用于高效地管理代码版本历�
    git branch -a										# 检查所有分支
    git fetch main										# 获取远程待开发主分支
    git fetch --all										# 获取远程所有分支
+   git submodule update --init --recursive			# 确保子模块同步
    ```
 
 2. 切换（`checkout`）或创建工作分支，在工作分支上进行开发
@@ -144,17 +146,17 @@ Git 是一个分布式版本控制系统，用于高效地管理代码版本历�
 
 ### 版本回退
 
+- `git stash -u`|`git stash apply`&`git stash clear`：临时寄存或弹出工作区和暂存区的改动
+
+- `git diff <hash1> <hash2> > output.txt`&`git apply output.txt`：重定向版本差异再应用
+
 - `git clean -n`&`git clean -fd`：清理未跟踪文件
 
 - `git restore <files>/git checkout .`：撤回工作区的修改，但不会影响未跟踪文件
 
 - `git restore --staged <files>`：将暂存区内容撤回到工作区
 
-- `git stash -u`|`git stash apply`&`git stash clear`：临时寄存或弹出工作区和暂存区的改动
-
-- `git diff <hash1> <hash2> > output.txt`&`git apply output.txt`：重定向版本差异再应用
-
-- `git commit --amend`：修改最新提交Msg
+- `git commit --amend`：此次暂存区内容与上次提交内容合并为单个提交
 
 - `git reset --<mode> <hash>`：移动HEAD到<hash>版本而回退，此时该分支本地和远程提交记录不一致，需要强制推送（`push -f`）覆盖
 
@@ -171,6 +173,39 @@ Git 是一个分布式版本控制系统，用于高效地管理代码版本历�
 - `git cherry-pick <hash>`：应用某个特定提交到当前分支
 
 - `git checkout --orphan fresh`：刷新仓库历史
+
+
+
+## 子模块
+
+Git 子模块允许在一个仓库中包含其他仓库作为子目录，常用于管理项目依赖：
+
+```bash
+# 克隆包含子模块的项目
+git clone --recursive <url>						# 自动初始化所有子模块
+git clone <url> && git submodule update --init --recursive	# 分步操作
+
+# 初始化子模块（首次或新增后）
+git submodule update --init --recursive			# 初始化并更新所有子模块
+git submodule update --init <path>				# 初始化特定子模块
+
+# 更新子模块（拉取主仓库更新后）
+git submodule update --recursive				# 更新到指定版本
+git submodule foreach git pull origin main		# 更新到最新版本
+
+# 查看子模块状态
+git submodule status							# 查看所有子模块状态
+git submodule summary							# 查看子模块更改摘要
+
+# 添加子模块
+git submodule add <url> <path>					# 添加新子模块
+git commit -m "Add submodule <name>"			# 提交子模块配置
+
+# 删除子模块
+git submodule deinit <path>						# 反初始化子模块
+git rm <path>									# 删除子模块文件
+rm -rf .git/modules/<path>						# 清理配置（可选）
+```
 
 
 

@@ -10,8 +10,8 @@
 
     {{- print " · "}}
     {{- with site.Params.footer.text }}
-        {{ . | markdownify }}
-        {{- print " · "}}
+    {{ . | markdownify }}
+    {{- print " · "}}
     {{- end }}
 
     <span>
@@ -21,16 +21,16 @@
 
     {{$scratch := newScratch}}
     {{ range (where .Site.Pages "Kind" "page" )}}
-        {{$scratch.Add "total" .WordCount}}
+    {{$scratch.Add "total" .WordCount}}
     {{ end }}
-    
+
     <div>在这里度过了<span id="days">0</span> ，写下 {{$scratch.Get "total" }} 字，时间过得真快呐！</div>
 
-    <div class="busuanzi-footer">
+    <!-- <div class="busuanzi-footer">
         <span id="busuanzi_container_site_pv">
             已有<span id="busuanzi_value_site_pv" style="font-weight: 500;">0</span>人次光临小窝
         </span>
-    </div>
+    </div> -->
 </footer>
 {{- end }}
 
@@ -46,14 +46,14 @@
 
     var BootDate = new Date("{{ .Site.Params.buildDate }}");
     function ShowRunTime(id) {
-      var NowDate = new Date();
-      var RunDateM = parseInt(NowDate - BootDate);
-      var RunDays = Math.floor(RunDateM / (24 * 3600 * 1000));
-      var RunHours = Math.floor(RunDateM % (24 * 3600 * 1000) / (3600 * 1000));
-      var RunMinutes = Math.floor(RunDateM % (24 * 3600 * 1000) % (3600 * 1000) / (60 * 1000));
-      var RunSeconds = Math.round(RunDateM % (24 * 3600 * 1000) % (3600 * 1000) % (60 * 1000) / 1000);
-      var days = RunDays + " 天 " + RunHours + " 时 " + RunMinutes + " 分 " + RunSeconds + " 秒";
-      document.getElementById(id).innerHTML = days;
+        var NowDate = new Date();
+        var RunDateM = parseInt(NowDate - BootDate);
+        var RunDays = Math.floor(RunDateM / (24 * 3600 * 1000));
+        var RunHours = Math.floor(RunDateM % (24 * 3600 * 1000) / (3600 * 1000));
+        var RunMinutes = Math.floor(RunDateM % (24 * 3600 * 1000) % (3600 * 1000) / (60 * 1000));
+        var RunSeconds = Math.round(RunDateM % (24 * 3600 * 1000) % (3600 * 1000) % (60 * 1000) / 1000);
+        var days = RunDays + " 天 " + RunHours + " 时 " + RunMinutes + " 分 " + RunSeconds + " 秒";
+        document.getElementById(id).innerHTML = days;
     }
     ShowRunTime('days');
     setInterval("ShowRunTime('days')", 1000);

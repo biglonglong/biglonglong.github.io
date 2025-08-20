@@ -2,7 +2,6 @@
 title: "🌐nav"
 hidemeta: true
 showToc: false
-
 ---
 
 
@@ -73,7 +72,7 @@ showToc: false
 
 > No one insists you read in full. If you need, read it!
 
-- [Github - AILearning（lizhi3158）](https://github.com/lizhi3158/AILearning)
+- [Github - notes-python3（lijin-THU）](https://github.com/lijin-THU/notes-python3)
 - [Video - C++教程从0到1（黑马程序员）](https://www.bilibili.com/video/BV1et411b73Z/)
   - [Site - C++参考手册](https://cppreference.cn/w/)
   - [Book - C++ Primer（第 5 版 中文版）](https://book.douban.com/subject/25708312/)
@@ -88,19 +87,28 @@ showToc: false
   - [Book - 程序员的自我修养](https://book.douban.com/subject/3652388/)
   - [Book - 程序是怎样跑起来的](https://book.douban.com/subject/26365491/)
   - [Github - translationCSAPP（EugeneLiu）](https://github.com/EugeneLiu/translationCSAPP)
-  - [Blog - Tag: ics（Arthals' ink）](https://arthals.ink/tags/ics)
+  - [Site - Tag: ics（Arthals' ink）](https://arthals.ink/tags/ics)
 - [Video - 操作系统原理（清华大学 向勇、陈渝）](https://www.bilibili.com/video/BV1uW411f72n/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Book - 操作系统导论（中文版）](https://itanken.github.io/ostep-chinese/)
   - [Site - Yanyan's Wiki（南京大学 蒋炎岩）](https://jyywiki.cn/)
   - [Book - 现代操作系统原理与实现](https://book.douban.com/subject/35208251/)
   - [Site - ucore实验指导书](https://learningos.github.io/ucore_os_webdocs/)
-- [Video - Pytorch框架与经典卷积神经网络与实战（炮哥）](https://www.bilibili.com/video/BV1e34y1M7wR/?spm_id_from=333.337.search-card.all.click)
-  - [Video - 快速带你入门深度学习与实战（炮哥）](https://www.bilibili.com/video/BV1eP411w7Re/?spm_id_from=333.1387.homepage.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+- [Video - 线性代数的本质（3Blue1Brown）](https://www.bilibili.com/video/BV1ys411472E/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Video - 线性代数（MIT）](https://www.bilibili.com/video/BV1xS4y1L7w5/?vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Github - notes-linear-algebra（zlotus）](https://github.com/zlotus/notes-linear-algebra)
 
+- [Video - 概率统计速成（数学强国）](https://www.bilibili.com/video/BV1TJ411y7Zp/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Video - 概率论（3Blue1Brown）](https://space.bilibili.com/88461692/lists/1528924?type=series)
+  - [Github - Statistics-note（ChanceQZ）](https://github.com/ChanceQZ/Statistics-note)
+
+- [Video - 微积分（矿爷）](https://www.bilibili.com/video/BV1Lt411r7NQ/?spm_id_from=333.337.search-card.all.click)
+- [Video - 从函数到神经网络【白话DeepSeek】（闪客）](https://www.bilibili.com/video/BV1uGA3eLEeu/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Video - Pytorch框架与经典卷积神经网络与实战（炮哥）](https://www.bilibili.com/video/BV1e34y1M7wR/?spm_id_from=333.337.search-card.all.click)
+  - [Video - 手撕“Everything”系列，Transformer, Diffusion，LLM（happy魇）](https://www.bilibili.com/video/BV1Fw4m1C7Tq/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Video - pytorch 大模型 多模态入门教程](https://www.bilibili.com/video/BV17P411m7Ma/?spm_id_from=333.1387.upload.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19) | [‍⁢⁡‌﻿⁡‌⁣⁢⁡⁡⁢⁤⁤‬‍⁣⁡⁣⁣⁣⁡⁣‍﻿﻿⁣‬⁡⁣‍‍﻿﻿‌‌人工智能学习路线（卢菁）](https://bcn51aw5ec5g.feishu.cn/wiki/Bo46wjKrMiPGMBkxNbacitACn4d)
 - [Video - ROS2理论与实践（赵虚左）](https://www.bilibili.com/video/BV1VB4y137ys/?vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Site - ROS2理论与实践讲义（猛狮集训营）](https://www.zhihu.com/people/41-69-11-75-42/posts)
   - [Site - ROS理论与实践（Autolabor）](http://www.autolabor.com.cn/book/ROSTutorials/)
-
 - [Github - PathPlanning（zhm-real）](https://github.com/biglonglong/PathPlanning)
 - [Github - LearningOpenCV（BingqiangZhou）](https://github.com/biglonglong/LearningOpenCV)
 
@@ -110,12 +118,14 @@ showToc: false
 
 - [大语言模型(LLM)入门学习路线图](https://blog.csdn.net/2401_84494441/article/details/143867081)
 - [ROS2的学习经验](https://blog.csdn.net/qq_64079631/article/details/133621574)
+- [(47 封私信 / 82 条消息) Robotics R&D - 知乎](https://www.zhihu.com/column/c_1387574965043171328)
 - [校招｜C++后台开发学习路线（已签腾讯sp，附学习资料） - 知乎](https://zhuanlan.zhihu.com/p/61457047)
 - [C++实习速成学习路线](https://www.wolai.com/ustcse/69ChCiD9xPBx9NAjpjyR3J)
 - [CodeTop 面试题目总结](https://codetop.cc/home)
 - [youngyangyang04/TechCPP: 【C++面试&C++学习指南】](https://github.com/youngyangyang04/TechCPP)
 - [huihut/interview: 📚 C/C++ 技术面试基础知识总结.](https://interview.huihut.com/#/)
 - [🧙关于我们🧙 | 自动驾驶小白说](https://www.helloxiaobai.cn/about)
+- [【全】无人驾驶系列知识入门到提高_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV137411E7oC/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
 - 百度 Apollo
 - [AI算法工程师手册](https://www.huaxiaozhuan.com/)
 

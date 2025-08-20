@@ -10,7 +10,7 @@ tags: ["summary", "ros2", "navigation", "plugin"]
 summary: ""
 
 math: true
-weight: 204
+weight: 10004
 cover:
     image: ""
     caption: ""

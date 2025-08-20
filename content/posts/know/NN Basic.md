@@ -10,7 +10,7 @@ tags: ["summary", "research", "ai", "nn"]
 summary: ""
 
 math: true
-weight: 401
+weight: 301
 cover:
     image: ""
     caption: ""
@@ -42,6 +42,10 @@ conda install pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit
 
 
 
+## Tensor
+
+
+
 ## NN
 
 $$
@@ -53,7 +57,8 @@ $$
   - 权重（$\textbf{w}^T$）：控制每个输入特征对神经元输出的影响程度
   - 偏置（$\textbf{b}$）：调节激活函数的触发阈值
   - 激活函数（$f$）：影响反向传播的梯度流动，控制神经元的激活与抑制
-- 层（Layers）：由多个神经元组合而成，一般神经网络结构依次为输入层（Input Layer）负责接收原始数据 $\rightarrow$ 隐藏层（Hidden Layers）进行特征提取 $\rightarrow$ 输出层（Output Layer）根据目标归纳为最终预测
+- 层（Layers）：经过神经元组合结构后产生的数据，一般神经网络结构依次为输入层（Input Layer）负责接收原始数据 $\rightarrow$ 隐藏层（Hidden Layers）进行特征提取 $\rightarrow$ 输出层（Output Layer）根据目标归纳为最终预测
+- 模型（Model）：任务的规律函数
 
 网络训练过程：首先输入数据通过模型**前向传播**（Forward Propagation）得到预测输出；随后利用**损失函数**（Loss Function）计算预测值与真实值之间的误差，并通过**链式法则**（Chain Rule）推导出各参数关于损失函数的梯度；接着模型**反向传播**（Back Propagation），基于梯度下降法，利用合适的**优化器**（Optimizer），在一定**学习率**（Learning Rate）下更新参数$\Delta \textbf{w}$和$\Delta \textbf{b}$，从而优化模型；通过多次**迭代**，模型逐步调优权重和偏置，最终使前向传播后损失函数计算的误差达到较小，获得性能较优的模型用于实践。
 
@@ -63,113 +68,23 @@ $$
 
 为避免多层神经网络退化为单层结构，同时帮助深度网络能够有效处理高维复杂任务，需要在每个神经元后引入非线性激活函数：
 
-### Sigmod
-
-$$
-\sigma(x) = \frac{1}{1 + e^{-x}}
-\longrightarrow
-\sigma'(x) = \sigma(x) \cdot (1 - \sigma(x))
-$$
-
-<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/sigmoid.png" alt="sigmoid" style="zoom: 25%;" />
-
-1. 区间：(0,1)，适合将实数映射到概率
-2. 单调性：单调递增
-3. 对称性：关于原点不对称
-4. 可微性：光滑（连续可导），满足反向传播的梯度计算要求
-5. 导数值：计算高效，但当输入值很大或很小时，梯度消失，训练耗时
-
-### Tanh
-
-$$
-\tanh(x) = \frac{e^{x} - e^{-x}}{e^{x} + e^{-x}} \longrightarrow
-\tanh'(x) = 1 - \tanh^2(x)
-$$
-
-<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/tanh.png" alt="tanh" style="zoom: 67%;" />
-
-1. 区间：(-1,1)，适合于数据归一化
-2. 单调性：单调递增
-3. 对称性：关于原点对称，具有正负一致性
-4. 可微性：光滑（连续可导），满足反向传播的梯度计算要求
-5. 导数值：计算高效，值大方便模型收敛，但当输入值很大或很小时，梯度消失，训练耗时
-
-### ReLU
-
-$$
-\text{ReLU}(x) = 
-\begin{cases} 
-    x & \text{if } x > 0 \\
-    0 & \text{if } x \leq 0
-\end{cases}
-\longrightarrow
-\text{ReLU}'(x) = 
-\begin{cases} 
-    1 & \text{if } x > 0 \\
-    0 & \text{if } x \leq 0
-\end{cases}
-$$
-
-<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/relu.png" alt="relu" style="zoom:67%;" />
-
-1. 区间：(0, +inf)，适合于加速网络训练
-2. 单调性：单调不递减
-3. 对称性：关于原点不对称
-4. 可微性：分段，光滑（连续可导），满足反向传播的梯度计算要求
-5. 导数值：计算高效，值大方便模型收敛，但可能存在神经元死亡
-
-### Leaky ReLU
-
-$$
-f(x) = 
-\begin{cases} 
-    x & \text{if } x \geq 0 \\
-    \alpha x & \text{if } x < 0
-\end{cases}
-\longrightarrow
-f'(x) = 
-\begin{cases} 
-    1 & \text{if } x \geq 0 \\
-    \alpha & \text{if } x < 0
-\end{cases}
-$$
-
-<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/leakyRelu.png" alt="leakyRelu" style="zoom: 67%;" />
-
-1. 区间：(-inf, +inf)，适合于解决梯度消失
-2. 单调性：单调递增
-3. 对称性：关于原点不对称
-4. 可微性：分段，光滑（连续可导），满足反向传播的梯度计算要求
-5. 导数值：计算高效，值大方便模型收敛，但可能超参不好确定
+| 函数名     | 表达式                                                       | 图像                                                         | 区间                         | 单调性     | 对称性                       | 可微性           | 导数                                                         |
+| ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------- | ---------- | ---------------------------- | ---------------- | ------------------------------------------------------------ |
+| Sigmoid    | $\sigma(x) = \frac{1}{1 + e^{-x}}$<br/>$\sigma'(x) = \sigma(x) \cdot (1 - \sigma(x))$ | <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/sigmoid.png" alt="sigmoid"/> | (0,1)，适合将实数映射到概率  | 单调递增   | 关于原点不对称               | 光滑（连续可导） | 计算高效，但当输入值很大或很小时，梯度消失，训练耗时         |
+| Tanh       | $\tanh(x) = \frac{e^{x} - e^{-x}}{e^{x} + e^{-x}}$<br/>$\tanh'(x) = 1 - \tanh^2(x)$ | <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/tanh.png" alt="tanh"/> | (-1,1)，适合于数据归一化     | 单调递增   | 关于原点对称，具有正负一致性 | 光滑（连续可导） | 计算高效，值大方便模型收敛，但当输入值很大或很小时，梯度消失，训练耗时 |
+| ReLU       | $\text{ReLU}(x) = \begin{cases} x & \text{if } x > 0 \\ 0 & \text{if } x \leq 0 \end{cases}$<br/>$\text{ReLU}'(x) = \begin{cases} 1 & \text{if } x > 0 \\ 0 & \text{if } x \leq 0 \end{cases}$ | <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/relu.png" alt="relu"/> | (0, +∞)，适合于加速网络训练  | 单调不递减 | 关于原点不对称               | 分段，连续可导   | 计算高效，值大方便模型收敛，但可能存在神经元死亡             |
+| Leaky ReLU | $f(x) = \begin{cases} x & \text{if } x \geq 0 \\ \alpha x & \text{if } x < 0 \end{cases}$<br/>$f'(x) = \begin{cases} 1 & \text{if } x \geq 0 \\ \alpha & \text{if } x < 0 \end{cases}$ | <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/leakyRelu.png" alt="leakyRelu"/> | (-∞, +∞)，适合于解决梯度消失 | 单调递增   | 关于原点不对称               | 分段，连续可导   | 计算高效，值大方便模型收敛，但超参不好确定                   |
 
 
 
 ## Loss Function
 
-衡量预测值与真实值的差异
+衡量预测值与真实值的差异：
 
-### Mean Squared Error
-
-考虑事件独立，计算实际模型与理想模型的差距 -> 实际值$y_i$、预测值$\hat{y}_i$
-$$
-J(x) = \frac{1}{2n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
-$$
-
-优点：梯度稳定，训练高效；适合大规模严格回归任务；
-
-缺点：平方项使得模型对离群点敏感，鲁棒性较差；
-
-### Cross Entropy
-
-考虑事件独立，最大似然估计实际模型作为理想模型的概率 -> 信息量$I(x)$/事件不确定性、熵$H(x)$/分布混乱度、交叉熵$H(y_i,\hat{y}_i)$/实验分布$\hat{y}_i$与标准分布$y_i$的差距
-$$
-I(x) = -\log p(x) \\
-H(x) = -\sum_{x \in \mathcal{X}} p(x) \log p(x) \\
-H(\hat{y}_i,y_i) = - \frac{1}{n} \sum_{i=1}^{n} y_i \log \hat{y}_i \\
-$$
-优点：与softmax结合，适合大规模严格分类任务；
-
-缺点：要求分类类别互斥；梯度不稳定，需谨慎处理低置信度的错误样本；
+| 函数名             | 表达式                                                       | 解释                                                 | 优点                                         | 缺点                                                         |
+| ------------------ | ------------------------------------------------------------ | ---------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------ |
+| Mean Squared Error | $J(x) = \frac{1}{2n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$     | 考虑事件独立，计算实际模型与理想模型的差距           | 梯度稳定，训练高效；适合大规模严格回归任务； | 平方项使得模型对离群点敏感，鲁棒性较差；                     |
+| Cross Entropy      | $H(\hat{y}_i,y_i) = - \frac{1}{n} \sum_{i=1}^{n} y_i \log \hat{y}_i$ | 考虑事件独立，最大似然估计实际模型作为理想模型的概率 | 与softmax结合，适合大规模严格分类任务；      | 要求分类类别互斥；梯度不稳定，需谨慎处理低置信度的错误样本； |
 
 
 
@@ -220,19 +135,18 @@ $$
 
 ## Train/Test Focus
 
-- 数据
-  - 收集
-  - 预处理：数据清洗（异常、NULL）、数据分布、数据处理（归一化、正则化）
+> 数据（数据清洗【异常、NULL】、数据分布【归一化、正则化】、数据增强【翻转、裁剪】）
+>
+> 模型（激活函数、损失函数【正则化惩罚项】、优化器、学习率、复杂度【dropout】）
+>
+> 训练方法（批次大小、训练轮次、权重初始化）
 
-- 模型
-  - 参数量：dropout
-  - 激活函数、损失函数、优化器和学习率
-
-- 训练：批次大小、训练轮次、权重初始化
-
+1. 过拟合|泛化能力：降低模型复杂度、增加数据量
+2. 梯度消失|梯度爆炸|收敛速度：梯度裁剪、残差网络、权重初始化、数据归一化、优化器
 
 
-## FCNN/MLP                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+
+## FCNN/MLP
 
 <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/FCNN.jpg" alt="FCNN" style="zoom: 33%;" />
 $$
@@ -266,7 +180,7 @@ $$
 
 ### simpleCNN
 
-<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/cnn.png" alt="cnn" style="zoom: 50%;" />
+<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/cnn.png" alt="cnn" style="zoom:50%;" />
 $$
 OH = \frac{H + 2P - FH}{S} + 1  \quad
 OW = \frac{W + 2P - FW}{S} + 1
@@ -305,7 +219,7 @@ $$
 
 ### [AlexNet](https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf)
 
-![alexnet](https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/alexnet.jpg)
+<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/alexnet.jpg" alt="alexnet" style="zoom: 80%;" />
 
 | 层类型（8）                       | 参数设置                               | 输出尺寸                          |
 | :-------------------------------- | :------------------------------------- | :-------------------------------- |
@@ -502,9 +416,9 @@ $$
   - 输入门（Input Gate）：淡化当前时间步信息
   - 输出门（Output Gate）：激活当前及其之前时间步信息，同时解决梯度问题
 
-优点：处理变长序列，解决长期依赖问题；缓解梯度消失/爆炸；
+优点：缓解梯度消失/爆炸；
 
-缺点：无法处理超长序列；计算复杂度高，内存消耗大，可能过拟合；超参数敏感；并行化困难；
+缺点：无法捕捉长期依赖关系；并行化困难；计算复杂度高，内存消耗大，可能过拟合；
 
 ### [GRU](https://arxiv.org/abs/1412.3555)
 
@@ -514,9 +428,9 @@ $$
   - 重置门$r_t$（Reset Gate）：淡化过去时间步信息
   - 更新门$z_t$（Update Gate）：平衡过去和当前时间步信息的权重
 
-优点：解决了梯度问题，降低了结构复杂性，训练效率高；有效捕捉长期依赖关系；
+优点：缓解梯度问题，降低结构复杂性，训练效率高；
 
-缺点：无法处理超长序列；并行化困难；
+缺点：无法捕捉长期依赖关系；并行化困难；
 
 
 
@@ -524,9 +438,13 @@ $$
 
 ### [simpleTransformer](https://arxiv.org/abs/1706.03762)
 
+> CNN像素级全局感知能力（自注意力）、RNN序列建模特性（位置编码），适合seq2seq（context + prompt -> answer）问题 hard train 一发
+>
+> - [史上最全Transformer：灵魂20问帮你彻底搞定Transformer-干货！ - 知乎](https://zhuanlan.zhihu.com/p/148656446)
+
 <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/transformers.png" alt="transformers" style="zoom: 50%;" />
 
-- 编码器（Encoders）：生成带有注意力信息的特征向量表示
+- 编码器（Encoders）：生成带有注意力信息的$\text{Keys}/\text{Values}$向量
 
   - 词嵌入（Token Embedding）：根据点积相似度，将离散的词符号映射到$d_{\text{model}}$维向量空间中
 
@@ -543,7 +461,7 @@ $$
   \mathbf{h}_i = \mathbf{e}_w + \mathbf{p}_i
   $$
 
-  - 自注意力机制（Self–Attention）：利用三个独立线性变换将输入词向量映射为**$\text{Query}, \text{Keys}, \text{Values}$向量**，缩放点积的方式计算不同词向量之间$\text{Query}$-$\text{Keys}$**相似度矩阵**，利用该注意力权重对值向量$\text{Values}$求加权和，生成具有全局依赖关系的新向量表示。特殊地，可以将$Q, K, V$均归纳为输入词向量即可
+  - 自注意力机制（Self–Attention）：利用三个线性变换矩阵$\text{W}_q、\text{W}_k、\text{W}_v$将每个词向量映射为$\text{Querys}, \text{Keys}, \text{Values}$向量；再以缩放点积的方式计算不同词向量之间$\text{Querys}$-$\text{Keys}$相似度矩阵；针对每个词向量与其他词向量的相似度，与对应值向量$\text{Values}$求加权和，生成具有注意力分配的新词向量表示。一般地，可以将$Q, K, V$均归纳为原始词向量
     $$
     \mathbf{Q} = \mathbf{X}\mathbf{W}_Q, 
     \mathbf{K} = \mathbf{X}\mathbf{W}_K,
@@ -554,7 +472,7 @@ $$
     \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
     $$
 
-  - 多头注意力机制（Multi-Headed Attention）：并行化多组注意力头，学习不同的投影子空间特征，从而捕获输入序列中不同类型的依赖关系，增强模型的表征能力
+  - 多头注意力机制（Multi-Headed Attention）：并行化多组$\text{W}_q、\text{W}_k、\text{W}_v$注意力头，学习不同投影子空间的特征，将不同头输出拼接起来，维度不发生变化，从而捕获输入序列中不同类型的依赖关系，增强模型的表征能力
 
   - 跳跃连接（Skip Connection）
 
@@ -569,39 +487,13 @@ $$
     \gamma, \beta
     $$
 
--  解码器（Decoders）：生成文本序列
+-  解码器（Decoders）：根据编码器的$\text{Keys}/\text{Values}$向量，以当前输入$\text{Querys}$，自回归以token：BEGIN、END生成文本序列
 
-  - 输入：编码器输出的特征向量、解码器自回归输出列表
-  - 掩码多头注意力机制（Masked Multi-Headed Attention）：利用$\text{Look-Ahead Mask}$矩阵抹去相似度矩阵中$\text{Query}$落后于$\text{Keys}$的部分
-  - 交互多头注意力机制（Interactive Multi-Headed Attention）：编码器输出$\text{Query}$和$\text{Keys}$，掩码多头注意力机制层输出$\text{Values}$，以作为其输入，确定焦点编码器
+  - 掩码多头注意力机制（Masked Multi-Headed Attention）：利用$\text{Look-Ahead Mask}$矩阵抹去相似度矩阵中$\text{Querys}$先于$\text{Keys}$部分的相似度
+  - 交互多头注意力机制（Interactive Multi-Headed Attention）：编码器输出$\text{Keys}/\text{Values}$向量，掩码多头注意力机制层输出$\text{Values}$向量，以这些作为为输入，确定焦点编码器
 
-优点：可小批量，可并行化
+- 扩展：复制机制、引导注意力机制、beam search、随机噪声、强化学习、鲁棒样本
 
-缺点：模型复杂、超参敏感、优化困难
+优点：可小批量，可并行化，复杂模型弹性大，小数据集过拟合，可引用于大数据集
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[史上最全Transformer：灵魂20问帮你彻底搞定Transformer-干货！ - 知乎](https://zhuanlan.zhihu.com/p/148656446)
-
-
-
-
-
-
-
+缺点：超参敏感、优化困难

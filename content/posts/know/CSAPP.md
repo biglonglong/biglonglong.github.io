@@ -10,7 +10,7 @@ tags: ["summary", "八股文", "c"]
 summary: ""
 
 math: true
-weight: 301
+weight: 201
 cover:
     image: ""
     caption: ""
@@ -242,7 +242,7 @@ $$
 |     |     |     | F   | D   | E   | M   | W   |     |
 |     |     |     |     | F   | D   | E   | M   | W   |
 
-<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/CPU%E7%94%B5%E8%B7%AF%E5%8E%9F%E7%90%86%E5%9B%BE.jpg" alt="CPU电路原理图" style="zoom: 33%;" />
+<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/CPU%E7%94%B5%E8%B7%AF%E5%8E%9F%E7%90%86%E5%9B%BE.jpg" alt="CPU电路原理图" style="zoom:33%;" />
 
 1. 为什么CPU能够按照周期执行，是什么在控制五级流水线的运行顺序？
 
