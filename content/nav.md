@@ -96,16 +96,15 @@ showToc: false
 - [Video - 线性代数的本质（3Blue1Brown）](https://www.bilibili.com/video/BV1ys411472E/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Video - 线性代数（MIT）](https://www.bilibili.com/video/BV1xS4y1L7w5/?vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Github - notes-linear-algebra（zlotus）](https://github.com/zlotus/notes-linear-algebra)
-
+  - [Book - 速通深度学习数学基础（卢菁）](https://book.douban.com/subject/36197583/)
 - [Video - 概率统计速成（数学强国）](https://www.bilibili.com/video/BV1TJ411y7Zp/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Video - 概率论（3Blue1Brown）](https://space.bilibili.com/88461692/lists/1528924?type=series)
   - [Github - Statistics-note（ChanceQZ）](https://github.com/ChanceQZ/Statistics-note)
-
 - [Video - 微积分（矿爷）](https://www.bilibili.com/video/BV1Lt411r7NQ/?spm_id_from=333.337.search-card.all.click)
 - [Video - 从函数到神经网络【白话DeepSeek】（闪客）](https://www.bilibili.com/video/BV1uGA3eLEeu/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Video - Pytorch框架与经典卷积神经网络与实战（炮哥）](https://www.bilibili.com/video/BV1e34y1M7wR/?spm_id_from=333.337.search-card.all.click)
   - [Video - 手撕“Everything”系列，Transformer, Diffusion，LLM（happy魇）](https://www.bilibili.com/video/BV1Fw4m1C7Tq/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
-  - [Video - pytorch 大模型 多模态入门教程](https://www.bilibili.com/video/BV17P411m7Ma/?spm_id_from=333.1387.upload.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19) | [‍⁢⁡‌﻿⁡‌⁣⁢⁡⁡⁢⁤⁤‬‍⁣⁡⁣⁣⁣⁡⁣‍﻿﻿⁣‬⁡⁣‍‍﻿﻿‌‌人工智能学习路线（卢菁）](https://bcn51aw5ec5g.feishu.cn/wiki/Bo46wjKrMiPGMBkxNbacitACn4d)
+  - [Video - pytorch 大模型 多模态入门教程](https://www.bilibili.com/video/BV17P411m7Ma/?spm_id_from=333.1387.upload.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19) | [‍⁢⁡‌Note‌ - 人工智能学习路线（卢菁）](https://bcn51aw5ec5g.feishu.cn/wiki/Bo46wjKrMiPGMBkxNbacitACn4d)
 - [Video - ROS2理论与实践（赵虚左）](https://www.bilibili.com/video/BV1VB4y137ys/?vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Site - ROS2理论与实践讲义（猛狮集训营）](https://www.zhihu.com/people/41-69-11-75-42/posts)
   - [Site - ROS理论与实践（Autolabor）](http://www.autolabor.com.cn/book/ROSTutorials/)
@@ -128,6 +127,22 @@ showToc: false
 - [【全】无人驾驶系列知识入门到提高_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV137411E7oC/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
 - 百度 Apollo
 - [AI算法工程师手册](https://www.huaxiaozhuan.com/)
+
+
+
+### TODO List
+
+> [‌‍⁤⁣⁤⁡⁡TASK - 飞书云文档](https://har0ukrko0d.feishu.cn/wiki/CTCEw1Gq2iMLE0kV57vcEwu1n2g)
+
+- Work 秋招
+  - LeetCode算法题专项
+  - nav八股文专项：OSstory、Cpp Primer、notes-python
+- Github 仓库维护
+  - [biglonglong.github.io](https://github.com/biglonglong/biglonglong.github.io)：../README/TODO_List  ../draft/*
+  - [NNABC](https://github.com/biglonglong/NNABC)：../model/* for 论文列表
+  - other projects digging…
+    - [我整理了10个可以写到简历上的C++项目_牛客网](https://www.nowcoder.com/discuss/353157418395836416)
+    - [0voice/Awesome_c-cpp_Projects](https://github.com/0voice/Awesome_c-cpp_Projects)
 
 
 

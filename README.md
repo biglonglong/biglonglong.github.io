@@ -4,14 +4,6 @@
 
 如果你感兴趣，可以看看我的一些Posts。
 
-- [Overview](#overview)
-- [Installation and Usage](#installation-and-usage)
-  - [Prerequisites](#prerequisites)
-  - [Steps](#steps)
-  - [Run](#run)
-- [TODO List](#todo-list)
-- [References](#references)
-
 
 
 ## Installation and Usage

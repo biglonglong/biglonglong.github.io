@@ -29,20 +29,103 @@ comments: true
 
 ```bash
 # install IDE Anaconda Venv
-conda create -n pytorch python==3.8
 conda env list
-conda activate pytorch
+conda create --name <venv_name> python==<version>
+conda activate <venv_name>
 conda list
 conda deactivate
+
 # install Nvidia GetForce Driver
 nvidia-smi
-# install pytorch [Packages]
-conda install pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit=11.3 -c pytorch
+
+# install by pip or conda, attention to version alignment
+# torch from https://pytorch.org/ based on CUDA_VERSION
+# Sci-computer Lib, such as torchsummary, pandas,matplotlib, scikit-learn...
+# transformers datasets accelerate
+
+# bak
+conda create --name <venv_name>_snapshot --clone <venv_name>
+conda env remove --name <venv_name>_snapshot
+
+# proxy
+vim ~/.bashrc
+PROXY_SERVER="http://your_proxy_server_ip:port"
+export http_proxy="$PROXY_SERVER"
+export HTTP_PROXY="$http_proxy"
+export https_proxy="$PROXY_SERVER"
+export HTTPS_PROXY="$https_proxy"
+# export all_proxy="socks5://your_proxy_server_ip:port"
+# export ALL_PROXY="$all_proxy"
+# export no_proxy="localhost,127.0.0.1,::1,.local"
+# export NO_PROXY="$no_proxy"
+export HF_ENDPOINT=https://hf-mirror.com
+export HF_XET_CACHE=https://hf-mirror.com/xet
+source ~/.bashrc
+
+# verify
+# export HUGGINGFACE_TOKEN=<token>
+hf auth login
+hf auth whoami
 ```
 
 
 
 ## Tensor
+
+一种专用于神经网络GPU计算的多维数组结构
+
+- 各种创建操作`torch.[create_function]([**args])`：`[**args]`作用下，以`[create_function]`方式创建tensor，包括list、arr、numpy、share_memory data、zeros、ones、full、eye、empty、rand、randn、andint、normal、arange、linspace、logspace、zeros_like、ones_like、rand_like等等，注意数据是值传递还是地址传递
+- 基本属性
+  - `data`：tensor不需要梯度计算的复制品
+
+  - `dtype`：tensor的数据类型
+
+  - `device`：tensor的存储设备，默认cpu
+
+  - `shape` / `size()`：tensor的维度大小
+
+  - `ndim` / `dim()`：tensor的维度数量
+
+  - `numel()`：tensor中元素的总数量
+- 梯度相关
+
+  - `requires_grad`：tensor是否需要计算梯度，默认False，通过目标函数最终的**标量**结果`backward(retain_graph=true)`累加批次所有梯度，默认计算图自动销毁，无法重复求梯度；最后再通过优化器`step()`更新tensor的`data`
+  - `grad`：tensor的梯度信息，初始为None，其下`zero_()`进行梯度清空
+  - `grad_fn`：创建该tensor的函数，用于反向传播
+  - `is_leaf`：tensor是否为叶子节点，用于反向传播
+- 内存布局
+
+  - `stride()`：tensor各维度在内存中的步长
+  - `is_contiguous()`：tensor在内存中是否连续存储
+  - `storage()`：tensor的底层存储对象
+  - `storage_offset()`：tensor数据在存储中的偏移量
+- 数据类型转换
+  - `to([type])`：将tensor数据转换为指定类型
+  - `int()`, `long()`, `float()`, `double()`, `bool()`：快捷类型转换方法
+- 设备转换 
+  - `cuda()`：转移到GPU设备
+  - `cpu()`：转移到CPU设备
+  - `to([device])`：转移到指定设备
+- 形状转换
+  - `reshape([shape])`：重新调整tensor形状，等价于contiguous + view
+  - `view([shape])`：创建新的tensor视图
+  - `permute([dims])`：重新排列维度
+  - `transpose([dim0], [dim1])`：交换两个维度
+  - `squeeze()`：移除大小为1的维度
+  - `unsqueeze([dim])`：在指定位置增加维度
+  - `flatten([start_dim], [end_dim])`：展平tensor
+- 数据转换
+  - `numpy()`：转换为NumPy数组（需在CPU）
+  - `tolist()`：转换为Python列表
+  - `item()`：提取标量值
+  - `detach()`：分离计算图，返回不需要梯度的tensor
+  - `clone()`：创建tensor的深拷贝
+  - `contiguous()`：返回内存连续的tensor
+- 各种数学运算`[math_function]([**args])`：tensor与`[**args]`进行``[function_name]`的运算，包括sqrt、log、exp、abs、neg、reciprocal、sigmoid、tanh、relu、mask、cat、stack、chunk、expand等等
+  - `einsum([''],[**args])`：爱因斯坦求和，用于自定义矩阵运算
+
+- 广播机制：从右向左（低维到高维）对齐维度，通过自动补1扩展维度，并最终将大小为1的维度复制扩展，以使两个张量具有运算兼容的形状
+- `nn.Parameter([tensor])`：张量参数化，存于`model.parameters()`，框架要求其中的tensors都具有梯度更新，才可再由优化器统一更新
 
 
 
@@ -68,23 +151,23 @@ $$
 
 为避免多层神经网络退化为单层结构，同时帮助深度网络能够有效处理高维复杂任务，需要在每个神经元后引入非线性激活函数：
 
-| 函数名     | 表达式                                                       | 图像                                                         | 区间                         | 单调性     | 对称性                       | 可微性           | 导数                                                         |
-| ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------- | ---------- | ---------------------------- | ---------------- | ------------------------------------------------------------ |
-| Sigmoid    | $\sigma(x) = \frac{1}{1 + e^{-x}}$<br/>$\sigma'(x) = \sigma(x) \cdot (1 - \sigma(x))$ | <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/sigmoid.png" alt="sigmoid"/> | (0,1)，适合将实数映射到概率  | 单调递增   | 关于原点不对称               | 光滑（连续可导） | 计算高效，但当输入值很大或很小时，梯度消失，训练耗时         |
-| Tanh       | $\tanh(x) = \frac{e^{x} - e^{-x}}{e^{x} + e^{-x}}$<br/>$\tanh'(x) = 1 - \tanh^2(x)$ | <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/tanh.png" alt="tanh"/> | (-1,1)，适合于数据归一化     | 单调递增   | 关于原点对称，具有正负一致性 | 光滑（连续可导） | 计算高效，值大方便模型收敛，但当输入值很大或很小时，梯度消失，训练耗时 |
-| ReLU       | $\text{ReLU}(x) = \begin{cases} x & \text{if } x > 0 \\ 0 & \text{if } x \leq 0 \end{cases}$<br/>$\text{ReLU}'(x) = \begin{cases} 1 & \text{if } x > 0 \\ 0 & \text{if } x \leq 0 \end{cases}$ | <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/relu.png" alt="relu"/> | (0, +∞)，适合于加速网络训练  | 单调不递减 | 关于原点不对称               | 分段，连续可导   | 计算高效，值大方便模型收敛，但可能存在神经元死亡             |
-| Leaky ReLU | $f(x) = \begin{cases} x & \text{if } x \geq 0 \\ \alpha x & \text{if } x < 0 \end{cases}$<br/>$f'(x) = \begin{cases} 1 & \text{if } x \geq 0 \\ \alpha & \text{if } x < 0 \end{cases}$ | <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/leakyRelu.png" alt="leakyRelu"/> | (-∞, +∞)，适合于解决梯度消失 | 单调递增   | 关于原点不对称               | 分段，连续可导   | 计算高效，值大方便模型收敛，但超参不好确定                   |
+| 函数名     | 表达式                                                                                                                                                                                         | 图像                                                                                               | 区间                         | 单调性     | 对称性                       | 可微性           | 导数                                                                   |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------- | ---------- | ---------------------------- | ---------------- | ---------------------------------------------------------------------- |
+| Sigmoid    | $\sigma(x) = \frac{1}{1 + e^{-x}}$<br/>$\sigma'(x) = \sigma(x) \cdot (1 - \sigma(x))$                                                                                                          | <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/sigmoid.png" alt="sigmoid"/>     | (0,1)，适合将实数映射到概率  | 单调递增   | 关于原点不对称               | 光滑（连续可导） | 计算高效，但当输入值很大或很小时，梯度消失，训练耗时                   |
+| Tanh       | $\tanh(x) = \frac{e^{x} - e^{-x}}{e^{x} + e^{-x}}$<br/>$\tanh'(x) = 1 - \tanh^2(x)$                                                                                                            | <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/tanh.png" alt="tanh"/>           | (-1,1)，适合于数据归一化     | 单调递增   | 关于原点对称，具有正负一致性 | 光滑（连续可导） | 计算高效，值大方便模型收敛，但当输入值很大或很小时，梯度消失，训练耗时 |
+| ReLU       | $\text{ReLU}(x) = \begin{cases} x & \text{if } x > 0 \\ 0 & \text{if } x \leq 0 \end{cases}$<br/>$\text{ReLU}'(x) = \begin{cases} 1 & \text{if } x > 0 \\ 0 & \text{if } x \leq 0 \end{cases}$ | <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/relu.png" alt="relu"/>           | (0, +∞)，适合于加速网络训练  | 单调不递减 | 关于原点不对称               | 分段，连续可导   | 计算高效，值大方便模型收敛，但可能存在神经元死亡                       |
+| Leaky ReLU | $f(x) = \begin{cases} x & \text{if } x \geq 0 \\ \alpha x & \text{if } x < 0 \end{cases}$<br/>$f'(x) = \begin{cases} 1 & \text{if } x \geq 0 \\ \alpha & \text{if } x < 0 \end{cases}$         | <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/leakyRelu.png" alt="leakyRelu"/> | (-∞, +∞)，适合于解决梯度消失 | 单调递增   | 关于原点不对称               | 分段，连续可导   | 计算高效，值大方便模型收敛，但超参不好确定                             |
 
 
 
 ## Loss Function
 
-衡量预测值与真实值的差异：
+衡量预测值与真实值的差异，Pytorch中作为层可自定义：
 
-| 函数名             | 表达式                                                       | 解释                                                 | 优点                                         | 缺点                                                         |
-| ------------------ | ------------------------------------------------------------ | ---------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------ |
-| Mean Squared Error | $J(x) = \frac{1}{2n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$     | 考虑事件独立，计算实际模型与理想模型的差距           | 梯度稳定，训练高效；适合大规模严格回归任务； | 平方项使得模型对离群点敏感，鲁棒性较差；                     |
-| Cross Entropy      | $H(\hat{y}_i,y_i) = - \frac{1}{n} \sum_{i=1}^{n} y_i \log \hat{y}_i$ | 考虑事件独立，最大似然估计实际模型作为理想模型的概率 | 与softmax结合，适合大规模严格分类任务；      | 要求分类类别互斥；梯度不稳定，需谨慎处理低置信度的错误样本； |
+| 函数名             | 表达式                                                               | 解释                                                 | 优点                                                                        | 缺点                                                         |
+| ------------------ | -------------------------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Mean Squared Error | $J(x) = \frac{1}{2n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$             | 考虑事件独立，计算实际模型与理想模型的差距           | 梯度稳定，训练高效；适合大规模严格回归任务；                                | 平方项使得模型对离群点敏感，鲁棒性较差；                     |
+| Cross Entropy      | $H(\hat{y}_i,y_i) = - \frac{1}{n} \sum_{i=1}^{n} y_i \log \hat{y}_i$ | 考虑事件独立，最大似然估计实际模型作为理想模型的概率 | 与softmax结合，适合大规模严格分类任务；包括softmax单标签\|sigmoid多标签分类 | 要求分类类别互斥；梯度不稳定，需谨慎处理低置信度的错误样本； |
 
 
 
@@ -97,52 +180,32 @@ $$
 \textbf{b}_{new} = \textbf{b}_{old} - \alpha \frac{\partial J(b)}{\partial b}
 $$
 
+优化过程常见的问题包括：
+
 - $\alpha$过小时模型收敛过慢，$\alpha$过大时模型收敛振荡
 - 鞍点梯度停滞问题 
 - 局部极小值问题
 
-### 2.SGD
-
-特点：批次数据平均梯度更新，历史惯性梯度更新（超参）
-
-适用：图像分类任务，卷积神经网络
-
-### 5.Adagrad
-
-特点：学习率自适应
-
-适用：稀疏数据任务、NLP 早期模型
-
-### 4.RMSprop
-
-特点：历史惯性梯度更新（超参）、学习率自适应（超参）
-
-适用：时序数据处理任务，循环神经网络
-
-### 1.Adam
-
-特点：历史惯性梯度更新（超参）、学习率自适应（超参）、偏差纠正
-
-适用：几乎所有深度学习任务
-
-### 3.AdamW
-
-特点：历史惯性梯度更新（超参）、学习率自适应（超参）、偏差纠正、模型参数衰减
-
-适用：BERT、GPT 等 Transformer 模型
+| 优化器  | 特点                                                                   | 适用情况                       |
+| ------- | ---------------------------------------------------------------------- | ------------------------------ |
+| Adam    | 历史惯性梯度更新（超参）、学习率自适应（超参）、偏差纠正               | 几乎所有深度学习任务           |
+| SGD     | 批次数据平均梯度更新，历史惯性梯度更新（超参）                         | 图像分类任务，卷积神经网络     |
+| AdamW   | 历史惯性梯度更新（超参）、学习率自适应（超参）、偏差纠正、模型参数衰减 | BERT、GPT 等 Transformer 模型  |
+| RMSprop | 历史惯性梯度更新（超参）、学习率自适应（超参）                         | 时序数据处理任务，循环神经网络 |
+| Adagrad | 学习率自适应                                                           | 稀疏数据任务、NLP 早期模型     |
 
 
 
 ## Train/Test Focus
 
-> 数据（数据清洗【异常、NULL】、数据分布【归一化、正则化】、数据增强【翻转、裁剪】）
->
-> 模型（激活函数、损失函数【正则化惩罚项】、优化器、学习率、复杂度【dropout】）
->
-> 训练方法（批次大小、训练轮次、权重初始化）
+数据（数据清洗【异常、NULL】、数据分布【归一化、正则化】、数据增强【翻转、裁剪】）
 
-1. 过拟合|泛化能力：降低模型复杂度、增加数据量
-2. 梯度消失|梯度爆炸|收敛速度：梯度裁剪、残差网络、权重初始化、数据归一化、优化器
+模型（激活函数、损失函数【正则化惩罚项】、优化器、学习率、复杂度【dropout】）
+
+训练方法（批次大小、训练轮次、权重初始化）
+
+> 1. 过拟合|泛化能力：降低模型复杂度、增加数据量
+> 2. 梯度消失|梯度爆炸|收敛速度：梯度裁剪、残差网络、权重初始化、数据归一化、优化器
 
 
 
@@ -434,66 +497,3 @@ $$
 
 
 
-## Transformers
-
-### [simpleTransformer](https://arxiv.org/abs/1706.03762)
-
-> CNN像素级全局感知能力（自注意力）、RNN序列建模特性（位置编码），适合seq2seq（context + prompt -> answer）问题 hard train 一发
->
-> - [史上最全Transformer：灵魂20问帮你彻底搞定Transformer-干货！ - 知乎](https://zhuanlan.zhihu.com/p/148656446)
-
-<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/transformers.png" alt="transformers" style="zoom: 50%;" />
-
-- 编码器（Encoders）：生成带有注意力信息的$\text{Keys}/\text{Values}$向量
-
-  - 词嵌入（Token Embedding）：根据点积相似度，将离散的词符号映射到$d_{\text{model}}$维向量空间中
-
-  $$
-  \mathbf{e}_w = E[w,:] \in \mathbb{R}^{d_{\text{model}}}
-  $$
-
-  - 位置编码（Positional Encoding）：向词向量中添加其在句子中先后关系的信息
-
-  $$
-  PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right) \\
-  PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right) \\
-  
-  \mathbf{h}_i = \mathbf{e}_w + \mathbf{p}_i
-  $$
-
-  - 自注意力机制（Self–Attention）：利用三个线性变换矩阵$\text{W}_q、\text{W}_k、\text{W}_v$将每个词向量映射为$\text{Querys}, \text{Keys}, \text{Values}$向量；再以缩放点积的方式计算不同词向量之间$\text{Querys}$-$\text{Keys}$相似度矩阵；针对每个词向量与其他词向量的相似度，与对应值向量$\text{Values}$求加权和，生成具有注意力分配的新词向量表示。一般地，可以将$Q, K, V$均归纳为原始词向量
-    $$
-    \mathbf{Q} = \mathbf{X}\mathbf{W}_Q, 
-    \mathbf{K} = \mathbf{X}\mathbf{W}_K,
-    \mathbf{V} = \mathbf{X}\mathbf{W}_V \\
-    
-    
-    
-    \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
-    $$
-
-  - 多头注意力机制（Multi-Headed Attention）：并行化多组$\text{W}_q、\text{W}_k、\text{W}_v$注意力头，学习不同投影子空间的特征，将不同头输出拼接起来，维度不发生变化，从而捕获输入序列中不同类型的依赖关系，增强模型的表征能力
-
-  - 跳跃连接（Skip Connection）
-
-  - 层标准化（Layer Normalize）：$ \gamma, \beta$持续训练，对某一词向量调整（统一量纲、移动数据分布区间到激活函数高梯度范围），加快模型收敛速度，使模型更稳定；解决小批量训练时，小批量无法体现总体特征的问题；
-    $$
-    y_i = \gamma \cdot \left( \frac{x_i - \mu_L}{\sqrt{\sigma_L^2 + \epsilon}} \right) + \beta \\
-    \mu_L = \frac{1}{m}\sum_{i=1}^m x_i
-    \quad
-    \sigma_L^2 = \frac{1}{m}\sum_{i=1}^m (x_i - \mu_L)^2 \quad
-    \epsilon > 0
-    \quad
-    \gamma, \beta
-    $$
-
--  解码器（Decoders）：根据编码器的$\text{Keys}/\text{Values}$向量，以当前输入$\text{Querys}$，自回归以token：BEGIN、END生成文本序列
-
-  - 掩码多头注意力机制（Masked Multi-Headed Attention）：利用$\text{Look-Ahead Mask}$矩阵抹去相似度矩阵中$\text{Querys}$先于$\text{Keys}$部分的相似度
-  - 交互多头注意力机制（Interactive Multi-Headed Attention）：编码器输出$\text{Keys}/\text{Values}$向量，掩码多头注意力机制层输出$\text{Values}$向量，以这些作为为输入，确定焦点编码器
-
-- 扩展：复制机制、引导注意力机制、beam search、随机噪声、强化学习、鲁棒样本
-
-优点：可小批量，可并行化，复杂模型弹性大，小数据集过拟合，可引用于大数据集
-
-缺点：超参敏感、优化困难

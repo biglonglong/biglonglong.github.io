@@ -74,6 +74,8 @@ comments: true
 
 - [ ] [QQ](https://im.qq.com/index/) for transmission
 
+- [ ] [ToDesk](https://www.todesk.com/)
+
 ### Linux (Ubuntu)
 
 | **挂载点**  | **分区大小** | **文件系统** | **用途**               | **备注**                                                    |
@@ -86,6 +88,9 @@ comments: true
 | swap分区    | HDD 可选     | swap         | 内存交换空间           | 内存≥16GB时可省略；≤8GB建议分配8-16GB                       |
 
 ```bash
+# show hidden files
+crtl + H
+
 # install vim
 sudo apt install vim
 
@@ -148,6 +153,19 @@ vim ~/.profile
 sudo apt install gnome-tweaks
 
 # install VScode ....
+
+# proxy
+vim ~/.bashrc
+PROXY_SERVER="http://your_proxy_server_ip:port"
+export http_proxy="$PROXY_SERVER"
+export HTTP_PROXY="$http_proxy"
+export https_proxy="$PROXY_SERVER"
+export HTTPS_PROXY="$https_proxy"
+# export all_proxy="socks5://your_proxy_server_ip:port"
+# export ALL_PROXY="$all_proxy"
+# export no_proxy="localhost,127.0.0.1,::1,.local"
+# export NO_PROXY="$no_proxy"
+source ~/.bashrc
 ```
 
 
@@ -343,9 +361,7 @@ sudo apt install gnome-tweaks
 
 This repository describes some guidelines, [simple introduction]
 
-- [TOC](#TOC)
-
-### Requirements and Features
+### Features
 
 ### Directory Structure
 
@@ -357,35 +373,9 @@ This repository describes some guidelines, [simple introduction]
 
 #### Run
 
-### Guide
+### More
 
-#### Abstract
-
-[introduction] [Input] [Output]
-
-![diagram]()
-
-#### Works
-
-##### Function/Class/Inovation
-
-[introduction]
-
-```
-// ...
-```
-
-- [input]
-- [[output]
-- [function]
-
-#### Results
-
-#### More
-
-本仓库包括源代码和详细文档，您可以通过阅读 [detail]() 了解算法的详细设计、原理和实验。
-
-### Bug or Experience
+本仓库包括源代码和详细文档，您可以通过阅读 [Guide]() 了解算法的详细设计、原理和实验。
 
 ### FAQ
 
@@ -398,6 +388,32 @@ This repository describes some guidelines, [simple introduction]
 ### License
 
 ### About the Author
+
+
+
+## Guide
+
+### Abstract
+
+[introduction] [Input] [Output]
+
+![diagram]()
+
+### Works
+
+#### Function/Class/Inovation
+
+[introduction]
+
+```
+// ...
+```
+
+- [input]
+- [[output]
+- [function]
+
+### Results
 
 
 

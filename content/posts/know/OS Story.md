@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 
 title: "OS Story"
 description: "操作系统核心模块及其基本原理"
