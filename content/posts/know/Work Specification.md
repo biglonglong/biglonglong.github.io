@@ -369,9 +369,9 @@ This repository describes some guidelines, [simple introduction]
 
 #### Prerequisites
 
-#### Steps
+#### Installation
 
-#### Run
+#### Usage
 
 ### More
 
@@ -383,7 +383,27 @@ This repository describes some guidelines, [simple introduction]
 
 ### References
 
-### Contributing
+### Pull Request
+
+1. **Issue**：描述你要解决的问题或新增的功能（格式、变量名、逻辑…），确保与维护者达成共识；
+2. **Fork & Clone & Commit & Push**：在自己账户下拉取仓库分支，克隆仓库到本地进行开发，请尽可能复现原代码和提交信息的风格；
+3. **New Pull Request & Merge**：确认你的分支与上游 main 分支，回应审查意见直到代码合并；
+
+如果以上步骤有任何问题，咨询仓库拥有者，或将你的改动交给他审查并提交。
+
+1. **Issue**: Describe the problem you plan to solve or the new feature you want to add (including format, variable names, logic, etc.). Ensure you reach a consensus with the maintainers before proceeding.
+2. **Fork & Clone & Commit & Push**: Fork the repository to your own account and clone it to your local machine for development. Please strive to replicate the style of the original code and commit messages.
+3. **New Pull Request & Merge**: Create a new Pull Request, ensuring your branch is up to date with the upstream `main` branch. Respond to review comments until the code is approved and merged.
+
+If you encounter any issues with the steps above, consult the repository owner or provide your changes to them for review and submission.
+
+### Contributor
+
+```html
+<a href="https://github.com/<UserName>/<RepoName>/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=<UserName>/<RepoName>" />
+</a>
+```
 
 ### License
 

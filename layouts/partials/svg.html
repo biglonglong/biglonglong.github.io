@@ -19,8 +19,8 @@
     c0.7,7.4,6.1,13.4,13.3,15v0C65.4,19.3,65.6,19.4,65.9,19.4z" />
 </svg>
 {{- else if (eq $icon_name "redbook") -}}
-<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-    <rect width="32" height="32" rx="6" fill="#FF2442" /> <!-- 小红书品牌红色 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+    <rect width="32" height="32" rx="6" fill="#FF2442" />
     <text x="16" y="22" font-family="Arial" font-size="12" font-weight="bold" fill="white"
         text-anchor="middle">RED</text>
 </svg>
@@ -36,6 +36,19 @@
     stroke-linecap="round" stroke-linejoin="round">
     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
     <polyline points="22,6 12,13 2,6"></polyline>
+</svg>
+{{- else if (eq $icon_name "easteregg") -}}
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+    <defs>
+        <linearGradient id="eggGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#FF6B6B" />
+            <stop offset="25%" stop-color="#FFD93D" />
+            <stop offset="50%" stop-color="#6BCF7F" />
+            <stop offset="75%" stop-color="#4D96FF" />
+            <stop offset="100%" stop-color="#9B51E0" />
+        </linearGradient>
+    </defs>
+    <ellipse cx="16" cy="16" rx="12.5" ry="14.5" fill="url(#eggGradient)" />
 </svg>
 {{- else if $icon_name -}}
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"

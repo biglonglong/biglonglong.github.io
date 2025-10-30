@@ -138,23 +138,26 @@ params:
   
   socialIcons:
     - name: email
-      title: Any question
+      title: Any Question
       url: "mailto:1522262926@qq.com"
     - name: github
       title: Clone Repository
       url: "https://github.com/biglonglong"
     - name: redbook
-      title: Daily life
+      title: Daily Life
       url: "https://www.xiaohongshu.com/user/profile/5f39f522000000000100a829"
     - name: tiktok
-      title: Thoughts and ideas
+      title: Thoughts and Ideas
       url: https://www.douyin.com/user/MS4wLjABAAAA8kcYaiVKhtfSokesSBj1rbgygU-hjOlDsfNGby0j4LY
     - name: rss
-      title: Subscribe me
+      title: Subscribe Me
       url: "./index.xml"
     - name: soundcloud
       title: backup where
-      url: "https://pan.baidu.com/s/1VWiI7siC3b6wNRITmbqGpg?pwd=627k"
+      url: "https://pan.baidu.com/s/1wnWmn3X_gpiKWOF0bo36TQ?pwd=1234"
+    - name: easteregg
+      title: Click Downloads
+      url: "./easter_egg.exe"
 
   fuseOpts:
       isCaseSensitive: false
@@ -239,7 +242,7 @@ enableRobotsTXT: true
 redirects:
 - from: /**
   status: 404
-  to: /home/404.html
+  to: /404.html
 
 ############################
 ## Social Media Embedding

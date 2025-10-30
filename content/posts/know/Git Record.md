@@ -174,6 +174,16 @@ Git 是一个分布式版本控制系统，用于高效地管理代码版本历�
 
 - `git checkout --orphan fresh`：刷新仓库历史
 
+- `git rebase -i <hash>`：从<hash>版本后开始修改提交历史，需要`git push --force-with-lease`
+
+  - `pick (p)`：保留该提交，不做任何修改
+  - `reword (r)`：修改提交信息
+  - `edit (e)`：暂停 rebase 过程，允许修改提交内容和msg
+  - `squash (s)`：将提交合并到前一个提交中
+  - `fixup (f)`：类似 squash，但丢弃该提交的提交信息
+  - `drop (d)`：完全删除该提交
+
+
 
 
 ## 子模块
@@ -336,7 +346,7 @@ git config --[system|global|local] core.safecrlf
 
 现象：跨平台工作空间提交项目后，代码**层次不齐**
 
-原因：制表符只与Tab制表`\t`有关，其显示宽度由编辑器或平台决定：一般Windows默认1个Tab=4个空格，而Linux里1个Tab=8个空格，同时编辑器（如VS Code、QQ等）支持**自动将Tab转换为若干空格**。
+原因：制表符只与Tab制表`\t`有关，其显示宽度由编辑器或平台决定：一般Windows默认1个Tab=4个空格，而Linux里1个Tab=8个空格，同时编辑器（如VS Code、QQ等）支持**自动将Tab转换为若干空格**
 
 - 方法：统一编辑器Tab长度为4个空格，确保代码在不同环境下显示一致且美观
 
@@ -349,3 +359,32 @@ git config --[system|global|local] core.safecrlf
   # adjust settings
   ```
 
+### ignorecase 大小写
+
+现象：git在 Windows 上管理仓库时，已有文件或文件夹名称**切换大小写**后提交，再次clone后无变化
+
+原因： Windows 文件系统默认是**大小写不敏感**的，而 Git 依赖文件系统来检测文件变化，当只改变大小写时，Windows 文件系统认为这是同一个文件，Git 无法感知变化
+
+- 方法一：通过 Git 命令强制重命名
+
+  ```bash
+  git mv OldFile TempName
+  git mv TempName newFile
+  ```
+
+- 方法二：配置 Git 区分大小写
+
+  ```bash
+  # check current ignorecase
+  git config core.ignorecase
+  
+  # set ignorecase true
+  git config core.ignorecase false
+  
+  # clean the file|folder in cache and readd
+  git rm [-r] --cached OldFile
+  git add newFile
+  ```
+
+
+除此之外，对于大小写敏感的仓库文件|文件夹|分支|配置项|脚本等等，初次clone到 Windows 文件系统时会存在覆盖问题

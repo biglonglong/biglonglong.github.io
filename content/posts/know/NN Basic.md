@@ -44,8 +44,8 @@ nvidia-smi
 # transformers datasets accelerate
 
 # bak
-conda create --name <venv_name>_snapshot --clone <venv_name>
-conda env remove --name <venv_name>_snapshot
+conda create --name <venv_name>_bak --clone <venv_name>
+conda env remove --name <venv_name>_bak
 
 # proxy
 vim ~/.bashrc
@@ -75,6 +75,7 @@ hf auth whoami
 一种专用于神经网络GPU计算的多维数组结构
 
 - 各种创建操作`torch.[create_function]([**args])`：`[**args]`作用下，以`[create_function]`方式创建tensor，包括list、arr、numpy、share_memory data、zeros、ones、full、eye、empty、rand、randn、andint、normal、arange、linspace、logspace、zeros_like、ones_like、rand_like等等，注意数据是值传递还是地址传递
+- 各种数学运算`[math_function]([**args])`：tensor与`[**args]`进行``[math_function]`的运算，包括sqrt、log、exp、abs、neg、reciprocal、sigmoid、tanh、relu、mask、cat、stack、chunk、expand、**einsum**等等
 - 基本属性
   - `data`：tensor不需要梯度计算的复制品
 
@@ -121,9 +122,6 @@ hf auth whoami
   - `detach()`：分离计算图，返回不需要梯度的tensor
   - `clone()`：创建tensor的深拷贝
   - `contiguous()`：返回内存连续的tensor
-- 各种数学运算`[math_function]([**args])`：tensor与`[**args]`进行``[function_name]`的运算，包括sqrt、log、exp、abs、neg、reciprocal、sigmoid、tanh、relu、mask、cat、stack、chunk、expand等等
-  - `einsum([''],[**args])`：爱因斯坦求和，用于自定义矩阵运算
-
 - 广播机制：从右向左（低维到高维）对齐维度，通过自动补1扩展维度，并最终将大小为1的维度复制扩展，以使两个张量具有运算兼容的形状
 - `nn.Parameter([tensor])`：张量参数化，存于`model.parameters()`，框架要求其中的tensors都具有梯度更新，才可再由优化器统一更新
 
@@ -193,19 +191,6 @@ $$
 | AdamW   | 历史惯性梯度更新（超参）、学习率自适应（超参）、偏差纠正、模型参数衰减 | BERT、GPT 等 Transformer 模型  |
 | RMSprop | 历史惯性梯度更新（超参）、学习率自适应（超参）                         | 时序数据处理任务，循环神经网络 |
 | Adagrad | 学习率自适应                                                           | 稀疏数据任务、NLP 早期模型     |
-
-
-
-## Train/Test Focus
-
-数据（数据清洗【异常、NULL】、数据分布【归一化、正则化】、数据增强【翻转、裁剪】）
-
-模型（激活函数、损失函数【正则化惩罚项】、优化器、学习率、复杂度【dropout】）
-
-训练方法（批次大小、训练轮次、权重初始化）
-
-> 1. 过拟合|泛化能力：降低模型复杂度、增加数据量
-> 2. 梯度消失|梯度爆炸|收敛速度：梯度裁剪、残差网络、权重初始化、数据归一化、优化器
 
 
 
@@ -497,3 +482,73 @@ $$
 
 
 
+## [Transformer](https://arxiv.org/abs/1706.03762)
+
+[史上最全Transformer：灵魂20问帮你彻底搞定Transformer-干货！ - 知乎](https://zhuanlan.zhihu.com/p/148656446)
+
+CNN像素级全局感知能力（自注意力）、RNN序列建模特性（位置编码），适合seq2seq（context + prompt -> answer）问题，hard train一发
+
+<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/transformers.png" alt="transformers" style="zoom: 50%;" />
+
+- 编码器（Encoders）：生成带有注意力信息的$\text{Keys}/\text{Values}$向量
+
+  - 词嵌入（Token Embedding）：根据点积相似度，将离散的词符号映射到$d_{\text{model}}$维向量空间中
+
+  $$
+  \mathbf{e}_w = E[w,:] \in \mathbb{R}^{d_{\text{model}}}
+  $$
+
+  - 位置编码（Positional Encoding）：向词向量中添加其在句子中先后关系的信息
+
+  $$
+  PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right) \\
+  PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right) \\
+  
+  \mathbf{h}_i = \mathbf{e}_w + \mathbf{p}_i
+  $$
+
+  - 自注意力机制（Self–Attention）：利用三个线性变换矩阵$\text{W}_q、\text{W}_k、\text{W}_v$将每个词向量映射为$\text{Querys}, \text{Keys}, \text{Values}$向量；再以缩放点积的方式计算不同词向量之间$\text{Querys}$-$\text{Keys}$相似度矩阵；针对每个词向量与其他词向量的相似度，与对应值向量$\text{Values}$求加权和，生成具有注意力分配的新词向量表示。一般地，可以将$Q, K, V$均归纳为原始词向量
+    $$
+    \mathbf{Q} = \mathbf{X}\mathbf{W}_Q, 
+    \mathbf{K} = \mathbf{X}\mathbf{W}_K,
+    \mathbf{V} = \mathbf{X}\mathbf{W}_V \\
+    
+    
+    
+    \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
+    $$
+
+  - 多头注意力机制（Multi-Headed Attention）：并行化多组$\text{W}_q、\text{W}_k、\text{W}_v$注意力头，学习不同投影子空间的特征，将不同头输出拼接起来，维度不发生变化，从而捕获输入序列中不同类型的依赖关系，增强模型的表征能力
+
+  - 跳跃连接（Skip Connection）
+
+  - 层标准化（Layer Normalize）：$ \gamma, \beta$持续训练，对某一词向量调整（统一量纲、移动数据分布区间到激活函数高梯度范围），加快模型收敛速度，使模型更稳定；解决小批量训练时，小批量无法体现总体特征的问题；
+    $$
+    y_i = \gamma \cdot \left( \frac{x_i - \mu_L}{\sqrt{\sigma_L^2 + \epsilon}} \right) + \beta \\
+    \mu_L = \frac{1}{m}\sum_{i=1}^m x_i
+    \quad
+    \sigma_L^2 = \frac{1}{m}\sum_{i=1}^m (x_i - \mu_L)^2 \quad
+    \epsilon > 0
+    \quad
+    \gamma, \beta
+    $$
+
+-  解码器（Decoders）：根据编码器的$\text{Keys}/\text{Values}$向量，以当前输入$\text{Querys}$，自回归以token：BEGIN、END生成文本序列
+
+   - 掩码多头注意力机制（Masked Multi-Headed Attention）：利用$\text{Look-Ahead Mask}$矩阵抹去相似度矩阵中$\text{Querys}$先于$\text{Keys}$部分的相似度
+   - 交互多头注意力机制（Interactive Multi-Headed Attention）：编码器输出$\text{Keys}/\text{Values}$向量，掩码多头注意力机制层输出$\text{Values}$向量，以这些作为为输入，确定焦点编码器
+
+- 扩展：复制机制、引导注意力机制、beam search、随机噪声、强化学习、鲁棒样本
+
+优点：可小批量，可并行化，复杂模型弹性大，小数据集过拟合，大数据集损失低（对比简单模型弹性小，小数据集训练快，大数据集损失大）
+
+缺点：超参敏感、优化困难
+
+| strcture          | position   | activation | LN           |
+| ----------------- | ---------- | ---------- | ------------ |
+| Encoder - Decoder | Sinusoidal | ReLU       | Post LN      |
+| Encoder only      | 绝对位置   | GeLU       | Pre LN       |
+| Dncoder only      | RoPE       | SwiGLU     | Post Deep LN |
+| Casual Encoder    | ALiBi      | GeGLU      | Pre RMS LN   |
+| Casual Decoder    |            |            |              |
+| Prefix Decoder    |            |            |              |

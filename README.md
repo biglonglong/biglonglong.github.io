@@ -48,7 +48,7 @@ git push origin main
 
 
 ## TODO List
-- [ ] 补充网站 `about` 栏目的内容
+- [ ] 补充网站 `about` 栏目的内容和 Github README主页
 - [ ] 网站装修
 
 
