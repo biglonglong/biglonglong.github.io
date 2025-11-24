@@ -373,6 +373,10 @@ This repository describes some guidelines, [simple introduction]
 
 #### Usage
 
+### Logs
+
+### Guide
+
 ### More
 
 本仓库包括源代码和详细文档，您可以通过阅读 [Guide]() 了解算法的详细设计、原理和实验。
