@@ -197,6 +197,7 @@ ShowBreadCrumbs: false
                 <span class="info-key">whoami</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Display user info</span><br>
                 <span class="info-key">fortune</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Display a random quote</span><br>
                 <span class="info-key">search &lt;keys&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Search content</span><br>
+                <span class="info-key">chat &lt;prompt&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Chat with AI</span><br>
                 <span class="info-key">clear</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Clear the screen</span><br>
                 <span class="info-key">help</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Show this help message</span><br>
                 <span class="info-key">sudo</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Try it and see what happens</span><br><br>
@@ -229,7 +230,7 @@ ShowBreadCrumbs: false
                 return `<span style="color:#ff5f56">ls: cannot access '${args}': No such file or directory</span>`;
             },
             cat: (args) => {
-                if (args === '') return '<span style="color:#ff5f56">cat: missing operand</span>';
+                if (args === '') return `<span style="color:#ff5f56">cat: missing operand</span>`;
 
                 const target = args.trim().toLowerCase();
                 if (target === 'readme.md') return data.bio;
@@ -238,7 +239,7 @@ ShowBreadCrumbs: false
                 return `<span style="color:#ff5f56">cat: ${args}: No such file or directory</span>`;
             },
             cd: (args) => {
-                if (args === '') return '<span style="color:#ff5f56">cd: missing operand</span>';
+                if (args === '') return `<span style="color:#ff5f56">cd: missing operand</span>`;
 
                 const target = args.trim().toLowerCase();
                 if (data.redirectMap[target]) {
@@ -248,18 +249,12 @@ ShowBreadCrumbs: false
                 return `<span style="color:#ff5f56">cd: no such directory: ${target}</span>`;
             },
             bash: (args) => {
-                if (args === '') return '<span style="color:#ff5f56">bash: missing operand</span>';
+                if (args === '') return `<span style="color:#ff5f56">bash: missing operand</span>`;
 
                 const target = args.trim().toLowerCase();
                 if (data.binMap[target]) {
                     window.location.href = data.binMap[target];
-                    return `<div style="color:#00FF00;">
-                            ✔ Downloaded <strong>${target}</strong>!<br>
-                            <span style="color:#FFA500; font-style:italic;">
-                                Please check your downloads folder and run the file manually.
-                            </span>
-                        </div>
-                    `;
+                    return `<div>Downloaded <span class=\"info-val\">${target}</span>! Manual run please.</div>`;
                 }
                 return `<span style="color:#ff5f56">bash: ${args}: command not found</span>`;
             },
@@ -269,29 +264,30 @@ ShowBreadCrumbs: false
                 return `<div style="padding: 5px; border-left: 3px solid #f99157; margin-left: 10px;">${data.quotes[randomIndex]}</div>`;
             },
             search: (args) => {
-                if (!args) {
-                    return '<span style="color:#f99157;">💡 Usage:</span> <code>search &lt;keyword&gt;</code> — e.g., <code>search path planning</code>';
+                if (args === '') {
+                    return `<span style="color:#f99157;">💡 Usage:</span> <code>search &lt;keyword&gt;</code> — e.g., <code>search path planning</code>`;
                 }
                 if (!fuse) {
-                    return '<span style="color:#ff5f56;">Search index is still loading. Please try again shortly.</span>';
+                    return `<span style="color:#ff5f56;">Search index is still loading. Please try again shortly.</span>`;
+                }
+                return searchIndex(args);
+            },
+            chat: (args) => {
+                // async command handler, return null
+                if (args === '') {
+                    return `<span style="color:#f99157;">💡 Usage:</span> <code>chat &lt;your question&gt;</code> — e.g., <code>chat What is reinforcement learning?</code>`;
                 }
 
-                const results = fuse.search(args);
-                if (results.length === 0) {
-                    return `<span style="color:#ff5f56;">No results found for "${args}".</span>`;
-                }
-                let resultHTML = `<span style="color:#00FF00;">Found ${results.length} result(s) for "${args}":</span><br><br>`;
-                results.slice(0, 5).forEach(result => {
-                    resultHTML += `<div style="margin-bottom:10px;">
-                        <a href="${result.item.url}" class="link">${result.item.title}</a><br>
-                        <span style="color:#BBBBBB;">${result.item.content.substring(0, 100)}...</span>
-                    </div>`;
-                });
-                return resultHTML;
+                askAIAndPrint(args);
+                return;
             },
-            
-            clear: () => null,
+            clear: () => {
+                // clear command handler, return null
+                output.innerHTML = '';
+                return;
+            },
             help: () => data.help,
+
             sudo: () => 'Password: <span style="display:inline-block; margin-left:5px;">🔑</span><br><span style="color:#ff5f56">Sorry, try again.</span>',
         };
 
@@ -317,22 +313,18 @@ ShowBreadCrumbs: false
             // 2. Process the command
             const [cmdName, args] = parseCommand(rawCmd);
             if (cmdName) {
-                if (cmdName === 'clear') {
-                    output.innerHTML = '';
-                } else {
-                    const handler = commands[cmdName];
-                    if (typeof handler === 'function') {
-                        try {
-                            const result = handler(args);
-                            if (result !== null && result !== undefined) {
-                                printOutput(result);
-                            }
-                        } catch (err) {
-                            printOutput(`<span style="color:#ff5f56">Error executing command: ${err.message}</span>`);
+                const handler = commands[cmdName];
+                if (typeof handler === 'function') {
+                    try {
+                        const result = handler(args);
+                        if (result !== null && result !== undefined) {
+                            printOutput(result);
                         }
-                    } else {
-                        printOutput(`<span style="color:#ff5f56">command not found: ${cmdName}</span>. Try 'help'.`);
+                    } catch (err) {
+                        printOutput(`<span style="color:#ff5f56">Error executing command: ${err.message}</span>`);
                     }
+                } else {
+                    printOutput(`<span style="color:#ff5f56">command not found: ${cmdName}</span>. Try 'help'.`);
                 }
             }
 
@@ -351,6 +343,90 @@ ShowBreadCrumbs: false
                     });
                 });
         }
+
+        function searchIndex(query) {
+            const results = fuse.search(query);
+            if (results.length === 0) {
+                return `<span style="color:#ff5f56;">No results found for "${query}".</span>`;
+            }
+            let resultHTML = `<span style="color:#00FF00;">Found ${results.length} result(s) for "${query}":</span><br><br>`;
+            results.slice(0, 5).forEach(result => {
+                resultHTML += `<div style="margin-bottom:10px;">
+                    <a href="${result.item.url}" class="link">${result.item.title}</a><br>
+                    <span style="color:#BBBBBB;">${result.item.content.substring(0, 100)}...</span>
+                </div>`;
+            });
+            return resultHTML;
+        }
+
+        async function askAIAndPrint(prompt) {
+            printOutput(`<span style="color:#00FF00;">🤖 thinking...<br></span>`);
+
+            try {
+                const response  = await fetch('https://api.moonshot.cn/v1/chat/completions', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer sk-LXuyNYVUoDw64ksqIg8dd7NETJ3eOnPeolzqjyxJPAfGqVAG`
+                    },
+                    body: JSON.stringify({ 
+                        model: "kimi-k2-turbo-preview",
+                        messages: [
+                            { role: 'system', content: 'You are a terminal chatbot'},
+                            { role: 'user', content: prompt }
+                        ],
+                        stream: true,
+                        max_tokens: 80,
+                    })
+                });
+
+                if (!response.ok || !response.body) {
+                    printOutput(`<span style="color:#ff5f56;">❌ Failed to connect to AI service.</span>`);
+                    return;
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                let fullContent = '';
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() || ''; 
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+                            try {
+                                const data = JSON.parse(line.slice(6));
+                                const content = data.choices[0]?.delta?.content || '';
+                                if (content) {
+                                    fullContent += content;
+                                    const span = document.createElement('span');
+                                    span.textContent = content;
+                                    const lastOutput = document.querySelector('.command-output:last-child');
+                                    if (lastOutput) {
+                                        lastOutput.appendChild(span);
+                                    } else {
+                                        printOutput(content);
+                                    }
+                                    scrollToBottom();
+                                }
+                            } catch (e) {
+                                console.warn('Parse error in SSE:', line, e);
+                            }
+                        }
+                    }
+                }
+                printOutput('');
+
+            } catch (err) {
+                console.error('AI request failed:', err);
+                printOutput(`<span style="color:#ff5f56;">⚠️ AI error: ${err.message || 'Unknown'}</span>`);
+            }
+        };
 
         function parseCommand(raw) {
             const trimmed = raw.trim();
