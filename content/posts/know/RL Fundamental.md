@@ -2,7 +2,7 @@
 draft: false
 
 title: "RL Fundamental"
-description: "强化学习入门，智能体训练、仿真平台、奖励设计"
+description: "强化学习概念入门"
 date: 2025-11-18
 author: ["biglonglong"]
 
@@ -30,6 +30,8 @@ comments: true
 <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/rl.png" alt="rl" style="zoom: 67%;" />
 
 ### Concepts
+
+与监督学习对比，强化学习利用环境带来的奖励自收敛：
 
 <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/rl%20method.png" alt="rl%20method" style="zoom: 20%;" />
 
@@ -126,7 +128,7 @@ $$
 $$
 动作价值（$Q^{\pi}(s,a)$），指从某个状态 $s$ 开始出发并选择某个动作 $a$，经过一致的 $\pi$，所能获得的 Return
 $$
-Q^{\pi}(s,a) = \mathbb{E}_\pi[G_t∣S_t = s, A_t = a] = \sum_{r} p(r|s,a) \cdot r + \gamma \cdot \sum_{s' \in S}p(s'|s,a) \cdot V^{\pi}(s')
+Q^{\pi}(s,a) = \mathbb{E}_\pi[G_t∣S_t = s, A_t = a] = \sum_{r} p(r|s,a) \cdot r + \gamma \cdot \sum_{s' \in S}p(s'|s,a) \cdot V^{\pi}(s') = \sum_{r} p(r|s,a) \cdot r + \gamma \cdot \sum_{s' \in S}p(s'|s,a) \cdot \sum_{a' \in A}\pi(a'|s')Q^\pi(s',a')
 $$
 状态价值是在不同动作价值的加权平均：
 $$
@@ -813,8 +815,6 @@ $$
   - behavior policy：和环境交互并采集数据的策略
   - target policy：算法评估和改进的策略
 
-
-
 - every  can be online & on-policy.
 
 ```python
@@ -832,7 +832,7 @@ for episode_history in episodes_history:
             q_target = reward + gamma * next_reward
         else:
             q_target = reward + gamma * np.max(Q[next_state])
-         Q[state, action] = Q[state, action] + alpha * (q_target - Q[state, action])
+        Q[state, action] = Q[state, action] + alpha * (q_target - Q[state, action])
 
 # Policy Improvement
 policy = np.random.choice(n_actions, size=n_states)

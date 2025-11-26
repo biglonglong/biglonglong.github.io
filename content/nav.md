@@ -1,7 +1,7 @@
 ---
-title: "🌐nav"
-hidemeta: true
 showToc: false
+hidemeta: true
+ShowBreadCrumbs: false
 ---
 
 
@@ -104,7 +104,8 @@ showToc: false
 - [Video - 从函数到神经网络【白话DeepSeek】（闪客）](https://www.bilibili.com/video/BV1uGA3eLEeu/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Video - Pytorch框架与经典卷积神经网络与实战（炮哥）](https://www.bilibili.com/video/BV1e34y1M7wR/?spm_id_from=333.337.search-card.all.click)
   - [Video - 手撕“Everything”系列，Transformer, Diffusion，LLM（happy魇）](https://www.bilibili.com/video/BV1Fw4m1C7Tq/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
-  - [Video - pytorch 大模型 多模态入门教程](https://www.bilibili.com/video/BV17P411m7Ma/?spm_id_from=333.1387.upload.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19) | [‍⁢⁡‌Note‌ - 人工智能学习路线（卢菁）](https://bcn51aw5ec5g.feishu.cn/wiki/Bo46wjKrMiPGMBkxNbacitACn4d)
+  - [Video - 深度学习系列（李宏毅）](https://www.bilibili.com/video/BV1TAtwzTE1S/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Github - minimind（jingyaogong）](https://github.com/jingyaogong/minimind)
 - [Github - MathFoundationRL（WindyLab）](https://github.com/MathFoundationRL/Book-Mathematical-Foundation-of-Reinforcement-Learning)
   - [Site - 蘑菇书（easy-rl）](https://datawhalechina.github.io/easy-rl/#/)
   - [Video - 强化学习系列（李宏毅）](https://www.bilibili.com/video/BV15hw9euExZ/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)

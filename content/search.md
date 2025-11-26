@@ -1,5 +1,5 @@
 ---
-title: "Search..." 
+title: "Search" 
+placeholder: "type here..."
 layout: "search" 
-placeholder: "type here"
 ---

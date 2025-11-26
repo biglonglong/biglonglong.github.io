@@ -1,7 +1,7 @@
 ---
 draft: false
 
-title: "VLM Basic"
+title: "LLM Basic"
 description: "大模型入门，模型算法、数据整理、GPU算力"
 date: 2025-08-14
 author: ["biglonglong"]
@@ -328,6 +328,12 @@ for i, model in enumerate(model_data):
 基座模型的选择，需要考虑模态与语言支持、生态开源或闭源、规模与成本、专业能力与领域数据、上下文长度、文档解析能力，现有的大模型不计其数，可以借助大模型检索能力推荐；
 
 经过评估在特定任务上表现不错的基座模型，通过有针对性地投入高质量数据和算力，能够**激发**其在该任务上的潜力，最终锻造出一个在该领域表现卓越的专业化模型，否则不适合作为基座模型；
+
+- [Chatbot Arena + | OpenLM.ai](https://openlm.ai/chatbot-arena/)
+  - [Open LLM Leaderboard - a Hugging Face Space by open-llm-leaderboard](https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard#/)
+  - [SuperCLUE中文大模型测评基准-AI评测榜单](https://superclueai.com/homepage)
+  - [Humanity's Last Exam](https://lastexam.ai/)
+- [LLM Models Comparison - Token Calculator](https://www.token-calculator.com/models)
 
 ### GPT
 

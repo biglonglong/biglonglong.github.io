@@ -49,13 +49,13 @@ languages:
           name: 📝Posts
           url: posts
           weight: 2
+        - identifier: console
+          name: 📟Console
+          url: console
+          weight: 3
         - identifier: nav
           name: 🌐Nav
           url: nav
-          weight: 3
-        - identifier: about
-          name: 🙋‍♂️About
-          url: about
           weight: 4
         
 # posts
