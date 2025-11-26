@@ -11,7 +11,7 @@ ShowBreadCrumbs: false
             <span class="minimize"></span>
             <span class="maximize"></span>
         </div>
-        <div class="title">biglonglong@localhost: ~ (zsh)</div>
+        <div class="title" id="terminal-title">guest@localhost: ~ (zsh)</div>
     </div>
     <div class="terminal-window" id="terminal-window" onclick="document.getElementById('cmd-input').focus()">
         <div id="output"></div>
@@ -122,6 +122,16 @@ ShowBreadCrumbs: false
         margin-bottom: 20px;
     }
 
+    .front-output {
+        color: #BBBBBB;
+        font-size: 12px;
+        margin-bottom: 12px;
+        line-height: 1.5;
+        font-family: inherit;
+        padding: 8px 0;
+        border-bottom: 1px solid #2d2d2d;
+    }
+
     .info-key {
         color: #569cd6;
         font-weight: bold;
@@ -146,6 +156,46 @@ ShowBreadCrumbs: false
 
 <script>
     let fuse;
+
+    updateInfo().then(data => {
+        const titleElement = document.getElementById('terminal-title');
+        titleElement.textContent = `${data.user || 'guest'}@${data.ip || 'localhost'}: ~ (zsh)`;
+
+        const output = document.getElementById('output');
+        function addFrontOutput(html) {
+            const div = document.createElement('div');
+            div.className = 'front-output';
+            div.innerHTML = html;
+            output.appendChild(div);
+        }
+
+        let WELCOME_MSG = "Last login on ttys001 at " + new Date().toString().split(' GMT')[0] + ` from ${data.org || 'Blue Planet'}`;
+        if (data.latitude && data.longitude) {
+            WELCOME_MSG += ` (${data.latitude.toFixed(4)}, ${data.longitude.toFixed(4)})`;
+        }
+
+        addFrontOutput(WELCOME_MSG);
+        addFrontOutput("Welcome to my interactive terminal! Type 'help' to see available commands.");
+    });
+
+    async function updateInfo() {
+        data = {
+            ip: null,
+            user: `${navigator.platform}.${navigator.userAgentData?.brands?.[0]?.brand}`,
+            org: null,
+            latitude: null,
+            longitude: null,
+        };
+
+        try {
+            const response = await fetch('https://ipapi.co/json/');
+            res_json = await response.json();
+            response.ok && Object.assign(data, res_json);
+        } catch (error) {
+            console.log('cannot fetch IP address', error);
+        }  
+        return data;
+    }
 
     (function () {
         const input = document.getElementById('cmd-input');
@@ -290,11 +340,6 @@ ShowBreadCrumbs: false
 
             sudo: () => 'Password: <span style="display:inline-block; margin-left:5px;">🔑</span><br><span style="color:#ff5f56">Sorry, try again.</span>',
         };
-
-        // Initialize welcome message
-        const WELCOME_MSG = "Last login: " + new Date().toString().split(' GMT')[0] + " on ttys001";
-        printOutput(WELCOME_MSG);
-        printOutput("Type 'help' to see available commands.");
 
         // --- 2. Core Logic ---
         input.addEventListener('keydown', function (e) {
