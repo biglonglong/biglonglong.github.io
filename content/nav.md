@@ -9,61 +9,87 @@ ShowBreadCrumbs: false
 ### Friends
 
 <div class="links-container">
-  <!-- more -->
+    <div class="link-box">
+        <a class="link" href="https://www.cloudofficial.top" target="_blank">
+            <img src="https://img.notionusercontent.com/s3/prod-files-secure%2F62ea150e-ff98-40ae-986e-7a386289383f%2F4298cc8f-70ba-483d-8f46-3a7298e0492c%2FCloud.png/size/w=1080?exp=1764316469&sig=ewhihiXGZuQxjsTZCHW9hqScPKA2KISOKNbCI5jj-4M&id=91585246-3694-40d3-bc67-14ac73369a1c&table=collection" alt="icon">
+            <div>
+                <span class="name">Cloud;Blog</span>
+                <div class="description">写作即自由</div>
+            </div>
+        </a>
+    </div>
+    <div class="link-box">
+        <a class="link" href="https://catcat.blog/" target="_blank">
+            <img src="https://catcat.blog/favicon/avatar-540.avif" alt="icon">
+            <div>
+                <span class="name">猫猫博客</span>
+                <div class="description">𝙄𝙩'𝙨 𝙩𝙝𝙚 𝙤𝙣𝙡𝙮 𝙉𝙀𝙀𝙏 𝙩𝙝𝙞𝙣𝙜 𝙩𝙤 𝙙𝙤…</div>
+            </div>
+        </a>
+    </div>
+    <div class="link-box">
+        <a class="link" href="https://blog.lmyself.top/" target="_blank">
+            <img src="https://shadownc.github.io/assets/images/logo.jpg?t=c6b98c1a-40cb-416f-8ecf-f429271faeec" alt="icon">
+            <div>
+                <span class="name">IMyself</span>
+                <div class="description">一起进步</div>
+            </div>
+        </a>
+    </div>
+    <div class="link-box">
+        <a class="link" href="https://www.cnblogs.com/lumia1998" target="_blank">
+            <img src="https://raw.githubusercontent.com/lumia1998/pic/master/blog/头像.jpg" alt="icon">
+            <div>
+                <span class="name">太陽と向日葵</span>
+                <div class="description">世界正安静下来，准备它的冬日休眠</div>
+            </div>
+        </a>
+    </div>
 </div>
+
 
 
 ### Document
 
 <div class="links-container">
-
-
-  <div class="link-box">
-    <a class="link" href="https://www.xiaolincoding.com/" target="_blank">
-      <img src="https://cdn.xiaolincoding.com/icon.webp" alt="icon">
-      <div>
-        <span class="name">小林coding</span>
-        <div class="description">图解408，让天下没有难懂的八股文</div>
-      </div>
-    </a>
-  </div>
-
-
-  <div class="link-box">
-    <a class="link" href="https://leetcode.cn/problemset/" target="_blank">
-      <img src="https://assets.leetcode.cn/aliyun-lc-upload/uploaded_files/2021/03/73c9f099-abbe-4d94-853f-f8abffd459cd/leetcode.png" alt="icon">
-      <div>
-        <span class="name">LeetCode</span>
-        <div class="description">全球极客挚爱的技术成长平台</div>
-      </div>
-    </a>
-  </div>
-
-
-  <div class="link-box">
-    <a class="link" href="https://dunwu.github.io/linux-tutorial/" target="_blank">
-      <img src="https://dunwu.github.io/linux-tutorial/images/dunwu-logo-100.png" alt="icon">
-      <div>
-        <span class="name">LINUX TUTORIAL</span>
-        <div class="description">📚 linux-tutorial 是一个 Linux 教程</div>
-      </div>
-    </a>
-  </div>
-
-
-  <div class="link-box">
-    <a class="link" href="https://web.qianguyihao.com/" target="_blank">
-      <img src="https://img.smyhvae.com/20200919-blog-bg.jpg" alt="icon">
-      <div>
-        <span class="name">千古前端图文</span>
-        <div class="description">超详细的 Web 前端入门到进阶知识库</div>
-      </div>
-    </a>
-  </div>
-
-
-  <!-- more -->
-
+    <div class="link-box">
+        <a class="link" href="https://www.xiaolincoding.com/" target="_blank">
+            <img src="https://cdn.xiaolincoding.com/icon.webp" alt="icon">
+            <div>
+                <span class="name">小林coding</span>
+                <div class="description">图解408，让天下没有难懂的八股文</div>
+            </div>
+        </a>
+    </div>
+    <div class="link-box">
+        <a class="link" href="https://leetcode.cn/problemset/" target="_blank">
+            <img src="https://assets.leetcode.cn/aliyun-lc-upload/uploaded_files/2021/03/73c9f099-abbe-4d94-853f-f8abffd459cd/leetcode.png"
+                alt="icon">
+            <div>
+                <span class="name">LeetCode</span>
+                <div class="description">全球极客挚爱的技术成长平台</div>
+            </div>
+        </a>
+    </div>
+    <div class="link-box">
+        <a class="link" href="https://dunwu.github.io/linux-tutorial/" target="_blank">
+            <img src="https://dunwu.github.io/linux-tutorial/images/dunwu-logo-100.png" alt="icon">
+            <div>
+                <span class="name">LINUX TUTORIAL</span>
+                <div class="description">📚 linux-tutorial 是一个 Linux 教程</div>
+            </div>
+        </a>
+    </div>
+    <div class="link-box">
+        <a class="link" href="https://web.qianguyihao.com/" target="_blank">
+            <img src="https://img.smyhvae.com/20200919-blog-bg.jpg" alt="icon">
+            <div>
+                <span class="name">千古前端图文</span>
+                <div class="description">超详细的 Web 前端入门到进阶知识库</div>
+            </div>
+        </a>
+    </div>
+    <!-- more -->
 </div>
 
 
@@ -172,7 +198,7 @@ ShowBreadCrumbs: false
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   }
   .link {
-    display: flex;
+    display: block;
     text-align: left;
     color: var(--content);
   }
@@ -181,6 +207,7 @@ ShowBreadCrumbs: false
     height: auto;
     border-radius: 50%;
     margin-right: 8px;
+    float: left;
   }
   .link .name {
     font-size: 0.9em;

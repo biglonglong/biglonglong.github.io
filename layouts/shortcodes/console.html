@@ -1,0 +1,27 @@
+<div id="terminal-container">
+    <div class="terminal-header">
+        <div class="terminal-buttons">
+            <span class="terminal-close"></span>
+            <span class="terminal-minimize"></span>
+            <span class="terminal-maximize"></span>
+        </div>
+        <div id="terminal-title">guest@localhost: ~ (zsh)</div>
+    </div>
+    <div id="terminal-window" onclick="document.getElementById('cmd-input').focus()">
+        <div id="history-output"></div>
+        <div class="input-line">
+            <span class="prompt-arrow">➜</span>
+            <span class="prompt-dir">~</span>
+            <input type="text" id="cmd-input" autocomplete="off" spellcheck="false" autofocus />
+        </div>
+    </div>
+</div>
+
+
+{{ $style := resources.Get "css/extended/console.css" | minify }}
+<link rel="stylesheet" href="{{ $style.RelPermalink }}">
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+
+{{ $console := resources.Get "js/console.js" | minify | fingerprint }}
+<script src="{{ $console.RelPermalink }}"></script>
