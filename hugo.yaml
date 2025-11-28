@@ -89,6 +89,8 @@ params:
     icon: image/logo.jpg
     iconHeight: 35
 
+  TerminalPassword: "DragonNest"
+
   # card
   ShowRssButtonInSectionTermList: false
   hideSummary: false

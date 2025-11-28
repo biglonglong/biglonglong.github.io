@@ -75,12 +75,26 @@
 }
 
 .prompt-arrow {
+    user-select: none;
+    -webkit-user-select: none;
+    /* Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE/Edge */
     color: #27c93f;
     font-weight: bold;
     margin-right: 10px;
 }
 
 .prompt-dir {
+    user-select: none;
+    -webkit-user-select: none;
+    /* Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE/Edge */
     color: #00d3d6;
     font-weight: bold;
     margin-right: 10px;

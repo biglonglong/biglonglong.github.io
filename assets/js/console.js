@@ -1,4 +1,5 @@
 let fuse;
+let isAdmin = false;
 
 updateInfo().then(data => {
     const titleElement = document.getElementById('terminal-title');
@@ -12,7 +13,7 @@ updateInfo().then(data => {
         output.appendChild(div);
     }
 
-    WELCOME_MSG = "Last login on ttys001 at " + new Date().toString().split(' GMT')[0] + ` from ${data.org || 'Blue Planet'}`;
+    WELCOME_MSG = "Last login on ttys001 at " + new Date().toString().split(' GMT')[0] + ` via ${data.org || 'Internet'}`;
     if (data.latitude && data.longitude) {
         WELCOME_MSG += ` (${data.latitude.toFixed(4)}, ${data.longitude.toFixed(4)})`;
     }
@@ -32,8 +33,10 @@ async function updateInfo() {
 
     try {
         const response = await fetch('https://ipapi.co/json/');
-        res_json = await response.json();
-        response.ok && Object.assign(data, res_json);
+        if (response.ok) {
+            res_json = await response.json();
+            Object.assign(data, res_json);
+        }
     } catch (error) {
         console.log('cannot fetch IP address', error);
     }
@@ -102,7 +105,7 @@ async function updateInfo() {
             <span class="info-key">chat &lt;prompt&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Chat with AI</span><br>
             <span class="info-key">clear</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Clear the screen</span><br>
             <span class="info-key">help</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Show this help message</span><br>
-            <span class="info-key">sudo</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Try it and see what happens</span><br>
+            <span class="info-key">sudo &lt;pwd&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Get admin rights</span><br>
             <span style="color:#797979; font-size: 15px;">:... and other hidden features</span><br><br>
             <span style="color:#797979;">Tip: Commands are case-insensitive, arguments are auto-trimmed</span><br>
             <hr style="border-top: 1px solid #333; margin: 5px 0;">
@@ -167,6 +170,21 @@ async function updateInfo() {
             const randomIndex = Math.floor(Math.random() * data.quotes.length);
             return `<div style="padding: 5px; border-left: 3px solid #f99157; margin-left: 10px;">${data.quotes[randomIndex]}</div>`;
         },
+
+        sudo: (args) => {
+            if (args === '') {
+                return `<span style="color:#ff5f56;">Password required</span>`;
+            }
+            if (isAdmin) {
+                return `<span style="color:#FFA500;">Already in admin mode</span>`;
+            }
+
+            if (args !== password) {
+                return `<span style="color:#ff5f56;">Incorrect password</span>`;
+            }
+            isAdmin = true;
+            return `<span style="color:#4CAF50;">Admin mode enabled</span>`;
+        },
         search: (args) => {
             if (args === '') {
                 return `<span style="color:#f99157;">💡 Usage:</span> <code>search &lt;keyword&gt;</code> — e.g., <code>search path planning</code>`;
@@ -197,13 +215,10 @@ async function updateInfo() {
             return;
         },
         clear: () => {
-            // clear command handler, return null
             output.innerHTML = '';
             return;
         },
         help: () => data.help,
-
-        sudo: () => 'Password: <span style="display:inline-block; margin-left:5px;">🔑</span><br><span style="color:#ff5f56">Sorry, try again.</span>',
     };
 
     // --- 2. Core Logic ---
@@ -275,25 +290,44 @@ async function updateInfo() {
 
     async function askAIAndPrint(prompt) {
         try {
-            const response = await fetch('https://api.moonshot.cn/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer sk-LXuyNYVUoDw64ksqIg8dd7NETJ3eOnPeolzqjyxJPAfGqVAG`
-                },
-                body: JSON.stringify({
-                    model: "kimi-k2-turbo-preview",
-                    messages: [
-                        { role: 'system', content: 'Be a concise terminal AI assistant.' },
-                        { role: 'user', content: prompt }
-                    ],
-                    stream: true,
-                    max_tokens: 80,
-                })
+            const { fetchUrl, fetchModel, fetchMethod, fetchHeader } = isAdmin
+                ? {
+                    fetchUrl: 'https://console-chat.biglonglong.workers.dev/v1/chat/completions',
+                    fetchModel: 'qwen-flash',
+                    fetchMethod: 'POST',
+                    fetchHeader: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+                : {
+                    fetchUrl: 'https://api.siliconflow.cn/v1/chat/completions',
+                    fetchModel: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B',
+                    fetchMethod: 'POST',
+                    fetchHeader: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer sk-hzdomvycthcpjhpeorywgygjxmmezwriwdljigkpbisipzyg'
+                    },
+                };
+
+            const fetchBody = JSON.stringify({
+                model: fetchModel,
+                messages: [
+                    { role: 'system', content: 'Be a concise terminal AI assistant.' },
+                    { role: 'user', content: prompt }
+                ],
+                max_tokens: 80,
+                stream: true,
+            })
+
+            const response = await fetch(fetchUrl, {
+                method: fetchMethod,
+                headers: fetchHeader,
+                body: fetchBody
             });
 
-            if (!response.ok || !response.body) {
-                printOutput(`<span style="color:#ff5f56;">❌ Failed to connect to AI service.</span>`);
+            if (!response.ok) {
+                const errorText = await response.text();
+                printOutput(`<span style="color:#ff5f56;">⚠️ Worker Failed (${response.status}): ${errorText}</span>`);
                 return;
             }
 
@@ -335,8 +369,7 @@ async function updateInfo() {
             printOutput('');
 
         } catch (err) {
-            console.error('AI request failed:', err);
-            printOutput(`<span style="color:#ff5f56;">⚠️ AI error: ${err.message || 'Unknown'}</span>`);
+            printOutput(`<span style="color:#ff5f56;">❌ Chat Error: ${err.message}</span>`);
         }
     };
 

@@ -61,7 +61,7 @@ git push origin main
   - [ ] 自动补全
   - [ ] 彩蛋功能
   - [ ] API_KEY
-
+  - [ ] SUDO
 
 
 ## References
