@@ -51,12 +51,8 @@ git push origin main
 - [ ] console
   - [ ] 主题切换
   - [ ] 音乐播放
-  - [ ] 迷你游戏
   - [ ] ASCII 艺术画廊
-  - [ ] 系统监控
   - [ ] 代码运行器
-  - [ ] 自动补全
-  - [ ] 彩蛋功能
 
 ## References
 

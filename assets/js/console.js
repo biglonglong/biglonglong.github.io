@@ -266,19 +266,14 @@ async function getWeather(lat, lon) {
                 const news_data = newsResult.status === 'fulfilled' ? newsResult.value : {};
                 const weather_data = weatherResult.status === 'fulfilled' ? weatherResult.value : {};
 
-                const content = sayHello(news_data, weather_data);
-                printOutput(content);
-
+                sayHello(news_data, weather_data);
                 if (newsResult.status === 'rejected') {
                     console.warn('News fetch failed:', newsResult.reason);
                 }
                 if (weatherResult.status === 'rejected') {
                     console.warn('Weather fetch failed:', weatherResult.reason);
                 }
-            }).catch(err => {
-                printOutput(`<span style="color:#ff5f56;">Unexpected error: ${err.message}</span>`);
             });
-
             return;
         },
 
@@ -289,9 +284,18 @@ async function getWeather(lat, lon) {
         help: () => data.help,
     };
 
+    const tabNames = [
+        ...Object.keys(commands),
+        'README.md',
+        'contact.txt',
+        'skills.json',
+        'Projects/',
+        'Blogs/',
+        'surprise.exe'
+    ];
+
     // --- 2. Core Logic ---
     input.addEventListener('keydown', function (e) {
-        // Ctrl + C
         if (e.ctrlKey && e.key === 'c') {
             const hasInputSelection = this.selectionStart !== this.selectionEnd;
             if (hasInputSelection) return;
@@ -300,6 +304,40 @@ async function getWeather(lat, lon) {
             showCommandLine(this.value + '<span style="color:#ff5f56"> ^C</span>');
             this.value = '';
             scrollToBottom();
+        }
+
+        else if (e.key === 'Tab') {
+            e.preventDefault();
+
+            const currentInput = this.value;
+            const words = currentInput.split(' ');
+            const lastWord = words[words.length - 1];
+            if (lastWord === '') return;
+
+            const matches = tabNames.filter(item =>
+                item.toLowerCase().startsWith(lastWord.toLowerCase())
+            );
+            if (matches.length === 1) {
+                words[words.length - 1] = matches[0];
+                this.value = words.join(' ');
+            } else if (matches.length > 1) {
+                let commonPrefix = matches.reduce((prefix, word) => {
+                    let i = 0;
+                    while (i < prefix.length && i < word.length && prefix[i].toLowerCase() === word[i].toLowerCase()) {
+                        i++;
+                    }
+                    return prefix.slice(0, i);
+                }, matches[0]);
+
+                if (commonPrefix.length > lastWord.length) {
+                    words[words.length - 1] = commonPrefix;
+                    this.value = words.join(' ');
+                } else {
+                    showCommandLine(currentInput);
+                    printOutput(`<span style="color:#00FF00;">Possible completions:</span><br>` + matches.map(name => escapeHtml(name)).join('&nbsp;&nbsp;'));
+                    scrollToBottom();
+                }
+            }
         }
 
         else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
@@ -551,7 +589,7 @@ async function getWeather(lat, lon) {
                 <div>${topNews}</div>
                 <span>${lastPart}</span>
             </div>`;
-        return content;
+        printOutput(content);
     }
 
     function escapeHtml(text) {
