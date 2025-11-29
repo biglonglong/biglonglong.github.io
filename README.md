@@ -55,14 +55,8 @@ git push origin main
   - [ ] ASCII 艺术画廊
   - [ ] 系统监控
   - [ ] 代码运行器
-  - [ ] 天气信息、新闻摘要
-  - [ ] 打字机效果
-  - [ ] 命令历史
   - [ ] 自动补全
   - [ ] 彩蛋功能
-  - [ ] API_KEY
-  - [ ] SUDO
-
 
 ## References
 

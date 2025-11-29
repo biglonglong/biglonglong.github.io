@@ -1,54 +1,84 @@
 let fuse;
-let isAdmin = false;
+let user_data = `${navigator.userAgentData?.platform || 'guest'}.${navigator.userAgentData?.brands?.[0]?.brand || ''}`;
 
-updateInfo().then(data => {
-    const titleElement = document.getElementById('terminal-title');
-    titleElement.textContent = `${data.user}@${data.ip || 'localhost'}: ~ (zsh)`;
-
-    const output = document.getElementById('history-output');
-    function addFrontOutput(html) {
-        const div = document.createElement('div');
-        div.className = 'front-output';
-        div.innerHTML = html;
-        output.appendChild(div);
-    }
-
-    WELCOME_MSG = "Last login on ttys001 at " + new Date().toString().split(' GMT')[0] + ` via ${data.org || 'Internet'}`;
-    if (data.latitude && data.longitude) {
-        WELCOME_MSG += ` (${data.latitude.toFixed(4)}, ${data.longitude.toFixed(4)})`;
-    }
-
-    addFrontOutput(WELCOME_MSG);
-    addFrontOutput("Welcome to my interactive terminal! Type 'help' to see available commands.");
-});
-
-async function updateInfo() {
-    data = {
-        ip: null,
-        user: `${navigator.platform || 'guest'}.${navigator.userAgentData?.brands?.[0]?.brand || ''}`,
-        org: null,
-        latitude: null,
-        longitude: null,
-    };
-
+async function getPosition() {
+    position_data = {};
     try {
         const response = await fetch('https://ipapi.co/json/');
         if (response.ok) {
-            res_json = await response.json();
-            Object.assign(data, res_json);
+            position_json = await response.json();
+            position_data = position_json;
         }
     } catch (error) {
-        console.log('cannot fetch IP address', error);
+        console.log('cannot fetch position', error);
     }
-    return data;
+    return position_data;
+}
+
+async function getNews() {
+    news_data = {};
+    try {
+        const response = await fetch(`https://gnews.io/api/v4/top-headlines?token=${gnewsApiKey}&lang=en&max=3`);
+        if (response.ok) {
+            const news_json = await response.json();
+            const availableNews = news_json.articles.filter(article => article.title && article.title !== '[Removed]');
+            if (availableNews.length > 0) {
+                const randomIndex = Math.floor(Math.random() * availableNews.length);
+                news_data = availableNews[randomIndex];
+            }
+        }
+    } catch (error) {
+        console.log('cannot fetch news', error);
+    }
+    return news_data;
+}
+
+async function getWeather(lat, lon) {
+    if (!lat || !lon) return {};
+
+    weather_data = {};
+    try {
+        const [curResponse, nextResponse] = await Promise.allSettled([
+            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${openweatherApiKey}&units=metric`),
+            fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${openweatherApiKey}&units=metric`)
+        ]);
+        if (curResponse.status === 'fulfilled' && curResponse.value.ok) {
+            const cur_json = await curResponse.value.json();
+            weather_data.current = cur_json;
+        }
+        if (nextResponse.status === 'fulfilled' && nextResponse.value.ok) {
+            const next_json = await nextResponse.value.json();
+            weather_data.next = next_json.list?.[1];
+        }
+    } catch (error) {
+        console.log('cannot fetch weather', error);
+    }
+    return weather_data;
 }
 
 (function () {
+    getPosition().then(position_data => {
+        const titleElement = document.getElementById('terminal-title');
+        titleElement.textContent = `${user_data}@${position_data.ip || 'localhost'}: ~ (zsh)`;
+
+        WELCOME_MSG = "Last login on ttys001 at " + new Date().toString().split(' GMT')[0] + ` via ${position_data.org || 'Internet'}`;
+        if (position_data.latitude && position_data.longitude) {
+            WELCOME_MSG += ` (${position_data.latitude.toFixed(4)}, ${position_data.longitude.toFixed(4)})`;
+        }
+        printOutput(WELCOME_MSG, 'front-output');
+        printOutput("Welcome to my interactive terminal! Type 'help' to see available commands.", 'front-output');
+    });
+
     const input = document.getElementById('cmd-input');
     const inputHeader = document.querySelector('.input-line');
     const output = document.getElementById('history-output');
     const terminalWindow = document.getElementById('terminal-window');
     initSearchIndex();
+
+    let isAdmin = false;
+    let commandHistory = [];
+    const MAX_HISTORY = 100;
+    let historyIndex = -1;
 
     // --- 1. Define data and commands here ---
     const data = {
@@ -100,12 +130,14 @@ async function updateInfo() {
             <span class="info-key">cd &lt;dir&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Change directory</span><br>
             <span class="info-key">bash &lt;exe&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Down or exe program (such as \`bash surprise.exe\`)</span><br>
             <span class="info-key">whoami</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Display user info</span><br>
+            <span class="info-key">hello</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Say \`hello\`</span><br>
             <span class="info-key">fortune</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Display a random quote</span><br>
             <span class="info-key">search &lt;keys&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Search content</span><br>
             <span class="info-key">chat &lt;prompt&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Chat with AI</span><br>
             <span class="info-key">clear</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Clear the screen</span><br>
             <span class="info-key">help</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Show this help message</span><br>
             <span class="info-key">sudo &lt;pwd&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Get admin rights</span><br>
+            <span class="info-key">history</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Show command history</span><br>
             <span style="color:#797979; font-size: 15px;">:... and other hidden features</span><br><br>
             <span style="color:#797979;">Tip: Commands are case-insensitive, arguments are auto-trimmed</span><br>
             <hr style="border-top: 1px solid #333; margin: 5px 0;">
@@ -155,16 +187,6 @@ async function updateInfo() {
             }
             return `<span style="color:#ff5f56">cd: no such directory: ${target}</span>`;
         },
-        bash: (args) => {
-            if (args === '') return `<span style="color:#ff5f56">bash: missing operand</span>`;
-
-            const target = args.trim().toLowerCase();
-            if (data.binMap[target]) {
-                window.location.href = data.binMap[target];
-                return `<div>Downloaded <span class=\"info-val\">${target}</span>! Manual run please.</div>`;
-            }
-            return `<span style="color:#ff5f56">bash: ${args}: command not found</span>`;
-        },
         whoami: () => data.bio,
         fortune: () => {
             const randomIndex = Math.floor(Math.random() * data.quotes.length);
@@ -184,6 +206,27 @@ async function updateInfo() {
             }
             isAdmin = true;
             return `<span style="color:#4CAF50;">Admin mode enabled</span>`;
+        },
+        bash: (args) => {
+            if (args === '') return `<span style="color:#ff5f56">bash: missing operand</span>`;
+
+            const target = args.trim().toLowerCase();
+            if (data.binMap[target]) {
+                window.location.href = data.binMap[target];
+                return `<div>Downloaded <span class=\"info-val\">${target}</span>! Manual run please.</div>`;
+            }
+            return `<span style="color:#ff5f56">bash: ${args}: command not found</span>`;
+        },
+        history: () => {
+            if (commandHistory.length === 0) {
+                return "<span style=\"color:#BBBBBB;\">No commands in history.</span>";
+            }
+
+            let html = '';
+            commandHistory.forEach((cmd, index) => {
+                html += `<div><span style="color:#797979;">${(index + 1).toString().padStart(3)}&nbsp;&nbsp;</span>${escapeHtml(cmd)}</div>`;
+            });
+            return html;
         },
         search: (args) => {
             if (args === '') {
@@ -214,6 +257,31 @@ async function updateInfo() {
             });
             return;
         },
+        hello: () => {
+            Promise.allSettled([
+                getNews(),
+                getWeather(position_data.latitude, position_data.longitude)
+            ]).then((results) => {
+                const [newsResult, weatherResult] = results;
+                const news_data = newsResult.status === 'fulfilled' ? newsResult.value : {};
+                const weather_data = weatherResult.status === 'fulfilled' ? weatherResult.value : {};
+
+                const content = sayHello(news_data, weather_data);
+                printOutput(content);
+
+                if (newsResult.status === 'rejected') {
+                    console.warn('News fetch failed:', newsResult.reason);
+                }
+                if (weatherResult.status === 'rejected') {
+                    console.warn('Weather fetch failed:', weatherResult.reason);
+                }
+            }).catch(err => {
+                printOutput(`<span style="color:#ff5f56;">Unexpected error: ${err.message}</span>`);
+            });
+
+            return;
+        },
+
         clear: () => {
             output.innerHTML = '';
             return;
@@ -232,11 +300,29 @@ async function updateInfo() {
             showCommandLine(this.value + '<span style="color:#ff5f56"> ^C</span>');
             this.value = '';
             scrollToBottom();
-            return;
+        }
+
+        else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (commandHistory.length === 0) return;
+
+            const isUp = e.key === 'ArrowUp';
+            if (historyIndex === -1) {
+                this.dataset.currentInput = this.value;
+            }
+
+            if (isUp) {
+                historyIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
+            } else {
+                historyIndex = (historyIndex >= 0 && historyIndex < commandHistory.length - 1) ? historyIndex + 1 : -1;
+            }
+            console.log(`${historyIndex}`)
+            this.value = historyIndex === -1 ? (this.dataset.currentInput || '') : commandHistory[historyIndex];
+            this.setSelectionRange(this.value.length, this.value.length);
         }
 
         // Enter
-        if (e.key === 'Enter') {
+        else if (e.key === 'Enter') {
             // Show the command that was just entered
             showCommandLine(this.value);
             // Process the command
@@ -248,6 +334,11 @@ async function updateInfo() {
                         const result = handler(args);
                         if (result !== null && result !== undefined) {
                             printOutput(result);
+
+                            commandHistory.push(`${cmdName} ${args || ''}`);
+                            if (commandHistory.length > MAX_HISTORY) {
+                                commandHistory.shift();
+                            }
                         }
                     } catch (err) {
                         printOutput(`<span style="color:#ff5f56">Error executing command: ${err.message}</span>`);
@@ -305,7 +396,7 @@ async function updateInfo() {
                     fetchMethod: 'POST',
                     fetchHeader: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer sk-hzdomvycthcpjhpeorywgygjxmmezwriwdljigkpbisipzyg'
+                        'Authorization': `Bearer ${siliconApiKey}`,
                     },
                 };
 
@@ -373,6 +464,107 @@ async function updateInfo() {
         }
     };
 
+    function sayHello(news_data, weather_data) {
+        const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const months = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"];
+        const now = new Date();
+        // const year = now.getFullYear();
+        // const month = now.getMonth();
+        // const day = now.getDate();
+        const weekday = now.getDay();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+
+        let greeting = "Hello👋!";
+        if (hours >= 5 && hours < 12) {
+            greeting = "Good morning☀️!";
+        } else if (hours >= 12 && hours < 18) {
+            greeting = "Good afternoon🌤️!";
+        } else if (hours >= 18 && hours < 22) {
+            greeting = "Good evening🌙!";
+        } else if (hours >= 22 && hours < 24) {
+            greeting = "Good night🌠!";
+        } else {
+            greeting = "Still up? Good... uh... quiet time🌌!";
+        }
+
+        let windLevel = '';
+        const windSpeed = weather_data.current?.wind?.speed;
+        if (windSpeed !== undefined) {
+            if (windSpeed < 1) windLevel = 'Air Calm.';
+            else if (windSpeed < 5) windLevel = 'Light Breeze.';
+            else if (windSpeed < 11) windLevel = 'Gentle Breeze.';
+            else if (windSpeed < 19) windLevel = 'Moderate Breeze.';
+            else if (windSpeed < 28) windLevel = 'Fresh Breeze.';
+            else windLevel = 'Strong Wind!';
+        }
+
+        let rainLevel = '';
+        const rainPop = weather_data.next?.pop;
+        if (rainPop !== undefined) {
+            if (rainPop < 0.2) rainLevel = 'No rain expected for heading outdoors!';
+            else if (rainPop < 0.5) rainLevel = 'Light chance of rain, consider taking an umbrella.';
+            else if (rainPop < 0.8) rainLevel = 'Moderate chance of rain, better to carry an umbrella.';
+            else rainLevel = 'High chance of rain, definitely take an umbrella!';
+        }
+
+        let weatherDiff = '';
+        const currentDesc = weather_data.current?.weather?.[0]?.description;
+        const nextDesc = weather_data.next?.weather?.[0]?.description;
+        if (currentDesc && nextDesc && currentDesc !== nextDesc) {
+            weatherDiff = ` The weather may change to ${nextDesc} soon.`;
+        } else {
+            weatherDiff = 'The weather is expected to remain stable in the coming period.';
+        }
+
+        const lastPartList = [
+            "Have a fantastic day! 🌟",
+            "A wonderful day is just beginning!🌟",
+            "Wishing you a productive and joyful day ahead! 🌈",
+        ];
+
+        const currentFrom = position_data.city ? ` from 🌆${position_data.city}` : '';
+        const currentTime = `${hours}:${minutes.toString().padStart(2, '0')}`;
+        const currentWeather = (weather_data.current && weather_data.next)
+            ? `The weather is ${weather_data.current.weather[0].description} today, 
+                with a current feels-like temperature of ${Math.round(weather_data.current.main.feels_like)}°C 
+                and a forecast high of ${Math.round(weather_data.current.main.temp_max)}°C, low of ${Math.round(weather_data.current.main.temp_min)}°C.
+                ${windLevel}<br>
+                ${weatherDiff} ${rainLevel}`
+            : '';
+        const topNews = news_data.title
+            ? `<span>By the way, here's a top news update for you:</span><br>
+                <hr style="border: 0; border-top: 1px solid #444; margin: 12px 0;">
+                <a href="${news_data.url}" target="_blank" class="terminal-link">${news_data.title}</a><br>
+                <span style="color:#BBBBBB; font-size:0.9em;">${news_data.description.substring(0, 500) || ''}</span>
+                <hr style="border: 0; border-top: 1px solid #444; margin: 8px 0 12px 0;">`
+            : '';
+
+        const lastPart = lastPartList[Math.floor(Math.random() * lastPartList.length)];
+
+        const content =
+            `<div>
+                <span>${greeting} my friend${currentFrom}.</span><br>
+                <span>It's ${currentTime} on ${weekdays[weekday]}.</span><br>
+                <span>${currentWeather}</span><br>
+                <div>${topNews}</div>
+                <span>${lastPart}</span>
+            </div>`;
+        return content;
+    }
+
+    function escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
     function showCommandLine(command, promptArrow = '➜', promptDir = '~') {
         const cmdLine = document.createElement('div');
         cmdLine.className = 'input-line';
@@ -396,9 +588,9 @@ async function updateInfo() {
         }
     }
 
-    function printOutput(html) {
+    function printOutput(html, className = 'command-output') {
         const div = document.createElement('div');
-        div.className = 'command-output';
+        div.className = className;
         div.innerHTML = html;
         output.appendChild(div);
     }

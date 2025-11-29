@@ -25,6 +25,9 @@
 
 <script>
     let password = "{{ .Site.Params.TerminalPassword }}";
+    let siliconApiKey = "{{ .Site.Params.siliconApiKey }}";
+    let gnewsApiKey = "{{ .Site.Params.gnewsApiKey }}";
+    let openweatherApiKey = "{{ .Site.Params.openweatherApiKey }}";
 </script>
 
 {{ $console := resources.Get "js/console.js" | minify | fingerprint }}
