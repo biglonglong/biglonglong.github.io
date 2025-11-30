@@ -89,7 +89,7 @@ params:
     icon: image/logo.jpg
     iconHeight: 35
 
-  TerminalPassword: "DragonNest"
+  terminalPassword: "DragonNest"
   siliconApiKey: "sk-hzdomvycthcpjhpeorywgygjxmmezwriwdljigkpbisipzyg"
   gnewsApiKey: "e942bead1767f9e68bc2bd48e0b3c739"
   openweatherApiKey: "e6b9d8edc04a0cae91059e1fe12052d0"

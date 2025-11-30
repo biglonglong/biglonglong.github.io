@@ -49,11 +49,11 @@ git push origin main
 
 ## TODO List
 - [ ] console
-  - [ ] 主题切换
   - [ ] 音乐播放
-  - [ ] ASCII 艺术画廊
   - [ ] 代码运行器
-
+- [ ] Blogs
+  - [ ] Drafts
+ 
 ## References
 
 - [adityatelange/hugo-PaperMod: A fast, clean, responsive Hugo theme.](https://github.com/adityatelange/hugo-PaperMod)

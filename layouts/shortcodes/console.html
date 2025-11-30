@@ -1,18 +1,18 @@
-<div id="terminal-container">
-    <div class="terminal-header">
-        <div class="terminal-buttons">
-            <span class="terminal-close"></span>
-            <span class="terminal-minimize"></span>
-            <span class="terminal-maximize"></span>
+<div id='terminal-container'>
+    <div class='terminal-header'>
+        <div class='terminal-buttons'>
+            <span class='button-close'></span>
+            <span class='button-minimize'></span>
+            <span class='button-maximize'></span>
         </div>
-        <div id="terminal-title">guest@localhost: ~ (zsh)</div>
+        <div id='terminal-title'>guest@localhost: ~ (zsh)</div>
     </div>
-    <div id="terminal-window" onclick="document.getElementById('cmd-input').focus()">
-        <div id="history-output"></div>
-        <div class="input-line">
-            <span class="prompt-arrow">➜</span>
-            <span class="prompt-dir">~</span>
-            <input type="text" id="cmd-input" autocomplete="off" spellcheck="false" autofocus />
+    <div id='terminal-window' onclick="document.getElementById('cmd-input').focus()">
+        <div id='history-output'></div>
+        <div class='input-line'>
+            <span class='prompt-arrow'>➜</span>
+            <span class='prompt-dir'>~</span>
+            <input type='text' id='cmd-input' autocomplete='off' spellcheck='false' autofocus />
         </div>
     </div>
 </div>
@@ -24,10 +24,10 @@
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
 
 <script>
-    let password = "{{ .Site.Params.TerminalPassword }}";
-    let siliconApiKey = "{{ .Site.Params.siliconApiKey }}";
-    let gnewsApiKey = "{{ .Site.Params.gnewsApiKey }}";
-    let openweatherApiKey = "{{ .Site.Params.openweatherApiKey }}";
+    let password = "{{ .Site.Params.terminalPassword }}" || "";
+    let siliconApiKey = "{{ .Site.Params.siliconApiKey }}" || "";
+    let gnewsApiKey = "{{ .Site.Params.gnewsApiKey }}" || "";
+    let openweatherApiKey = "{{ .Site.Params.openweatherApiKey }}" || "";
 </script>
 
 {{ $console := resources.Get "js/console.js" | minify | fingerprint }}

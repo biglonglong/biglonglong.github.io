@@ -1,146 +1,519 @@
-/* Basic Layout */
+/* ===== Basic Layout ===== */
+/* Terminal Container */
 #terminal-container {
     width: 100%;
     max-width: 800px;
     margin: 20px auto;
-    /* Updated Font Stack for better terminal look */
-    font-family: 'Fira Code', 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     border-radius: 8px;
     overflow: hidden;
-    background: #1e1e1e;
+    font-family: 'Fira Code', 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    transition: box-shadow 0.3s ease-in-out;
 }
 
-/* Top Title Bar */
+#terminal-container:focus-within {
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5), 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Terminal Header */
 .terminal-header {
-    background: #2d2d2d;
     padding: 10px 15px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #333;
 }
 
+/* Terminal Control Buttons */
 .terminal-buttons span {
     display: inline-block;
     width: 12px;
     height: 12px;
     border-radius: 50%;
     margin-right: 8px;
+    transition: background 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 
-.terminal-close {
+.terminal-buttons span:hover {
+    opacity: 0.7;
+}
+
+.button-close {
     background: #ff5f56;
 }
 
-.terminal-minimize {
+.button-minimize {
     background: #ffbd2e;
 }
 
-.terminal-maximize {
+.button-maximize {
     background: #27c93f;
 }
 
+/* Terminal Title */
 #terminal-title {
     flex: 1;
     text-align: center;
-    color: #999;
     font-size: 14px;
     margin-left: -60px;
-    /* Visual centering correction */
 }
 
 /* Terminal Content Area */
 #terminal-window {
-    background: #1e1e1e;
-    /* VS Code style dark background */
-    color: #f0f0f0;
     padding: 20px;
     height: 480px;
-    /* Fixed height, or min-height */
     overflow-y: auto;
     font-size: 16px;
     line-height: 1.6;
     cursor: text;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    word-break: break-all;
 }
 
-/* Scrollbar style */
-#terminal-window::-webkit-scrollbar {
-    width: 14px;
-}
-
-/* Input Box Style */
+/* Input Line */
 .input-line {
     display: flex;
     align-items: center;
+    margin-bottom: 2px;
 }
 
-.prompt-arrow {
-    user-select: none;
-    -webkit-user-select: none;
-    /* Safari */
-    -moz-user-select: none;
-    /* Firefox */
-    -ms-user-select: none;
-    /* IE/Edge */
-    color: #27c93f;
-    font-weight: bold;
-    margin-right: 10px;
-}
-
+/* Prompt Elements */
+.prompt-arrow,
 .prompt-dir {
     user-select: none;
     -webkit-user-select: none;
-    /* Safari */
     -moz-user-select: none;
-    /* Firefox */
     -ms-user-select: none;
-    /* IE/Edge */
-    color: #00d3d6;
     font-weight: bold;
     margin-right: 10px;
+    transition: color 0.3s ease;
 }
 
+/* Scrollbar */
+#terminal-window::-webkit-scrollbar {
+    width: 12px;
+}
+
+#terminal-window::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+}
+
+/* Command Input */
 #cmd-input {
+    flex: 1;
     background: transparent;
     border: none;
-    color: #f0f0f0;
     font-family: inherit;
     font-size: inherit;
-    flex: 1;
     outline: none;
-    caret-color: #babbbd;
+    padding-top: 2px;
+    box-sizing: border-box;
 }
 
-/* Specific Output Styles */
+/* Command Output */
 .command-output {
     margin-bottom: 20px;
 }
 
-.front-output {
-    color: #BBBBBB;
-    font-size: 12px;
-    margin-bottom: 12px;
-    line-height: 1.5;
+.output-pre {
+    font-size: 14px;
     font-family: inherit;
-    padding: 8px 0;
-    border-bottom: 1px solid #2d2d2d;
+    line-height: 2.0;
+    margin-bottom: 15px;
 }
 
-.info-key {
-    color: #569cd6;
-    font-weight: bold;
+.output-begin,
+.output-end {
+    font-style: italic;
+    opacity: 0.7;
 }
 
-.info-val {
-    color: #ce9178;
-}
-
+/* Link */
 .terminal-link {
-    color: #4ec9b0;
     text-decoration: underline;
     cursor: pointer;
 }
 
+.terminal-link:hover {
+    opacity: 0.8;
+    text-shadow: 0 0 5px currentColor;
+}
+
+.terminal-link:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+/* Auto */
+.info-key {
+    font-weight: bold;
+}
+
+.info-json {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 24px;
+    border-radius: 12px;
+    font-family: inherit;
+}
+
+.info-extract {
+    font-size: 0.9em;
+}
+
+.info-tail {
+    font-size: 15px;
+}
+
+.table-key,
+.table-val,
+.table-val-another {
+    display: inline-block;
+    min-width: 165px;
+}
+
+.table-key {
+    font-weight: bold;
+}
+
+
+.list-number {
+    margin-right: 8px;
+}
+
+.file-dir {
+    font-weight: bold;
+}
+
+/* Dividers */
+.divider-level-one,
+.divider-level-two,
+.divider-level-three {
+    border: 0 !important;
+}
+
+/* Quote Block */
+.quote-block {
+    padding: 5px;
+    margin-left: 10px;
+}
+
+/* ====== DARK THEME ====== */
+#terminal-container {
+    background: #1a1a1a;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.terminal-header {
+    background: #2d2d2d;
+    border-bottom: 1px solid #3d3d3d;
+}
+
+#terminal-title {
+    color: #aaaaaa;
+}
+
+#terminal-window {
+    color: #e8e8e8;
+    background: #1a1a1a;
+}
+
+.prompt-arrow {
+    color: #4cd964;
+}
+
+.prompt-dir {
+    color: #00e0e3;
+}
+
+#terminal-window::-webkit-scrollbar-thumb {
+    background: #444;
+    border: 2px solid #1a1a1a;
+}
+
+/* Scrollbar Thumb Hover */
+#terminal-window::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+/* Scrollbar Track */
+#terminal-window::-webkit-scrollbar-track {
+    background: #252525;
+}
+
+#cmd-input {
+    color: #f7f7f7;
+    caret-color: #babbbd;
+}
+
+#cmd-input::placeholder {
+    color: #888;
+}
+
+.output-pre {
+    color: #c0c0c0;
+}
+
+.output-begin,
+.output-end {
+    color: #797979;
+}
+
+.terminal-link {
+    color: #6d9efd;
+}
+
+/* Visited Link */
 .terminal-link:visited {
+    color: #c792ea;
+}
+
+.info-key {
+    color: #569cd6;
+}
+
+.info-json {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.info-extract {
+    color: #BBBBBB;
+}
+
+.info-tail {
+    color: #797979;
+}
+
+.table-key {
+    color: #569cd6;
+}
+
+.table-val {
     color: #d7ba7d;
 }
+
+.table-val-another {
+    color: #BBBBBB;
+}
+
+.list-number {
+    color: #797979;
+}
+
+.list-value {
+    color: #d7ba7d;
+}
+
+/* Status */
+.st-error {
+    color: #ff5f56;
+}
+
+.st-warning {
+    color: #FFA500;
+}
+
+.st-info {
+    color: #5DADE2;
+}
+
+.st-success {
+    color: #4CAF50;
+}
+
+.st-highlight {
+    color: #00A3CC;
+}
+
+/* File */
+.file-dir {
+    color: #4daafc;
+}
+
+.file-hidden {
+    color: #5a5a5a;
+}
+
+.file-sh {
+    color: #4A7B5A;
+}
+
+/* Dividers */
+.divider-level-one {
+    border-top: 1px solid #444 !important;
+    margin: 8px 0 !important;
+    opacity: 0.8 !important;
+}
+
+.divider-level-two {
+    border-top: 2px solid #555 !important;
+    margin: 10px 0 !important;
+    opacity: 0.9 !important;
+}
+
+.divider-level-three {
+    border-top: 1px dashed #666 !important;
+    padding: 2px 0 !important;
+    margin: 15px 0 !important;
+}
+
+/* Quote Block */
+.quote-block {
+    border-left: 3px solid #f99157;
+}
+
+/* ====== LIGHT THEME ====== */
+#terminal-container.terminal-light {
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+#terminal-container.terminal-light .terminal-header {
+    background: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#terminal-container.terminal-light #terminal-title {
+    color: #555;
+}
+
+#terminal-container.terminal-light #terminal-window {
+    color: #1a202c;
+    background: #ffffff;
+}
+
+#terminal-container.terminal-light .prompt-arrow {
+    color: #00796b;
+}
+
+#terminal-container.terminal-light .prompt-dir {
+    color: #00897b;
+}
+
+#terminal-container.terminal-light #terminal-window::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border: 2px solid #ffffff;
+}
+
+#terminal-container.terminal-light #terminal-window::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+#terminal-container.terminal-light #terminal-window::-webkit-scrollbar-track {
+    background: transparent;
+    background: #f8f8f8;
+}
+
+#terminal-container.terminal-light #cmd-input {
+    color: #333333;
+    caret-color: #555;
+}
+
+#terminal-container.terminal-light #cmd-input::placeholder {
+    color: #999;
+}
+
+#terminal-container.terminal-light .output-pre {
+    color: #444444;
+}
+
+#terminal-container.terminal-light .output-begin,
+#terminal-container.terminal-light .output-end {
+    color: #999999;
+}
+
+#terminal-container.terminal-light .terminal-link {
+    color: #00796b;
+}
+
+#terminal-container.terminal-light .terminal-link:visited {
+    color: #5d4037;
+}
+
+#terminal-container.terminal-light .info-key {
+    color: #0d47a1;
+}
+
+#terminal-container.terminal-light .info-json {
+    background: #e3f2fd;
+    border: 1px solid #BBDEFB;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+#terminal-container.terminal-light .info-extract {
+    color: #555555;
+}
+
+#terminal-container.terminal-light .info-tail {
+    color: #777777;
+}
+
+#terminal-container.terminal-light .table-key {
+    color: #0d47a1;
+}
+
+#terminal-container.terminal-light .table-val {
+    color: #bf360c;
+}
+
+#terminal-container.terminal-light .table-val-another {
+    color: #555555;
+}
+
+#terminal-container.terminal-light .list-number {
+    color: #aaaaaa;
+}
+
+#terminal-container.terminal-light .list-value {
+    color: #5d4037;
+}
+
+#terminal-container.terminal-light .st-error {
+    color: #d32f2f;
+}
+
+#terminal-container.terminal-light .st-warning {
+    color: #f57f17;
+}
+
+#terminal-container.terminal-light .st-info {
+    color: #333333;
+}
+
+#terminal-container.terminal-light .st-success {
+    color: #388e3c;
+}
+
+#terminal-container.terminal-light .st-highlight {
+    color: #FF5722;
+}
+
+#terminal-container.terminal-light .file-dir {
+    color: #1976d2;
+}
+
+#terminal-container.terminal-light .file-hidden {
+    color: #9e9e9e;
+}
+
+#terminal-container.terminal-light .file-sh {
+    color: #004d40;
+}
+
+#terminal-container.terminal-light .divider-level-one {
+    border-top: 1px solid #e0e0e0 !important;
+}
+
+#terminal-container.terminal-light .divider-level-two {
+    border-top: 2px solid #cccccc !important;
+}
+
+#terminal-container.terminal-light .divider-level-three {
+    border-top: 1px dashed #aaaaaa !important;
+}
+
+#terminal-container.terminal-light .quote-block {
+    border-left: 3px solid #ff9800;
+}
+
+/* ====== UNKNOWN THEME ====== */

@@ -1,10 +1,9 @@
-let fuse;
-let user_data = `${navigator.userAgentData?.platform || 'guest'}.${navigator.userAgentData?.brands?.[0]?.brand || ''}`;
 
 async function getPosition() {
     position_data = {};
+    const apiUrl = 'https://ipapi.co/json/';
     try {
-        const response = await fetch('https://ipapi.co/json/');
+        const response = await fetch(apiUrl);
         if (response.ok) {
             position_json = await response.json();
             position_data = position_json;
@@ -17,8 +16,10 @@ async function getPosition() {
 
 async function getNews() {
     news_data = {};
+    const proxyUrl = 'https://api.allorigins.win/raw?url=';
+    const apiUrl = encodeURIComponent(`https://gnews.io/api/v4/top-headlines?token=${gnewsApiKey}&lang=en&max=3`);
     try {
-        const response = await fetch(`https://gnews.io/api/v4/top-headlines?token=${gnewsApiKey}&lang=en&max=3`);
+        const response = await fetch(proxyUrl + apiUrl);
         if (response.ok) {
             const news_json = await response.json();
             const availableNews = news_json.articles.filter(article => article.title && article.title !== '[Removed]');
@@ -37,18 +38,17 @@ async function getWeather(lat, lon) {
     if (!lat || !lon) return {};
 
     weather_data = {};
+    const curApiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${openweatherApiKey}&units=metric`;
+    const nextApiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${openweatherApiKey}&units=metric`;
     try {
-        const [curResponse, nextResponse] = await Promise.allSettled([
-            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${openweatherApiKey}&units=metric`),
-            fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${openweatherApiKey}&units=metric`)
-        ]);
+        const [curResponse, nextResponse] = await Promise.allSettled([fetch(curApiUrl), fetch(nextApiUrl)]);
         if (curResponse.status === 'fulfilled' && curResponse.value.ok) {
             const cur_json = await curResponse.value.json();
             weather_data.current = cur_json;
         }
         if (nextResponse.status === 'fulfilled' && nextResponse.value.ok) {
             const next_json = await nextResponse.value.json();
-            weather_data.next = next_json.list?.[1];
+            weather_data.next = next_json.list?.[0];
         }
     } catch (error) {
         console.log('cannot fetch weather', error);
@@ -57,44 +57,90 @@ async function getWeather(lat, lon) {
 }
 
 (function () {
-    getPosition().then(position_data => {
-        const titleElement = document.getElementById('terminal-title');
-        titleElement.textContent = `${user_data}@${position_data.ip || 'localhost'}: ~ (zsh)`;
-
-        WELCOME_MSG = "Last login on ttys001 at " + new Date().toString().split(' GMT')[0] + ` via ${position_data.org || 'Internet'}`;
-        if (position_data.latitude && position_data.longitude) {
-            WELCOME_MSG += ` (${position_data.latitude.toFixed(4)}, ${position_data.longitude.toFixed(4)})`;
-        }
-        printOutput(WELCOME_MSG, 'front-output');
-        printOutput("Welcome to my interactive terminal! Type 'help' to see available commands.", 'front-output');
-    });
-
-    const input = document.getElementById('cmd-input');
-    const inputHeader = document.querySelector('.input-line');
-    const output = document.getElementById('history-output');
-    const terminalWindow = document.getElementById('terminal-window');
-    initSearchIndex();
-
+    /* --- Initial Setup --- */
+    let fuse;
     let isAdmin = false;
     let commandHistory = [];
     const MAX_HISTORY = 100;
     let historyIndex = -1;
+    let terminalConfig = {
+        theme: 'dark',
+        alias: {
+            'whoami': 'cat contact.txt',
+        }
+    };
 
-    // --- 1. Define data and commands here ---
+    initTheme();
+    getPosition().then(position_data => {
+        const titleElement = document.getElementById('terminal-title');
+        titleElement.textContent = `${navigator.userAgentData?.platform || 'guest'}.${navigator.userAgentData?.brands?.[0]?.brand || ''}
+            @${position_data.ip || 'localhost'}: ~ (zsh)`;
+
+        WELCOME_MSG = `Last login on ttys001 at ${new Date().toString().split(' GMT')[0]} via ${position_data.org || 'Internet'}`;
+        if (position_data.latitude && position_data.longitude) {
+            WELCOME_MSG += ` (${position_data.latitude.toFixed(4)}, ${position_data.longitude.toFixed(4)})`;
+        }
+        WELCOME_MSG += '<br>Welcome to my interactive terminal! Type `help` to see available commands.';
+        printOutput(WELCOME_MSG, 'output-pre');
+    });
+    initSearchIndex();
+
+    const terminalWindow = document.getElementById('terminal-window');
+    const inputLine = document.querySelector('.input-line');
+    const inputElement = document.getElementById('cmd-input');
+    const outputElement = document.getElementById('history-output');
+
+    /* --- Data and Commands --- */
     const data = {
+        help: ` 
+            <span class='output-begin'># List of available commands:</span><br>
+            <span class='table-key'>COMMAND</span> <span class='table-key'>DESCRIPTION</span><br>
+            <hr class='divider-level-two'>
+                <span class='table-val'>ls (-a)</span>
+                <span class='table-val-another'>List directory contents (including hidden)</span><br>
+                <span class='table-val'>cat &lt;file&gt;</span>
+                <span class='table-val-another'>Display file contents</span><br>
+                <span class='table-val'>cd &lt;dir&gt;</span>
+                <span class='table-val-another'>Change directory</span><br>
+                <span class='table-val'>bash &lt;exe&gt;</span>
+                <span class='table-val-another'>Down or exe program (such as \`bash surprise.exe\`)</span><br>
+                <span class='table-val'>whoami</span>
+                <span class='table-val-another'>Display user info</span><br>
+                <span class='table-val'>hello</span>
+                <span class='table-val-another'>Say \`hello\`</span><br>
+                <span class='table-val'>fortune</span>
+                <span class='table-val-another'>Display a random quote</span><br>
+                <span class='table-val'>search &lt;keys&gt;</span>
+                <span class='table-val-another'>Search content</span><br>
+                <span class='table-val'>chat &lt;prompt&gt;</span>
+                <span class='table-val-another'>Chat with AI</span><br>
+                <span class='table-val'>clear</span>
+                <span class='table-val-another'>Clear the screen</span><br>
+                <span class='table-val'>help</span>
+                <span class='table-val-another'>Show this help message</span><br>
+                <span class='table-val'>sudo &lt;pwd&gt;</span>
+                <span class='table-val-another'>Get admin rights</span><br>
+                <span class='table-val'>history</span>
+                <span class='table-val-another'>Show command history</span><br>
+                <span class='table-val'>set &lt;key&gt; &lt;value&gt;</span>
+                <span class='table-val-another'>Set configuration values</span><br>
+                <span class='info-tail'>:... </span>
+            <hr class='divider-level-two'>
+            <span class='output-end'>Tip: Commands are case-insensitive, arguments are auto-trimmed</span><br>
+            `,
+
         list: `
-            <span style="color:#4daafc; font-weight:bold;">Projects/</span>&nbsp;&nbsp;
-            <span style="color:#4daafc; font-weight:bold;">Blogs/</span>&nbsp;&nbsp;
+            <span class='file-dir'>Projects/</span>&nbsp;&nbsp;
+            <span class='file-dir'>Blogs/</span>&nbsp;&nbsp;
             <span>README.md</span>&nbsp;&nbsp;
             <span>contact.txt</span>&nbsp;&nbsp;
             <span>skills.json</span>
             `,
         listall: `
-            <span style="color:#5a5a5a;font-weight:bold;">.config/</span>&nbsp;&nbsp;
-            <span style="color:#5a5a5a;">.zshrc</span>&nbsp;&nbsp;
-            <span style="color:#4A7B5A;">surprise.exe</span>&nbsp;&nbsp;
-            <span style="color:#4daafc; font-weight:bold;">Projects/</span>&nbsp;&nbsp;
-            <span style="color:#4daafc; font-weight:bold;">Blogs/</span>&nbsp;&nbsp;
+            <span class='file-hidden'>.zshrc</span>&nbsp;&nbsp;
+            <span class='file-sh'>surprise.exe</span>&nbsp;&nbsp;
+            <span class='file-dir'>Projects/</span>&nbsp;&nbsp;
+            <span class='file-dir'>Blogs/</span>&nbsp;&nbsp;
             <span>README.md</span>&nbsp;&nbsp;
             <span>contact.txt</span>&nbsp;&nbsp;
             <span>skills.json</span>
@@ -102,61 +148,40 @@ async function getWeather(lat, lon) {
 
         bio: `
             <div>
-            Hello! I'm <span style="color:#00A3CC; font-weight:bold;">biglonglong</span>.<br>A curious Developer who specializes in converting coffee to code.
+                Hello! I'm <span class='info-key'>biglonglong</span>.<br>A curious Developer who specializes in converting coffee to code.
             </div>
             `,
         contact: `
             <div>
-            Email: <a href="mailto:1522262926@qq.com" target="_blank" class="terminal-link">1522262926@qq.com</a><br>
-            GitHub: <a href="https://github.com/biglonglong" target="_blank" class="terminal-link">github.com/biglonglong</a>
+                Email: <a href='mailto:1522262926@qq.com' target='_blank' class='terminal-link'>1522262926@qq.com</a><br>
+                GitHub: <a href='https://github.com/biglonglong' target='_blank' class='terminal-link'>github.com/biglonglong</a>
             </div>
             `,
         skills: `
-            <div class='info-val'>
-            const stack = {<br>
-            &nbsp;&nbsp;algorithms: {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;llm: ["Prompt", "RAG", "Tools", "Fine-tuning", "RL"],<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;ad: ["Decision", "Planning", "Mining"]<br>
-            &nbsp;&nbsp;},<br>
-            &nbsp;&nbsp;tools: ["ROS", "PyTorch", "TensorFlow", "Docker", "Git"]<br>
-            };
-            </div>`,
-        help: ` 
-            <span style="color: #797979; font-style: italic;"># List of available commands</span><br>
-            <span class='info-key'>COMMAND</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#DDDDDD;">DESCRIPTION</span><br>
-            <hr style="border-top: 1px solid #333; margin: 5px 0;"><br>
-            <span class="info-key">ls (-a)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">List directory contents (including hidden)</span><br>
-            <span class="info-key">cat &lt;file&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Display file contents</span><br>
-            <span class="info-key">cd &lt;dir&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Change directory</span><br>
-            <span class="info-key">bash &lt;exe&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Down or exe program (such as \`bash surprise.exe\`)</span><br>
-            <span class="info-key">whoami</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Display user info</span><br>
-            <span class="info-key">hello</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Say \`hello\`</span><br>
-            <span class="info-key">fortune</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Display a random quote</span><br>
-            <span class="info-key">search &lt;keys&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Search content</span><br>
-            <span class="info-key">chat &lt;prompt&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Chat with AI</span><br>
-            <span class="info-key">clear</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Clear the screen</span><br>
-            <span class="info-key">help</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Show this help message</span><br>
-            <span class="info-key">sudo &lt;pwd&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Get admin rights</span><br>
-            <span class="info-key">history</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#BBBBBB;">Show command history</span><br>
-            <span style="color:#797979; font-size: 15px;">:... and other hidden features</span><br><br>
-            <span style="color:#797979;">Tip: Commands are case-insensitive, arguments are auto-trimmed</span><br>
-            <hr style="border-top: 1px solid #333; margin: 5px 0;">
+            ${formatJson({
+            algorithms: {
+                llm: ['Prompt', 'RAG', 'Tools', 'Fine-tuning', 'RL'],
+                ad: ['Decision', 'Planning', 'Mining']
+            },
+            tools: ['ROS', 'PyTorch', 'TensorFlow', 'Docker', 'Git']
+        }, 'const stack = ')}
+            </div>
             `,
 
         redirectMap: {
-            "posts": '/home/posts',
-            "projects": 'https://github.com/biglonglong?tab=repositories'
+            'blogs/': '/home/posts',
+            'projects/': 'https://github.com/biglonglong?tab=repositories'
         },
         binMap: {
-            "surprise.exe": "../surprise.exe",
+            'surprise.exe': '../surprise.exe',
         },
         quotes: [
             "There are only 10 types of people in this world: those who understand binary and those who don't.",
-            "Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.",
-            "If debugging is the process of removing software bugs, then programming must be the process of putting them in.",
-            "The best thing about a boolean is that even if you are wrong, you are only off by a bit.",
-            "A good programmer is someone who always looks both ways before crossing a one-way street.",
-            "The most important tool for a programmer is a rubber duck."
+            'Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.',
+            'If debugging is the process of removing software bugs, then programming must be the process of putting them in.',
+            'The best thing about a boolean is that even if you are wrong, you are only off by a bit.',
+            'A good programmer is someone who always looks both ways before crossing a one-way street.',
+            'The most important tool for a programmer is a rubber duck.'
         ]
     };
 
@@ -166,119 +191,121 @@ async function getWeather(lat, lon) {
 
             const target = args.trim().toLowerCase();
             if (target === '-a') return data.listall;
-            return `<span style="color:#ff5f56">ls: cannot access '${args}': No such file or directory</span>`;
+            return `<span class='st-error'>ls: Cannot Access '${args}'</span>`;
         },
         cat: (args) => {
-            if (args === '') return `<span style="color:#ff5f56">cat: missing operand</span>`;
+            if (args === '') return `<span class='st-error'>cat: Missing Operand</span>`;
 
             const target = args.trim().toLowerCase();
             if (target === 'readme.md') return data.bio;
             if (target === 'contact.txt') return data.contact;
-            if (target === "skills.json") return data.skills;
-            return `<span style="color:#ff5f56">cat: ${args}: No such file or directory</span>`;
+            if (target === 'skills.json') return data.skills;
+            if (target === '.zshrc') {
+                if (isAdmin) return formatJson(terminalConfig);
+                return `<span class='st-warning'>cat: Permission Denied: '${args}'</span>`;
+            }
+            return `<span class='st-error'>cat: No Such File: '${args}'</span>`;
         },
         cd: (args) => {
-            if (args === '') return `<span style="color:#ff5f56">cd: missing operand</span>`;
+            if (args === '') return `<span class='st-error'>cd: Missing Operand</span>`;
 
             const target = args.trim().toLowerCase();
             if (data.redirectMap[target]) {
                 window.location.href = data.redirectMap[target];
-                return `<span style="color:#BBBBBB;">Redirecting...</span>`;
+                return `<span class='output-end'>Redirecting...</span>`;
             }
-            return `<span style="color:#ff5f56">cd: no such directory: ${target}</span>`;
+            return `<span class='st-error'>cd: No Such Directory: '${args}'</span>`;
         },
         whoami: () => data.bio,
         fortune: () => {
             const randomIndex = Math.floor(Math.random() * data.quotes.length);
-            return `<div style="padding: 5px; border-left: 3px solid #f99157; margin-left: 10px;">${data.quotes[randomIndex]}</div>`;
+            return `<div class='quote-block'>${data.quotes[randomIndex]}</div>`;
         },
 
         sudo: (args) => {
-            if (args === '') {
-                return `<span style="color:#ff5f56;">Password required</span>`;
-            }
-            if (isAdmin) {
-                return `<span style="color:#FFA500;">Already in admin mode</span>`;
-            }
+            if (args === '') return `<span class='st-error'>sudo: Missing Operand</span>`;
 
-            if (args !== password) {
-                return `<span style="color:#ff5f56;">Incorrect password</span>`;
-            }
+            if (args !== password) return `<span class='st-error'>Incorrect Password</span>`;
+            if (isAdmin) return `<span class='st-warning'>Already in Admin Mode</span>`;
             isAdmin = true;
-            return `<span style="color:#4CAF50;">Admin mode enabled</span>`;
+            return `<span class='st-success'>Admin Mode Enabled</span>`;
         },
         bash: (args) => {
-            if (args === '') return `<span style="color:#ff5f56">bash: missing operand</span>`;
+            if (args === '') return `<span class='st-error'>bash: Missing Operand</span>`;
 
             const target = args.trim().toLowerCase();
             if (data.binMap[target]) {
                 window.location.href = data.binMap[target];
-                return `<div>Downloaded <span class=\"info-val\">${target}</span>! Manual run please.</div>`;
+                return `<span class='st-warning'>Downloading <span class='info-key'>${args}</span>! Manual Run Please</span>`;
             }
-            return `<span style="color:#ff5f56">bash: ${args}: command not found</span>`;
+            return `<span class='st-error'>bash: No Such Sh: ${args}</span>`;
         },
         history: () => {
-            if (commandHistory.length === 0) {
-                return "<span style=\"color:#BBBBBB;\">No commands in history.</span>";
-            }
+            if (commandHistory.length === 0) return "<span class='st-warning'>No Commands in History</span>";
 
             let html = '';
             commandHistory.forEach((cmd, index) => {
-                html += `<div><span style="color:#797979;">${(index + 1).toString().padStart(3)}&nbsp;&nbsp;</span>${escapeHtml(cmd)}</div>`;
+                html += `<div>
+                    <span class='list-number'>${(index + 1).toString().padStart(3)}</span>
+                    &nbsp;&nbsp;
+                    <span class='list-value'>${escapeHtml(cmd)}</span>
+                </div>`;
             });
             return html;
         },
+        set: (args) => {
+            const parts = args.trim().split(' ');
+            if (parts.length < 2) return `<span class='st-error'>set: Missing Operands</span>`;
+
+            const key = parts[0].toLowerCase();
+            const value = parts.slice(1).join(' ').toLowerCase();
+
+            if (key === 'theme') {
+                if (value !== 'dark' && value !== 'light') {
+                    return `<span class='st-error'>set: Invalid Value for 'theme'. Use 'dark' or 'light'.</span>`;
+                }
+                setTheme(value);
+                return `<span class='st-success'>Theme set to '${value}'</span>`;
+            }
+            return `<span class='st-error'>set: Unknown Configuration Key: '${key}'</span>`;
+        },
+
         search: (args) => {
-            if (args === '') {
-                return `<span style="color:#f99157;">💡 Usage:</span> <code>search &lt;keyword&gt;</code> — e.g., <code>search path planning</code>`;
-            }
-            if (!fuse) {
-                return `<span style="color:#ff5f56;">Search index is still loading. Please try again shortly.</span>`;
-            }
+            if (args === '') return `<span class='st-info'>💡 Usage:</span> <code>search &lt;keyword&gt;</code> — e.g., <code>search path planning</code>`;
+            if (!fuse) return `<span class='st-error'>Search index Load Failed, Refresh Please</span>`;
             return searchIndex(args);
         },
         chat: (args) => {
-            // async command handler, return null
-            if (args === '') {
-                return `<span style="color:#f99157;">💡 Usage:</span> <code>chat &lt;your question&gt;</code> — e.g., <code>chat What is reinforcement learning?</code>`;
-            }
+            if (args === '') return `<span class='st-info'>💡 Usage:</span> <code>chat &lt;question&gt;</code> — e.g., <code>chat What is reinforcement learning?</code>`;
 
-            const statusDiv = document.createElement('div');
-            statusDiv.className = '.input-line';
-            statusDiv.innerHTML = '<span style="color:#797979; font-style: italic; border-left: 2px solid #4A7B5A; padding-left: 8px;">🤖 Thinking...</span>';
-            statusDiv.style.opacity = '0.7';
-            output.appendChild(statusDiv);
-
-            inputHeader.style.display = 'none';
+            const waitingDiv = printOutput('🤖 Thinking...', 'output-begin');
+            inputLine.style.display = 'none';
             askAIAndPrint(args).finally(() => {
-                inputHeader.style.display = 'flex';
-                statusDiv.remove();
-                input.focus();
+                inputLine.style.display = 'flex';
+                waitingDiv.remove();
+                inputElement.focus();
             });
             return;
         },
         hello: () => {
+            printOutput("🥹!!! I'm biglonglong?long？", 'output-begin');
+            inputLine.style.display = 'none';
             Promise.allSettled([
                 getNews(),
                 getWeather(position_data.latitude, position_data.longitude)
-            ]).then((results) => {
-                const [newsResult, weatherResult] = results;
-                const news_data = newsResult.status === 'fulfilled' ? newsResult.value : {};
-                const weather_data = weatherResult.status === 'fulfilled' ? weatherResult.value : {};
-
-                sayHello(news_data, weather_data);
-                if (newsResult.status === 'rejected') {
-                    console.warn('News fetch failed:', newsResult.reason);
-                }
-                if (weatherResult.status === 'rejected') {
-                    console.warn('Weather fetch failed:', weatherResult.reason);
-                }
-            });
+            ])
+                .then((results) => {
+                    const [newsResult, weatherResult] = results;
+                    const news_data = newsResult.status === 'fulfilled' ? newsResult.value : {};
+                    const weather_data = weatherResult.status === 'fulfilled' ? weatherResult.value : {};
+                    inputLine.style.display = 'flex';
+                    sayHello(news_data, weather_data);
+                });
             return;
         },
 
         clear: () => {
-            output.innerHTML = '';
+            outputElement.innerHTML = '';
             return;
         },
         help: () => data.help,
@@ -291,17 +318,18 @@ async function getWeather(lat, lon) {
         'skills.json',
         'Projects/',
         'Blogs/',
-        'surprise.exe'
+        'surprise.exe',
+        '.zshrc'
     ];
 
-    // --- 2. Core Logic ---
-    input.addEventListener('keydown', function (e) {
+    /* --- Core Logic --- */
+    inputElement.addEventListener('keydown', function (e) {
         if (e.ctrlKey && e.key === 'c') {
             const hasInputSelection = this.selectionStart !== this.selectionEnd;
             if (hasInputSelection) return;
-
             e.preventDefault();
-            showCommandLine(this.value + '<span style="color:#ff5f56"> ^C</span>');
+
+            showCommandLine(this.value + "<span class='st-error'> ^C</span>");
             this.value = '';
             scrollToBottom();
         }
@@ -333,37 +361,32 @@ async function getWeather(lat, lon) {
                     words[words.length - 1] = commonPrefix;
                     this.value = words.join(' ');
                 } else {
-                    showCommandLine(currentInput);
-                    printOutput(`<span style="color:#00FF00;">Possible completions:</span><br>` + matches.map(name => escapeHtml(name)).join('&nbsp;&nbsp;'));
+                    showCommandLine(currentInput + '<span class="st-warning"> ^Tab</span>');
+                    printOutput(`<span class='output-begin'>Possible completions:</span><br> ${matches.map(name => escapeHtml(name)).join('&nbsp;&nbsp;')}`);
                     scrollToBottom();
                 }
             }
         }
 
         else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-            e.preventDefault();
             if (commandHistory.length === 0) return;
+            e.preventDefault();
 
-            const isUp = e.key === 'ArrowUp';
             if (historyIndex === -1) {
                 this.dataset.currentInput = this.value;
             }
 
-            if (isUp) {
+            if (e.key === 'ArrowUp') {
                 historyIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
             } else {
                 historyIndex = (historyIndex >= 0 && historyIndex < commandHistory.length - 1) ? historyIndex + 1 : -1;
             }
-            console.log(`${historyIndex}`)
             this.value = historyIndex === -1 ? (this.dataset.currentInput || '') : commandHistory[historyIndex];
             this.setSelectionRange(this.value.length, this.value.length);
         }
 
-        // Enter
         else if (e.key === 'Enter') {
-            // Show the command that was just entered
             showCommandLine(this.value);
-            // Process the command
             const [cmdName, args] = parseCommand(this.value);
             if (cmdName) {
                 const handler = commands[cmdName];
@@ -379,17 +402,53 @@ async function getWeather(lat, lon) {
                             }
                         }
                     } catch (err) {
-                        printOutput(`<span style="color:#ff5f56">Error executing command: ${err.message}</span>`);
+                        printOutput(`<span class='st-error'>Error Executing Command: ${err.message}</span>`);
                     }
                 } else {
-                    printOutput(`<span style="color:#ff5f56">command not found: ${cmdName}</span>. Try 'help'.`);
+                    printOutput(`<span class='st-error'>Command Not Found: ${cmdName}</span>. Try \`help\`.`);
                 }
             }
-            // Reset input box and scroll to bottom
+
             this.value = '';
             scrollToBottom();
         }
     });
+
+    function printOutput(html, className = 'command-output') {
+        const div = document.createElement('div');
+        div.className = className;
+        div.innerHTML = html;
+        outputElement.appendChild(div);
+        return div;
+    }
+
+    function showCommandLine(command_html, promptArrow = '➜', promptDir = '~') {
+        const cmdLine = document.createElement('div');
+        cmdLine.className = 'input-line';
+        cmdLine.innerHTML = `
+            <span class='prompt-arrow'>${promptArrow}</span>
+            <span class='prompt-dir'>${promptDir}</span>
+            <span>${command_html}</span>
+        `;
+        outputElement.appendChild(cmdLine);
+    }
+
+    function formatJson(jsonObj, prefix = '') {
+        return `<div class='info-json'>${prefix}${JSON.stringify(jsonObj, null, 4)
+            .replace(/ /g, '&nbsp;')
+            .replace(/\n/g, '<br>')}</div>`;
+    }
+
+    function escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
 
     function initSearchIndex() {
         return fetch('../index.json')
@@ -402,18 +461,38 @@ async function getWeather(lat, lon) {
             });
     }
 
+    function scrollToBottom() {
+        terminalWindow.scrollTop = terminalWindow.scrollHeight;
+    }
+
+    window.onload = function () {
+        inputElement.focus();
+    };
+
+    function parseCommand(raw) {
+        const trimmed = raw.trim();
+        if (!trimmed) return [null, ''];
+
+        const firstSpace = trimmed.indexOf(' ');
+        if (firstSpace === -1) {
+            return [trimmed.toLowerCase(), ''];
+        } else {
+            return [trimmed.slice(0, firstSpace).toLowerCase(), trimmed.slice(firstSpace + 1)];
+        }
+    }
+
     function searchIndex(query) {
         const results = fuse.search(query);
-        if (results.length === 0) {
-            return `<span style="color:#ff5f56;">No results found for "${query}".</span>`;
-        }
-        let resultHTML = `<span style="color:#00FF00;">Found ${results.length} result(s) for "${query}":</span><br><br>`;
-        results.slice(0, 5).forEach(result => {
-            resultHTML += `<div style="margin-bottom:10px;">
-                    <a href="${result.item.permalink}" class="terminal-link">${result.item.title}</a><br>
-                    <span style="color:#BBBBBB;">${result.item.content.substring(0, 100)}...</span>
+        if (results.length === 0) return `<span class='st-warning'>No results Found for '${query}'.</span>`;
+
+        let resultHTML = `<span class='st-highlight'>Found ${results.length} result(s) for '${query}':</span><br><br>`;
+        results.slice(0, 3).forEach(result => {
+            resultHTML += `<div style='margin-bottom:10px;'>
+                    <a href='${result.item.permalink}' class='terminal-link'>${result.item.title}</a><br>
+                    <span class='info-extract'>${result.item.content.substring(0, 100)}...</span>
                 </div>`;
         });
+        resultHTML += `<span class='info-tail'>:... </span>`;
         return resultHTML;
     }
 
@@ -456,7 +535,7 @@ async function getWeather(lat, lon) {
 
             if (!response.ok) {
                 const errorText = await response.text();
-                printOutput(`<span style="color:#ff5f56;">⚠️ Worker Failed (${response.status}): ${errorText}</span>`);
+                printOutput(`<span class='st-error'>❌ Worker Failed (${response.status}): ${errorText}</span>`);
                 return;
             }
 
@@ -498,14 +577,14 @@ async function getWeather(lat, lon) {
             printOutput('');
 
         } catch (err) {
-            printOutput(`<span style="color:#ff5f56;">❌ Chat Error: ${err.message}</span>`);
+            printOutput(`<span class='st-error'>❌ Chat Error: ${err.message}</span>`);
         }
     };
 
     function sayHello(news_data, weather_data) {
-        const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        const months = ["January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"];
+        const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const months = ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'];
         const now = new Date();
         // const year = now.getFullYear();
         // const month = now.getMonth();
@@ -514,17 +593,17 @@ async function getWeather(lat, lon) {
         const hours = now.getHours();
         const minutes = now.getMinutes();
 
-        let greeting = "Hello👋!";
+        let greeting = 'Hello👋!';
         if (hours >= 5 && hours < 12) {
-            greeting = "Good morning☀️!";
+            greeting = 'Good morning☀️!';
         } else if (hours >= 12 && hours < 18) {
-            greeting = "Good afternoon🌤️!";
+            greeting = 'Good afternoon🌤️!';
         } else if (hours >= 18 && hours < 22) {
-            greeting = "Good evening🌙!";
+            greeting = 'Good evening🌙!';
         } else if (hours >= 22 && hours < 24) {
-            greeting = "Good night🌠!";
+            greeting = 'Good night🌠!';
         } else {
-            greeting = "Still up? Good... uh... quiet time🌌!";
+            greeting = 'Still up? Good... uh... quiet time🌌!';
         }
 
         let windLevel = '';
@@ -551,32 +630,33 @@ async function getWeather(lat, lon) {
         const currentDesc = weather_data.current?.weather?.[0]?.description;
         const nextDesc = weather_data.next?.weather?.[0]?.description;
         if (currentDesc && nextDesc && currentDesc !== nextDesc) {
-            weatherDiff = ` The weather may change to ${nextDesc} soon.`;
+            weatherDiff = ` The weather may change to <span class="info-key">${nextDesc}</span> soon.`;
         } else {
             weatherDiff = 'The weather is expected to remain stable in the coming period.';
         }
 
         const lastPartList = [
-            "Have a fantastic day! 🌟",
-            "A wonderful day is just beginning!🌟",
-            "Wishing you a productive and joyful day ahead! 🌈",
+            'Have a fantastic day! 🌟',
+            'A wonderful day is just beginning!🌟',
+            'Wishing you a productive and joyful day ahead! 🌈',
         ];
 
         const currentFrom = position_data.city ? ` from 🌆${position_data.city}` : '';
-        const currentTime = `${hours}:${minutes.toString().padStart(2, '0')}`;
+        const currentTime = `<span class="info-key">${hours}:${minutes.toString().padStart(2, '0')}</span>`;
         const currentWeather = (weather_data.current && weather_data.next)
-            ? `The weather is ${weather_data.current.weather[0].description} today, 
-                with a current feels-like temperature of ${Math.round(weather_data.current.main.feels_like)}°C 
-                and a forecast high of ${Math.round(weather_data.current.main.temp_max)}°C, low of ${Math.round(weather_data.current.main.temp_min)}°C.
-                ${windLevel}<br>
-                ${weatherDiff} ${rainLevel}`
+            ? `The weather is <span class="info-key">${weather_data.current.weather[0].description}</span> today, 
+                with a current feels-like temperature of <span class="info-key">${Math.round(weather_data.current.main.feels_like)}°C</span>,
+                a forecast high of <span class="info-key">${Math.round(weather_data.current.main.temp_max)}°C</span> 
+                and a low of <span class="info-key">${Math.round(weather_data.current.main.temp_min)}°C</span>.
+                <span class="info-key">${windLevel}</span><br>
+                ${weatherDiff} <span class="st-highlight">${rainLevel}</span>`
             : '';
         const topNews = news_data.title
             ? `<span>By the way, here's a top news update for you:</span><br>
-                <hr style="border: 0; border-top: 1px solid #444; margin: 12px 0;">
-                <a href="${news_data.url}" target="_blank" class="terminal-link">${news_data.title}</a><br>
-                <span style="color:#BBBBBB; font-size:0.9em;">${news_data.description.substring(0, 500) || ''}</span>
-                <hr style="border: 0; border-top: 1px solid #444; margin: 8px 0 12px 0;">`
+                <hr class='divider-level-three'>
+                <a href='${news_data.url}' target='_blank' class='terminal-link'>${news_data.title}</a><br>
+                <span class='info-extract'>${news_data.description.substring(0, 500) || ''}</span>
+                <hr class='divider-level-three'>`
             : '';
 
         const lastPart = lastPartList[Math.floor(Math.random() * lastPartList.length)];
@@ -592,53 +672,19 @@ async function getWeather(lat, lon) {
         printOutput(content);
     }
 
-    function escapeHtml(text) {
-        const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
-        };
-        return text.replace(/[&<>"']/g, m => map[m]);
+    function initTheme() {
+        const savedTheme = localStorage.getItem('terminalTheme') || 'dark';
+        setTheme(savedTheme);
     }
 
-    function showCommandLine(command, promptArrow = '➜', promptDir = '~') {
-        const cmdLine = document.createElement('div');
-        cmdLine.className = 'input-line';
-        cmdLine.innerHTML = `
-            <span class="prompt-arrow">${promptArrow}</span>
-            <span class="prompt-dir">${promptDir}</span>
-            <span>${command}</span>
-        `;
-        output.appendChild(cmdLine);
-    }
-
-    function parseCommand(raw) {
-        const trimmed = raw.trim();
-        if (!trimmed) return [null, ''];
-
-        const firstSpace = trimmed.indexOf(' ');
-        if (firstSpace === -1) {
-            return [trimmed.toLowerCase(), ''];
+    function setTheme(theme) {
+        const containerElement = document.getElementById('terminal-container');
+        if (theme === 'light') {
+            containerElement.classList.add('terminal-light');
         } else {
-            return [trimmed.slice(0, firstSpace).toLowerCase(), trimmed.slice(firstSpace + 1)];
+            containerElement.classList.remove('terminal-light');
         }
+        terminalConfig.theme = theme;
+        localStorage.setItem('terminalTheme', theme);
     }
-
-    function printOutput(html, className = 'command-output') {
-        const div = document.createElement('div');
-        div.className = className;
-        div.innerHTML = html;
-        output.appendChild(div);
-    }
-
-    function scrollToBottom() {
-        terminalWindow.scrollTop = terminalWindow.scrollHeight;
-    }
-
-    // Auto focus on load
-    window.onload = function () {
-        input.focus();
-    };
 })();
