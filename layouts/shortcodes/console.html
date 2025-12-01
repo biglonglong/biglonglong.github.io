@@ -17,12 +17,6 @@
     </div>
 </div>
 
-
-{{ $style := resources.Get "css/extended/console.css" | minify }}
-<link rel="stylesheet" href="{{ $style.RelPermalink }}">
-
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
-
 <script>
     let password = "{{ .Site.Params.terminalPassword }}" || "";
     let siliconApiKey = "{{ .Site.Params.siliconApiKey }}" || "";
@@ -30,5 +24,20 @@
     let openweatherApiKey = "{{ .Site.Params.openweatherApiKey }}" || "";
 </script>
 
-{{ $console := resources.Get "js/console.js" | minify | fingerprint }}
-<script src="{{ $console.RelPermalink }}"></script>
+{{- /* Searchable Console */ -}}
+{{- $fusejs := resources.Get "js/fuse.basic.min.js" }}
+{{- if not $fusejs }}
+  {{- errorf "Missing assets/js/fuse.basic.min.js – required for console search functionality." }}
+{{- end }}
+{{- $consolejs := resources.Get "js/console.js" }}
+{{- if not $consolejs }}
+  {{- errorf "Missing assets/js/console.js – main terminal logic file not found." }}
+{{- end }}
+
+{{- $consoleWithSearch := slice $fusejs $consolejs | resources.Concat "assets/js/consoleWithSearch.js" | minify }}
+{{- if not site.Params.assets.disableFingerprinting }}
+  {{- $consoleWithSearch = $consoleWithSearch | fingerprint }}
+  <script defer crossorigin="anonymous" src="{{ $consoleWithSearch.RelPermalink }}" integrity="{{ $consoleWithSearch.Data.Integrity }}"></script>
+{{- else }}
+  <script defer crossorigin="anonymous" src="{{ $consoleWithSearch.RelPermalink }}"></script>
+{{- end }}

@@ -59,7 +59,8 @@ languages:
           weight: 4
         
 # posts
-paginate: 7
+pagination:
+  pagerSize: 7
 permalinks:
   post: "/:title/"
 
