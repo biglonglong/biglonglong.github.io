@@ -49,7 +49,6 @@ git push origin main
 
 ## TODO List
 - [ ] console
-  - [ ] 音乐播放
   - [ ] 代码运行器
 - [ ] Blogs
   - [ ] Drafts

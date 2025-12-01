@@ -36,6 +36,7 @@ comments: true
 | `USB flash drive` | 便携资料           |
 
 - [ ] [Clash](https://github.com/clashdownload/Clash?tab=readme-ov-file)：profiles
+- [ ] [‌‍⁤⁣⁤⁡⁡TASK - 飞书云文档](https://har0ukrko0d.feishu.cn/wiki/CTCEw1Gq2iMLE0kV57vcEwu1n2g)
 - [ ] [Google Chrome](https://www.google.com/chrome/)：Default browser、log in、turn on Sync（Extensions、BookMark）、search engine setting
 
 - [ ] [VS Code](https://code.visualstudio.com/)：log in、Backup and Sync Settings

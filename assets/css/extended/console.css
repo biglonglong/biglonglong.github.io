@@ -175,8 +175,10 @@
     font-weight: bold;
 }
 
-
 .list-number {
+    display: inline-block;
+    width: 30px;
+    text-align: right;
     margin-right: 8px;
 }
 

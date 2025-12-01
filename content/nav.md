@@ -10,11 +10,11 @@ ShowBreadCrumbs: false
 
 <div class="links-container">
     <div class="link-box">
-        <a class="link" href="https://www.cloudofficial.top" target="_blank">
-            <img src="https://img.notionusercontent.com/s3/prod-files-secure%2F62ea150e-ff98-40ae-986e-7a386289383f%2F4298cc8f-70ba-483d-8f46-3a7298e0492c%2FCloud.png/size/w=1080?exp=1764316469&sig=ewhihiXGZuQxjsTZCHW9hqScPKA2KISOKNbCI5jj-4M&id=91585246-3694-40d3-bc67-14ac73369a1c&table=collection" alt="icon">
+        <a class="link" href="https://www.miaoer.net/" target="_blank">
+            <img src="https://static.miaoer.net/logo/avatar.webp" alt="icon">
             <div>
-                <span class="name">Cloud;Blog</span>
-                <div class="description">写作即自由</div>
+                <span class="name">喵二</span>
+                <div class="description">缘，妙不可言</div>
             </div>
         </a>
     </div>
@@ -159,24 +159,6 @@ ShowBreadCrumbs: false
 - [【全】无人驾驶系列知识入门到提高_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV137411E7oC/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
 - 百度 Apollo
 - [AI算法工程师手册](https://www.huaxiaozhuan.com/)
-
-
-
-### TODO List
-
-> [‌‍⁤⁣⁤⁡⁡TASK - 飞书云文档](https://har0ukrko0d.feishu.cn/wiki/CTCEw1Gq2iMLE0kV57vcEwu1n2g)
-
-- Work 秋招
-  - LeetCode算法题专项
-  - nav八股文专项：OSstory
-  - Cpp Primer、notes-python
-  - 自动驾驶、大模型、强化学习、Java/Go
-- Github 仓库维护
-  - [biglonglong.github.io](https://github.com/biglonglong/biglonglong.github.io)：../README/TODO_List  ../draft/*
-  - [NNABC](https://github.com/biglonglong/NNABC)：../model/* for 论文列表
-  - other projects digging…
-    - [我整理了10个可以写到简历上的C++项目_牛客网](https://www.nowcoder.com/discuss/353157418395836416)
-    - [0voice/Awesome_c-cpp_Projects](https://github.com/0voice/Awesome_c-cpp_Projects)
 
 
 

@@ -56,9 +56,55 @@ async function getWeather(lat, lon) {
     return weather_data;
 }
 
+class simpleTTS {
+    constructor() {
+        this.queue = [];
+        this.synth = window.speechSynthesis;
+        this.isPlaying = false;
+    }
+
+    speak(text, force = false) {
+        if (!text || !this.synth) return;
+        if (force) {
+            this.clear();
+        }
+
+        this.queue.push(text);
+        this._process();
+    }
+
+    _process() {
+        if (this.isPlaying || this.queue.length === 0) return;
+
+        this.isPlaying = true;
+        const text = this.queue.shift();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.6;
+        utterance.pitch = 0.8;
+        utterance.volume = 0.6;
+
+        utterance.onend = () => {
+            this.isPlaying = false;
+            this._process();
+        };
+        utterance.onerror = () => {
+            this.isPlaying = false;
+            this._process();
+        };
+
+        this.synth.speak(utterance);
+    }
+
+    clear() {
+        this.queue = [];
+        this.synth.cancel();
+        this.isPlaying = false;
+    }
+}
+
 (function () {
     /* --- Initial Setup --- */
-    let fuse;
     let isAdmin = false;
     let commandHistory = [];
     const MAX_HISTORY = 100;
@@ -83,7 +129,10 @@ async function getWeather(lat, lon) {
         WELCOME_MSG += '<br>Welcome to my interactive terminal! Type `help` to see available commands.';
         printOutput(WELCOME_MSG, 'output-pre');
     });
+
+    let fuse;
     initSearchIndex();
+    let tts = new simpleTTS();
 
     const terminalWindow = document.getElementById('terminal-window');
     const inputLine = document.querySelector('.input-line');
@@ -278,11 +327,11 @@ async function getWeather(lat, lon) {
         chat: (args) => {
             if (args === '') return `<span class='st-info'>💡 Usage:</span> <code>chat &lt;question&gt;</code> — e.g., <code>chat What is reinforcement learning?</code>`;
 
-            const waitingDiv = printOutput('🤖 Thinking...', 'output-begin');
+            printOutput('🤖 Thinking...', 'output-begin');
             inputLine.style.display = 'none';
             askAIAndPrint(args).finally(() => {
                 inputLine.style.display = 'flex';
-                waitingDiv.remove();
+                scrollToBottom();
                 inputElement.focus();
             });
             return;
@@ -298,8 +347,10 @@ async function getWeather(lat, lon) {
                     const [newsResult, weatherResult] = results;
                     const news_data = newsResult.status === 'fulfilled' ? newsResult.value : {};
                     const weather_data = weatherResult.status === 'fulfilled' ? weatherResult.value : {};
-                    inputLine.style.display = 'flex';
                     sayHello(news_data, weather_data);
+                    inputLine.style.display = 'flex';
+                    scrollToBottom();
+                    inputElement.focus();
                 });
             return;
         },
@@ -313,17 +364,37 @@ async function getWeather(lat, lon) {
 
     const tabNames = [
         ...Object.keys(commands),
+        ...Object.keys(terminalConfig),
+        '.zshrc',
         'README.md',
         'contact.txt',
         'skills.json',
         'Projects/',
         'Blogs/',
         'surprise.exe',
-        '.zshrc'
+        'light',
+        'dark'
     ];
 
     /* --- Core Logic --- */
     inputElement.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            if (commandHistory.length === 0) return;
+            e.preventDefault();
+
+            if (historyIndex === -1) {
+                this.dataset.currentInput = this.value;
+            }
+
+            if (e.key === 'ArrowUp') {
+                historyIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
+            } else {
+                historyIndex = (historyIndex >= 0 && historyIndex < commandHistory.length - 1) ? historyIndex + 1 : -1;
+            }
+            this.value = historyIndex === -1 ? (this.dataset.currentInput || '') : commandHistory[historyIndex];
+            this.setSelectionRange(this.value.length, this.value.length);
+        } else historyIndex = -1;
+
         if (e.ctrlKey && e.key === 'c') {
             const hasInputSelection = this.selectionStart !== this.selectionEnd;
             if (hasInputSelection) return;
@@ -368,23 +439,6 @@ async function getWeather(lat, lon) {
             }
         }
 
-        else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-            if (commandHistory.length === 0) return;
-            e.preventDefault();
-
-            if (historyIndex === -1) {
-                this.dataset.currentInput = this.value;
-            }
-
-            if (e.key === 'ArrowUp') {
-                historyIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
-            } else {
-                historyIndex = (historyIndex >= 0 && historyIndex < commandHistory.length - 1) ? historyIndex + 1 : -1;
-            }
-            this.value = historyIndex === -1 ? (this.dataset.currentInput || '') : commandHistory[historyIndex];
-            this.setSelectionRange(this.value.length, this.value.length);
-        }
-
         else if (e.key === 'Enter') {
             showCommandLine(this.value);
             const [cmdName, args] = parseCommand(this.value);
@@ -395,11 +449,10 @@ async function getWeather(lat, lon) {
                         const result = handler(args);
                         if (result !== null && result !== undefined) {
                             printOutput(result);
-
-                            commandHistory.push(`${cmdName} ${args || ''}`);
-                            if (commandHistory.length > MAX_HISTORY) {
-                                commandHistory.shift();
-                            }
+                        }
+                        commandHistory.push(`${cmdName} ${args || ''}`);
+                        if (commandHistory.length > MAX_HISTORY) {
+                            commandHistory.shift();
                         }
                     } catch (err) {
                         printOutput(`<span class='st-error'>Error Executing Command: ${err.message}</span>`);
@@ -543,6 +596,7 @@ async function getWeather(lat, lon) {
             const decoder = new TextDecoder();
             let buffer = '';
             let fullContent = '';
+            let chatDiv = printOutput('');
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
@@ -560,12 +614,7 @@ async function getWeather(lat, lon) {
                                 fullContent += content;
                                 const span = document.createElement('span');
                                 span.textContent = content;
-                                const lastOutput = document.querySelector('.command-output:last-child');
-                                if (lastOutput) {
-                                    lastOutput.appendChild(span);
-                                } else {
-                                    printOutput(content);
-                                }
+                                chatDiv.appendChild(span);
                                 scrollToBottom();
                             }
                         } catch (e) {
@@ -574,7 +623,7 @@ async function getWeather(lat, lon) {
                     }
                 }
             }
-            printOutput('');
+            tts.speak(fullContent, true);
 
         } catch (err) {
             printOutput(`<span class='st-error'>❌ Chat Error: ${err.message}</span>`);

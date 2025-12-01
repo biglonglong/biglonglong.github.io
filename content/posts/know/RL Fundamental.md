@@ -2,7 +2,7 @@
 draft: false
 
 title: "RL Fundamental"
-description: "强化学习概念入门"
+description: "从零开始理解强化学习"
 date: 2025-11-18
 author: ["biglonglong"]
 
