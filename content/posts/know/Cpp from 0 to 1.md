@@ -86,8 +86,25 @@ int main() {
 
 * 标识符不能是关键字
 * 标识符只能由大小字母、数字、下划线组成
-* 第一个字符必须为字母或下划线
+* 第一个字符必须为字母或下划线，以方便语法解析
 * 见名知意
+
+### 字面值
+
+源代码中直接表示的**固定值**，编译器无需计算就能理解其值。
+
+- 十进制整数：`42`
+- 十进制无符号整数：`42U`
+- 十进制浮点数：`3.14`
+- 科学计数法：`1.6e-19`
+- 八进制整数：`042`
+- 十六进制整数：`0x2a`
+- 二进制整数：`0b101010`
+- 字符：`'A'`
+- 转义字符：`'\n'`
+- 字符串：`"Hello"`
+- 布尔：`true`
+- 指针：`nullptr`、`NULL`
 
 
 
@@ -97,27 +114,27 @@ int main() {
 
 ### 内置类型
 
-| 整型           | 占用         | 取值范围                                        | 示例                                                         |
-| -------------- | ------------ | ----------------------------------------------- | ------------------------------------------------------------ |
-| short          | 2字节        | (-2^15 ~ 2^15-1)                                | `short num = 1`                                              |
-| int            | 4字节        | (-2^31 ~ 2^31-1)                                | `int num = 1`                                                |
-| long           | 4字节或8字节 | (-2^31 ~ 2^31-1)                                | `long num = 1`                                               |
-| long long      | 8字节        | (-2^63 ~ 2^63-1)                                | `long long num = 1`                                          |
-| **字符型**     |              |                                                 |                                                              |
-| char           | 1字节        | ASCII编码或其字符集<br>转义字符集(不可显示字符) | `char ch = 'a'`                                              |
-| **布尔型**     |              |                                                 |                                                              |
-| bool           | 1字节        | true(1)   false(0)                              | `bool flag = true`                                           |
-| **浮点型**     |              |                                                 |                                                              |
-| float          | 4字节        | 7位有效数字                                     | `float f1 = 3.14`<br>`float f1 = 3.14f`<br/>`float f2 = 3e2` |
-| double(双精度) | 8字节        | 15～16位有效数字                                | `double d1 = 3.14`                                           |
+| 整型           | 占用         | 取值范围                                              | 示例                                                         |
+| -------------- | ------------ | ----------------------------------------------------- | ------------------------------------------------------------ |
+| short          | 2字节        | (-2^15 ~ 2^15-1)                                      | `short num = 1`                                              |
+| int            | 4字节        | (-2^31 ~ 2^31-1)                                      | `int num = 1`                                                |
+| long           | 4字节或8字节 | (-2^31 ~ 2^31-1)                                      | `long num = 1`                                               |
+| long long      | 8字节        | (-2^63 ~ 2^63-1)                                      | `long long num = 1`                                          |
+| **字符型**     |              |                                                       |                                                              |
+| (signed) char  | 1字节        | ASCII编码可显示字符集<br >ASCII编码不可显示转义字符集 | `char ch = 'a'`                                              |
+| **布尔型**     |              |                                                       |                                                              |
+| bool           | 1字节        | true(1)   false(0)                                    | `bool flag = true`                                           |
+| **浮点型**     |              |                                                       |                                                              |
+| float          | 4字节        | 7位有效数字                                           | `float f1 = 3.14`<br>`float f1 = 3.14f`<br/>`float f2 = 3e2` |
+| double(双精度) | 8字节        | 15位有效数字                                          | `double d1 = 3.14`                                           |
 
-> `sizeof( 数据类型 / 对象)`可以统计数据类型或对象所占内存大小
+> `sizeof( 数据类型 / 对象)`可以统计数据类型或对象所占字节数
 
 ### 自定义类型
 
 #### string [类](./面向对象.md)
 
-通过面向对象特性和属性（如数组、指针、引用、const或static修饰等）自定义数据类型，以字符串为例：
+通过面向对象特性或修饰属性（如数组、指针、引用、const或static等）自定义数据类型，以字符串为例：
 
 - `string  字符串名 = "字符串值"`：C++风格字符串
 - `char 字符串名[] = "字符串值"`：C风格字符串，需要一个字节存储结尾字符`\0`
@@ -133,31 +150,31 @@ int main() {
 
 ### 指针
 
-复合类型`基本数据类型 *`，用于保存基本数据类型的内存地址和访问该内存地址的内容
+复合类型`基本数据类型 *`，用于保存基本数据类型对象的内存地址，长度由系统位数决定。
 
-`数据类型 *指针名 = &其他对象`
+`基本数据类型 *指针名 = &其他对象`
 
-- 空指针：NULL、nullptr、0；初始化指针，不可访问
+- 空指针`NULL、nullptr、0`：用于初始化指针，不可访问
 - 野指针：指针指向非法的内存空间，不可访问
 - `&a`：通过&取地址，得到对象内存地址
 - `*p`：通过*解引用，得到指针指向的值
-- `const int * p1 = &a`：常量指针，指针指向可以改，指针指向的值不可以更改
-- `int * const p2 = &a`：指针常量，指针指向不可以改，指针指向的值可以更改
+
+> - `const int *p1 = &a`/`int const *p1 = &a`：指向常量的指针，指针指向可以改，指针指向的值不可以更改
+> - `int *const p2 = &a`：指针常量，指针指向不可以改，指针指向的值可以更改
+> - `const int *const p1 = &a`：指向常量的常量指针，指针指向不可以改，指针指向的值不可以更改
 
 ### 引用
 
-复合类型`基本数据类型 &`，给对象起别名，操作的是同一个对象，本质是指针常量。创建引用时，必须初始化为一个对象且不可更改
+复合类型`基本数据类型 &`，给已存在对象另外分配一个对象名 ，**不是新对象**，不占用独立内存空间。必须初始化为非临时对象且不可更改！
 
 `数据类型 &别名 = 原名`
 
-- 函数返回引用可以作为左值，从而修改引用函数内部的对象
-- const修饰的引用对象可以初始化为一个字面值
+- 不要返回局部变量/临时对象的引用，因为局部变量/临时对象可能会被销毁；
+- 函数返回引用可以作为左值，从而修改引用函数内部处理的对象
 
-### const修饰
+> `const int &p1 = &a`/`int const &p1 = &a`：常量引用，引用常量值，可以初始化为临时对象或字面值
 
-### static修饰
 
-### void类型
 
 ### 类型转换
 
@@ -165,11 +182,11 @@ int main() {
 
 `转换后数据类型 转换后对象 = (转换后数据类型)转换前对象`
 
-不同内置数据类型之间发生运算会进行自动类型转换，如`int -> unsigned`，否则保持旧类型
+不同内置数据类型之间发生运算，会进行自动类型转换，如`int`和``unsgined`之间运算时，`int -> unsigned`会自动发生；同时，运算结果会自动进行类型推理。
 
 
 
-## 数组
+### 数组
 
 连续存放相同类型数据元素的集合
 
@@ -183,7 +200,7 @@ int main() {
 
 二维数组定义：
 
-`数据类型  数组名[ 行数 ][ 列数 ] = { {数据1，数据2 } ，{数据3，数据4 } }`
+`数据类型  数组名[ 行数 ][ 列数 ] = { {数据1，数据2 }, {数据3，数据4 } }`
 
 `数据类型  数组名[ 行数 ][ 列数 ] = { 数据1，数据2，数据3，数据4}`
 
@@ -192,12 +209,16 @@ int main() {
 ` 数据类型  数组名[ 行数 ][ 列数 ] `
 
 - `数组名[下标]...[下标]`：数组访问
-- 数组名理解为`数据类型 * const`指针类型或者`数据类型 _[]`数组类型
-  - 通过指针和指针重载的加减运算符能快速得到下一个元素的地址；
-  - `sizeof(数组名)`统计整个数组在内存中的长度；
-  - 多维数组的定义是一种嵌套，即二维数组是一维数组的数组
+- 数组可以理解为 `数据类型 []`数组类型
+  - `sizeof(arr)`：统计整个数组在内存中的长度；
+  - `&arr`：数组首地址，与`&arr[0]` 地址值相同，但类型不同，意义不同
+- 大多表达式中会退化为`数据类型 * const`指针常量类型
+  - `arr + 1`：下一个元素地址
+  - `*arr`：首元素值
 
+- 函数参数中的数组名，实际是普通指针，除非使用引用`int (&arr)[]`
 
+- 多维数组的定义是一种嵌套，即二维数组是一维数组的数组
 
 ## 运算符
 
@@ -338,7 +359,7 @@ for (size_t i = 0; i < count; i++) {
 
 `返回值类型 函数名(参数类型 形参的列表)`
 
-### 参数与返回值传递
+### 参数传递
 
 - 值传递：形参和实参是不同地址空间的对象。如果形参发生变化，并不会影响实参。
 - 地址传递：以地址作为参数，形参和实参操作的是同一地址空间。形参可以修改实参的值。
@@ -347,7 +368,7 @@ for (size_t i = 0; i < count; i++) {
 ### 参数类型
 
 - `(数据类型 参数= 默认值)`：默认参数，放在参数列表最后，调用时可省略默认，可被修改
-  - 如果函数声明有默认值，函数实现的时候就不能有默认参数
+  - 默认参数的默认值只能在函数定义或声明中指定一次，不能重复指定
 - `(数据类型)`：占位参数，调用函数时必须填补该位置，可以有默认值
 
 ### 重载
@@ -356,8 +377,8 @@ for (size_t i = 0; i < count; i++) {
 
 * 同一个作用域下
 * 函数名称相同
-* **函数参数不同**，如类型、长度、顺序、引用与常量引用
-  * 函数参数中存在默认参数时容易存在歧义
+* **函数参数不同**，如个数、类型、顺序、引用与常量引用
+  * 函数参数中存在默认参数时容易存在歧义重载
 
 
 
@@ -365,7 +386,7 @@ for (size_t i = 0; i < count; i++) {
 
 - 代码区：存放函数体的二进制机器指令，只读共享，由操作系统进行管理的
 - 全局区：存放全局变量和静态变量以及常量区存放常量和const修饰全局变量，由操作系统进行管理的
-- 栈区：程序运行后，由编译器自动分配释放, 存放函数的参数值,局部变量等，==不要返回局部变量的地址或者引用==
+- 栈区：程序运行后，由编译器自动分配释放, 存放函数的参数值、局部变量等，==这也是为什么不要返回局部变量的地址或者引用==
 - 堆区：程序运行后，由程序员通过`new`分配和`delete`释放,若程序员不释放，程序结束时由操作系统回收
   - `数据类型 *变量名 = new 数据类型(初始值)`：开辟数据，返回该数据对应的类型的指针
   - `数据类型 *数组名 = new 数据类型[初始大小]`：开辟数组
@@ -378,14 +399,15 @@ for (size_t i = 0; i < count; i++) {
 
 1. 创建后缀名为.h的头文件 ，引入必要库，说明源文件的声明
 
-2. 创建后缀名为.cpp的同名源文件，引入头文件，定义头文件声明的内容
+2. 创建后缀名为.cpp的同名源文件，引入头文件，定义头文件声明
 
 3. 创建后缀名为.cpp的调用源文件，引入头文件，调用头文件声明
 
-   > 【类模板调用时创建函数】
+   > 模板不是真正的代码，而是代码的"模具"。编译器在实例化（调用）模板时，才根据具体类型生成真正的代码。
    >
-   > 1. 头文件中可以将声明和实现写在一起，后缀名为.hpp
-   > 2. 不再引入头文件而是源文件
+   > 分文件编写的类模板由于文件隔离，无法编译类实现
+   >
+   > 因此，要求声明和实现在同一文件中，即`.hpp`
 
 
 
@@ -472,7 +494,7 @@ int main() {
 
 - public：公共权限，类内可以访问，类外可以访问
 - protected：保护权限，类内可以访问，类外不可以访问
-- private：默认访问权限【struct 默认访问权限为公共权限】，私有权限，类内可以访问，类外不可以访问
+- private：私有权限，默认访问权限【struct 默认访问权限为公共权限】，类内可以访问，类外不可以访问
 
 访问对象：`对象名.成员;`|`对象名->成员;`
 
@@ -598,54 +620,95 @@ pa.constfix();
 
 ### 封装模型
 
-- 类的成员函数和静态成员供整个类共享，不属于某个对象，仅非静态成员变量才属于单个对象。
+```txt
+┌─────────────────────────────┐
+│       代码区 (Text)          │
+│  - 所有可执行代码		     │
+│  - 成员函数代码（共享）		   │
+│  - 虚函数表（vtable）	      │
+├─────────────────────────────┤
+│       数据区 (Data)          │
+│  - 全局变量        		   │
+│  - 静态成员变量（共享）		   │
+│  - 字符串常量		   		  │
+├─────────────────────────────┤
+│       BSS区 (未初始化数据)    │ 
+│  - 未初始化数据	    	      │
+├─────────────────────────────┤
+│       堆 (Heap)             │ ← new创建的对象
+│  ┌─────────────────────┐    │
+│  │ 对象1: 			    │    │
+│  │  - 虚函数表指针(vptr) │    │
+│  │  - int, char...     │    │
+│  └─────────────────────┘    │
+│  ┌─────────────────────┐    │
+│  │ 对象2: ... 		    │    │
+│  └─────────────────────┘    │
+├─────────────────────────────┤
+│           栈 (Stack)        │ ← 局部对象
+│  ┌─────────────────────┐    │
+│  │ 对象3: 			    │    │
+│  │  - 虚函数表指针(vptr) │    │
+│  │  - int, char...     │    │
+│  └─────────────────────┘    │
+└─────────────────────────────┘
+```
 
-- 空对象占用一个字节，非空对象按其成员大小占用，虚继承对象存在一个虚基类指针
-- 按代码顺序构造，逆序析构
-- **空对象指针也是可以调用成员函数的**。如果调用的成员函数可能用到this指针，需要判断保证代码的健壮性
+- 空对象占用一个字节，以确保每个对象在内存中都有唯一的地址。
+- 对象空指针也是可以调用成员函数的，但要保证不存在访问`this`指针的可能性。
 
 ### 构造函数
 
-为对象自动初始化，可以重载，编译器提供空实现的无参构造和属性复制的拷贝构造和赋值重载
+对象自动初始化，可以重载，编译器提供空实现的无参构造和浅拷贝的拷贝构造及赋值重载
 
 `类名(形参列表){}`
 
 - 如果定义了有参构造函数，编译器不再提供无参构造；如果定义了拷贝构造函数，不再提供其他构造函数
-- 当成员属性中存在指针类型，且没有自定义深拷贝构造和赋值【在堆区重新申请空间拷贝指针指向的值】，编译器提供的浅拷贝构造和赋值，只是对指针属性地址的复制，存在重复地址释放的风险。
+- 当成员属性中存在指针类型，且没有自定义深拷贝构造和赋值【在堆区重新申请空间拷贝成员指针变量指向的值】，存在重复地址释放的风险
 
 ### 析构函数
 
-为对象自动销毁清理，不可重载，编译器提供空实现的无参析构
+对象自动销毁清理，不可重载，编译器提供空实现的无参析构
 
 `~类名(){`
 
-- 对象按执行顺序构造，按逆序析构；先构造对象成员，再构造本对象，析构相反；
+- 对象按执行顺序构造，析构反之
 
-- 当属性中存在堆区数据时，最好在析构函数中`if(p!NULL){delete p; p=NULL;}`
+- 先构造对象成员，再构造本对象，析构反之
+
+- 构造子类时，先构造父类，再构造子类，析构反之
+
+- 当属性中存在堆区数据时，最好在析构函数中手动销毁
+
+  ```cpp
+  if(p!=nullptr) {
+  	delete p;
+  	p = nullptr;
+  }
+  ```
 
 
 ### 修饰
 
 #### this指针
 
-class预定义指针常量，隐含在每个非静态成员中，**指向被调用成员所属的对象**
+类预定义指针常量，隐含在每个非静态成员中，指向被调用成员所属的对象
 
-- 当形参和成员变量同名时，可用this指针来区分
-- 在类的非静态成员函数中返回对象本身，可使用**return *this**
+- 当形参和成员变量同名时，可用 this 指针来区分
+- 在类的非静态成员函数中返回对象本身，即 `return *this` 
 
 #### static修饰成员
 
-在成员变量和成员函数前加上关键字static，**静态成员供类下所有对象共享**
+在成员变量和成员函数前加上关键字static，静态成员供类下所有对象共享
 
 - 静态成员变量要求类内声明，类外初始化
 - 静态成员函数只能访问静态成员变量
 
-#### const修饰成员函数
+#### const修饰成员
 
-在成员函数参数列表后加上关键字const，**常函数不可以修改成员属性**
+在成员函数参数列表后加上关键字const，const成员不允许对成员变量进行修改
 
-- 成员属性声明时加关键字mutable后，在常函数中依然可以修改；
-
+- 常函数不可以修改成员变量，但成员变量声明时加关键字mutable后，在常函数中依然可以修改；
 - 常对象只能调用常函数或修改mutable变量
 
 ### 友元
@@ -655,7 +718,7 @@ class预定义指针常量，隐含在每个非静态成员中，**指向被调�
 #### 全局函数
 
 ```
-friend void goodGay(Building * building);
+friend void visit(Building * building);
 ```
 
 #### 类
@@ -667,12 +730,12 @@ friend class goodGay;
 #### 成员函数
 
 ```
-friend void goodGay::visit();
+friend void goodGay::visit(Building * building);
 ```
 
-### 运算符重载
+## 运算符重载
 
-为适应新类，对运算符像定义函数一样重定义，可重载，可以是全局函数，也可以是成员函数。
+重定义运算符像定义函数一样，可以是全局函数，也可以是成员函数。
 
 ```cpp
 class Person
@@ -745,8 +808,6 @@ public:
 ```
 
 ```cpp
-// 全局函数无法访问类内私有变量，友元化全局函数后可调用
-
 //全局函数实现 + 重载
 //p1 + p2 或者 operator+(p1, p2)
 Person operator+(const Person& p1, const Person& p2) {
@@ -767,298 +828,231 @@ ostream& operator<<(ostream& os, const Person& p) {
 
 ## 继承
 
-呈树型的类关系，下级类（子类）除了拥有上级类（父类）的成员，还有自己独有的成员。
+呈树型的类关系，派生类（子类）除了拥有基类（父类）的成员，还有自己独有的成员。
 
-```cpp
-#include <iostream>
-#include <string>
-using namespace std;
+继承类：`class 子类：继承方式 父类{};`，可多继承，即 `class 子类 ：继承方式1 父类1, 继承方式2 父类2...{};`。
 
-class Animal {
-public:
-	Animal() = default;
-	Animal(string name) : name(name) {}
-	virtual ~Animal() = default;
-
-	virtual void makeSound() const = 0;
-	string getName() const {
-		return name;
-	}
-
-protected:
-	string name;
-};
-
-class Dog : public Animal {
-public:
-	Dog(string name) : Animal(name) {}
-	~Dog() = default;
-
-	void makeSound() const override {
-		cout << name << " says: Woof!" << endl;
-	}
-};
-
-class Cat : public Animal {
-public:
-	Cat(string name) : Animal(name) {}
-	~Cat() = default;
-
-	void makeSound() const override {
-		cout << name << " says: Meow!" << endl;
-	}
-};
-```
-
-### 继承模型
-
-- 父类所有非静态成员属性都被子类继承，可用`cl /d1 reportSingleClassLayout类名 类所在文件` 检查
-- 构造子类时，先构造父类，再构造子类，析构反之
-
-### 继承方式
+继承方式：
 
 - public公共继承：保持成员访问权限，无法访问父类的私有成员
 - protected保护继承：成员访问权限保护化，无法访问父类的私有成员
 - private私有继承：成员访问权限私有化，无法访问父类的私有成员
 
-### 同名成员继承
+```cpp
+class Animal
+{
+public:
+    Animal() = default;
+    Animal(string name) : name(name) {}
+    virtual ~Animal() = default;
 
-子类对象访问同名成员，子类同名成员直接访问，父类同名成员使用作用域区分。
+    virtual void makeSound() const
+    {
+        cout << name << " makes a sound." << endl;
+    };
 
-### 多继承
+    string getName() const
+    {
+        return name;
+    }
+    string name;
+};
 
-` class 子类 ：继承方式 父类1 ， 继承方式 父类2...`
+class Dog : virtual public Animal
+{
+public:
+    Dog(string name) : Animal(name) {}
+    ~Dog() = default;
 
-产生菱形继承时，为了解决“孙类继承了爷类两份同属性数据”的问题，父类需要虚继承，即` class 子类 ：virtual 继承方式 父类1`。通过虚基类指针->虚基类表，使得这两份同属性数据指向同一个对象
+    void makeSound() const override
+    {
+        cout << name << " says: Woof!" << endl;
+    }
+
+    int DogId;
+};
+
+class Cat : virtual public Animal
+{
+public:
+    Cat(string name) : Animal(name) {}
+    ~Cat() = default;
+
+    void makeSound() const override
+    {
+        cout << name << " says: Meow!" << endl;
+    }
+
+    int CatId;
+};
+
+class DogCat : public Dog, public Cat
+{
+public:
+    DogCat(string name) : Animal(name), Dog(name), Cat(name) {}
+    ~DogCat() = default;
+
+    void makeSound() const override
+    {
+        Dog::makeSound();
+        Cat::makeSound();
+    }
+};
+```
+
+### 继承模型
+
+```txt
+CatDog 菱形继承对象：
+┌─────────────────┐
+│ Cat 部分         │
+│   ├ Animal数据   │ ← name (副本1)
+│   └ CatId   	  │
+├─────────────────┤
+│ Dog 部分         │
+│   ├ Animal数据   │ ← name (副本2)
+│   └ DogId   	  │
+├─────────────────┤
+│ CatDog 部分	     │
+└─────────────────┘
+CatDog 虚继承对象（父类数据不在虚继承子类中）：
+┌─────────────────┐
+│ Cat 部分         │
+| 虚基类指针(Cat)   | ← 指向 Animal部分
+│   └ CatId   	  │
+├─────────────────┤
+│ Dog 部分         │
+| 虚基类指针(Dog)   | ← 指向 Animal部分
+│   └ DogId   	  │
+├─────────────────┤
+│ CatDog部分       │
+├─────────────────┤
+│ Animal部分       │ ← 只有一个共享副本！
+│  └ name          │
+└─────────────────┘
+```
+
+- 子类对象访问同名成员，子类同名成员直接访问，父类同名成员使用作用域区分访问
+- 产生菱形继承时，孙类会继承了爷类两份重复成员，无法直接访问重复成员，但可以使用作用域区分访问。**虚继承**解决菱形继承重复数据的问题
 
 
 
 ## 多态
 
-- 静态多态: 函数重载、运算符重载和非虚函数继承，编译阶段确定函数地址
-- 动态多态: 虚函数继承，运行阶段确定函数地址
+不同对象对同一函数做出不同的响应
+
+- 编译时静态多态：函数重载、运算符重载、模板
+- 运行时动态多态：通过虚函数和继承实现
+  - 父类指针或引用可以指向子类成员；指向父类对象只能调用父类函数及子类重写虚函数，要想调用子类函数需要指向子类对象
+  - 子类可以重载父类的虚函数；未重载时该函数采用父类实现，重载时该函数采用子类实现
+
 
 ```cpp
 void speak(Animal* a) {
     a->makeSound();
-    delete a;
+    delete a; 
 }
 speak(new Cat("Fluffy"));
 speak(new Dog("Rover"));
 ```
 
-- 虚函数：**父类指针或引用可以指向子类成员**，子类重载的成员函数可以覆盖父类对应的虚函数
-  - 父类指针对象只能调用父类接口，要想调用子类接口需要强转为子类
-
-- 抽象类：虚函数通常内容无用，**可用纯虚函数`= 0`简化**
-  - 抽象类不可实例化，且其子类必须重写
-
-- 虚析构/纯虚析构：**父类无法释放子类开辟的堆区指针**，采用虚析构/纯虚析构会先调用子类析构，再调用父类析构；
-  - 纯虚析构也要有实现
-
-
 ### 多态模型
 
-虚基类有一个指向虚函数表的指针
+当一个类声明了至少一个虚函数（或继承了虚函数），编译器就会为这个类**生成一个唯一的虚函数表**，表中的每个条目指向该类的一个虚函数的实际代码地址。
 
-- 当子类未发生重写，直接继承虚基类的指针和虚函数表
-- 当子类发生重写，继承虚基类的指针，并重写虚函数表
+当你通过父类指针或引用调用虚函数时，通过下面的对象模型找到对应的虚函数表及其虚函数实现。
 
-### 举例
-
-```cpp
-#include<iostream>
-using namespace std;
-
-//抽象CPU类
-class CPU
-{
-public:
-	virtual void calculate() = 0;
-};
-
-//抽象显卡类
-class VideoCard
-{
-public:
-	virtual void display() = 0;
-};
-
-//抽象内存条类
-class Memory
-{
-public:
-	virtual void storage() = 0;
-};
-
-//电脑类
-class Computer
-{
-public:
-	Computer(CPU * cpu, VideoCard * vc, Memory * mem) {
-		m_cpu = cpu;
-		m_vc = vc;
-		m_mem = mem;
-	}
-
-	void work() {
-		m_cpu->calculate();
-		m_vc->display();
-		m_mem->storage();
-	}
-
-	~Computer(){
-		if (m_cpu != NULL) {
-			delete m_cpu;
-			m_cpu = NULL;
-		}
-		if (m_vc != NULL) {
-			delete m_vc;
-			m_vc = NULL;
-		}
-		if (m_mem != NULL) {
-			delete m_mem;
-			m_mem = NULL;
-		}
-	}
-
-private:
-	CPU * m_cpu; //CPU的零件指针
-	VideoCard * m_vc; //显卡零件指针
-	Memory * m_mem; //内存条零件指针
-};
-
-//具体厂商
-//Intel厂商
-class IntelCPU :public CPU
-{
-public:
-	virtual void calculate() {
-		cout << "Intel的CPU开始计算了！" << endl;
-	}
-};
-
-class IntelVideoCard :public VideoCard
-{
-public:
-	virtual void display() {
-		cout << "Intel的显卡开始显示了！" << endl;
-	}
-};
-
-class IntelMemory :public Memory
-{
-public:
-	virtual void storage() {
-		cout << "Intel的内存条开始存储了！" << endl;
-	}
-};
-
-//Lenovo厂商
-class LenovoCPU :public CPU
-{
-public:
-	virtual void calculate() {
-		cout << "Lenovo的CPU开始计算了！" << endl;
-	}
-};
-
-class LenovoVideoCard :public VideoCard
-{
-public:
-	virtual void display() {
-		cout << "Lenovo的显卡开始显示了！" << endl;
-	}
-};
-
-class LenovoMemory :public Memory
-{
-public:
-	virtual void storage() {
-		cout << "Lenovo的内存条开始存储了！" << endl;
-	}
-};
-
-
-int main()
-{
-	//第一台电脑零件
-	CPU * intelCpu = new IntelCPU;
-	VideoCard * intelCard = new IntelVideoCard;
-	Memory * intelMem = new IntelMemory;
-
-	cout << "第一台电脑开始工作：" << endl;
-	//创建第一台电脑
-	Computer * computer1 = new Computer(intelCpu, intelCard, intelMem);
-	computer1->work();
-	delete computer1;
-
-	cout << "-----------------------" << endl;
-	cout << "第二台电脑开始工作：" << endl;
-	//第二台电脑组装
-	Computer * computer2 = new Computer(new LenovoCPU, new LenovoVideoCard, new LenovoMemory);;
-	computer2->work();
-	delete computer2;
-
-	cout << "-----------------------" << endl;
-	cout << "第三台电脑开始工作：" << endl;
-	//第三台电脑组装
-	Computer * computer3 = new Computer(new LenovoCPU, new IntelVideoCard, new LenovoMemory);;
-	computer3->work();
-	delete computer3;
-
-}
+```txt
++-------------------+
+| vfptr (vtable)      |  <- 指向该对象所属类的虚函数表！
++-------------------+
+| 成员变量            |
++-------------------+
 ```
 
+- 虚函数通常内容无用，可用纯虚函数简化；常用于构造抽象类，不可实例化，其子类必须重写，为子类提供公共接口和基本实现
 
+  ```cpp
+  virtual void makeSound() const = 0;
+  ```
+
+- 当通过父类指针析构子类对象时，会导致子类的析构函数不被调用，从而产生资源泄漏。虚析构会先调用子类析构，再自动调用父类析构
+  - 纯虚析构也可以创建抽象类，但必须添加手动的析构逻辑
 
 
 
 # C++ 模板
 
+编写与具体类型无关的代码，在编译时由编译器根据实际使用的类型自动生成具体版本（可以重载）
+
+`template <typename T>`：告诉编译器下面这个函数或类里的 `T` 是一个类型占位符，且使用相同的`T`，可以定义多个同名的`T`供不同个对象使用
+
 ## 函数模板
 
-建立一个通用函数，其函数返回值类型和形参类型可以不具体制定，用一个**虚拟的类型**来代表；每个模板T只能被一个对象使用，可以定义多个同名的T供多个对象使用
-
 ```cpp
+#include <iostream>
+using namespace std;
+
+// 主模板声明
 template <typename T>
-bool myCompare(T& a, T& b) {
-	return a!=b;
+bool myCompare(T a, T b);
+
+// 精确匹配的普通函数
+bool myCompare(int a, int b)
+{
+    cout << "普通函数被调用" << endl;
+    return a != b;
+}
+ 
+// 特化模板函数
+template <>
+bool myCompare<int *>(int *a, int *b)
+{
+    cout << "特化模板函数被调用" << endl;
+    return *a != *b;
 }
 
-int a=1, b=2;
-myCompare(a, b);				// 自动推导
-myCompare<int>(a, b);			// 显示指定
-```
+// 显式实例化
+template bool myCompare<int>(int a, int b);
 
-- 模板T自动推导的类型要一致，不存在隐式类型转换
-- 模板T要可确定，不确定时要显示指定；显示指定时可以隐式类型转换
+// 泛化模板函数
+template <typename T>
+bool myCompare(T a, T b)
+{
+    cout << "泛化模板函数被调用" << endl;
+    return a != b;
+}
 
-### 调用规则
-
-1. 如果函数模板和普通函数都可以实现，优先调用普通函数
-2. 可以通过空模板参数列表来强制调用函数模板
-3. 函数模板也可以发生重载
-4. 如果函数模板可以产生更好的匹配,优先调用函数模板
-
-### 具体化
-
-当符合具体化的函数时，优先调用
-
-```cpp
-template<> bool myCompare(Person &p1, Person &p2) {
-	return !(p1.m_Name==p2.m_Name && p1.m_Age==p2.m_Age);
+int main()
+{
+    int x = 1, y = 2;
+    myCompare(x, y);      // 自动推导，调用普通函数
+    myCompare<>(x, y);    // 自动推导，强制调用模板函数
+    myCompare(&x, &y);    // 显示指定，调用特化模板函数
+    myCompare<int>(x, y); // 显示指定，调用泛化模板函数
 }
 ```
+
+隐式实例化方法 ：
+
+- 自动推导：类型要一致且可确定，不存在隐式类型转换
+- 显示指定：可以隐式类型转换
+
+调用规则：
+
+1. （显示指定模板|空模板）强制调用函数模板
+2. 精确匹配的普通函数
+3. 特化函数模板/显示实例化
+4. 泛化函数模板
+5. 类型转换后的普通函数
 
 
 
 ## 类模板
 
-建立一个通用类，类中的成员 数据类型可以不具体制定，用一个**虚拟的类型**来代表。
-
 ```cpp
-template<class NameType, class AgeType = int> 
+// 含默认类模板
+template<typename NameType, typename AgeType = int> 
 class Person
 {
 public:
@@ -1074,12 +1068,36 @@ public:
 	AgeType mAge;
 };
 
-Person<string>P1("孙悟空", 999);		// 没有自动类型推导
+// 部分特化类模板
+template <typename NameType>
+class Person<NameType, int>
+{
+public:
+    Person(NameType name, int age)
+    {
+        this->mName = name;
+        this->mAge = age;
+    }
+    void showPerson()
+    {
+        cout << "姓名: " << this->mName << " 年龄: " << this->mAge << endl;
+    }
+    void func()
+    {
+        cout << "这是模板的全特化版本" << endl;
+    }
+
+public:
+    NameType mName;
+    int mAge;
+};
+
+Person<string> P1("孙悟空", 999);		// 没有自动类型推导
 P1.showPerson();
 ```
 
 ```cpp
-template<class T1, class T2>
+template<typename T1, typename T2>
 class Person {
 public:
 	Person(T1 name, T2 age);
@@ -1089,63 +1107,116 @@ public:
 	T2 m_Age;
 };
 
-template<class T1, class T2>
+template<typename T1, typename T2>
 Person<T1, T2>::Person(T1 name, T2 age) {
 	this->m_Name = name;
 	this->m_Age = age;
 }
-template<class T1, class T2>
+template<typename T1, typename T2>
 void Person<T1, T2>::showPerson() {
 	cout << "姓名: " << this->m_Name << " 年龄:" << this->m_Age << endl;
 }
 ```
 
-- 普通类中的成员函数一开始就创建，类模板中的成员函数在调用时才创建，未调用的成员函数不参与类型推导
-- 每个模板T只能被一个类成员使用，可以定义多个同名的T供多个类成员使用
+- 类模板隐式实例化方法只允许显示指定
+- 特化类模板不需要和主模板成员保持完全一致
+- 类模板不具备继承属性
+
+特殊用法：
+
+```cpp
+// 非类型参数类模板 常量、引用、指针
+template <typename NameType, int N>
+class Person
+{
+public:
+    Person(NameType name, int age)
+    {
+        this->mName = name;
+        this->mAge = age;
+    }
+    void showPerson()
+    {
+        cout << "name: " << this->mName << " age: " << this->mAge << endl;
+    }
+
+public:
+    NameType mName;
+    int mAge = N;
+};
+
+// 嵌套模板
+template <template <typename> typename Container, typename T>
+class Wrapper
+{
+private:
+    Container<T> data;
+
+public:
+    Wrapper(const Container<T> &d) : data(d) {}
+    void display()
+    {
+        for (const auto &item : data)
+        {
+            cout << item << " ";
+        }
+        cout << endl;
+    }
+};
+
+vector<int> v = {1, 2, 3, 4, 5};
+Wrapper<vector, int> example(v);
+example.display();
+```
 
 ### 函数参数
 
-1. 指定传入的类型
+- 指定传入的类型
 
-   ```cpp
-   void printPerson1(Person<string> &p);
-   ```
 
-2. 参数模板化
+```cpp
+void printPerson1(Person<string> &p);
+```
 
-   ```cpp
-   template <class T1, class T2>
-   void printPerson2(Person<T1, T2>&p);
-   ```
+- 参数模板化
 
-3. 整个类模板化
 
-   ```cpp
-   template<class T>
-   void printPerson3(T & p);
-   ```
+```cpp
+template <typename T1>
+void printPerson2(Person<T1> &p);
+```
+
+- 整个类模板化
+
+
+```cpp
+template<typename T>
+void printPerson3(T & p);
+```
 
 ### 继承
 
-* 当子类继承的父类是一个类模板时，子类要指定出父类中T的类型
+* 当子类继承的父类是一个类模板时，子类要指定出父类中模板类型
 
-  ```cpp
-  class Son :public Base<int>
-  ```
+```cpp
+class Son :public Base<int>
+```
 
 * 如果想灵活指定出父类中T的类型，子类也需变为类模板
 
-  ```cpp
-  template<class T1, class T2>
-  class Son :public Base<T2>
-  ```
+
+```cpp
+template<typename T1, typename T2>
+class Son :public Base<T2>
+```
 
 ### 友元
 
-全局函数类内实现
+- 全局函数类内实现
+
 
 ```cpp
-template<class T1, class T2>
+template<typename T1, typename T2>
 class Person
 {
 	friend void printPerson(Person<T1, T2> & p) {
@@ -1156,20 +1227,21 @@ class Person
 printPerson(p);
 ```
 
-全局函数类外实现
+- 全局函数类外实现
+
 
 ```cpp
-template<class T1, class T2> class Person;
-template<class T1, class T2> void printPerson(Person<T1, T2> & p);
+template<typename T1, typename T2> class Person;
+template<typename T1, typename T2> void printPerson(Person<T1, T2> & p);
 
-template<class T1, class T2>
+template<typename T1, typename T2>
 class Person
 {
 	friend void printPerson<>(Person<T1, T2> & p);
     // ...
 };
 
-template<class T1, class T2>
+template<typename T1, typename T2>
 void printPerson(Person<T1, T2> & p)
 {
 	cout << "类外实现 ---- 姓名： " << p.m_Name << " 年龄：" << p.m_Age << endl;
@@ -1178,7 +1250,7 @@ void printPerson(Person<T1, T2> & p)
 printPerson(p);
 ```
 
-### 举例
+## 举例
 
 ```hpp
 #pragma once
@@ -1272,9 +1344,9 @@ private:
 
 ## 容器
 
-string、vector、deque、stack、queue、list、set、pair、map
+类型：string、vector、deque、stack、queue、list、set、pair、map
 
-构造、赋值、存取、插入、删除、修改、属性
+方法：构造、赋值、存取、插入、删除、修改、属性
 
 ## 算法
 

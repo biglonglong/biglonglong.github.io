@@ -31,7 +31,7 @@ comments: true
 
 ### Concepts
 
-与监督学习对比，强化学习利用环境带来的奖励自收敛：
+与监督学习对比，强化学习利用**环境**带来的奖励自收敛，无需大量标注数据，通过试错学习最优策略：
 
 <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/rl%20method.png" alt="rl%20method" style="zoom: 20%;" />
 
@@ -41,16 +41,15 @@ comments: true
 
   - 状态可以是完全可见的（完全可观测环境），也可以是部分可见的（部分可观测环境）
 
-- Action：动作（$A(s_i)$），智能体在某个状态下可以执行的操作，动作和环境会导致智能体状态发生改变
+- Action：动作（$a_j(s_i)$），智能体在某个状态下执行的操作，动作和环境会导致智能体状态发生改变
 
   - 迷宫游戏中指当前智能体在当前位置 向上/向下/向左/向右 移动一格
-  - 动作空间可以是离散的（如上下左右移动），也可以是连续的（如方向盘转动角度）
+  - 动作空间可以是离散的（如向上下左右移动），也可以是连续的（如方向盘转动角度）
 
 - **Policy**：策略（$\pi(a_{ij}|s_i)$），智能体的决策核心，它规定了在任意状态应该采取什么动作
-
   - 迷宫游戏中指当前智能体的操作决策，可通过表格或者条件概率分布（神经网络）描述
   - 直接决定了智能体的行为，强化学习的最终目标就是找到一个最优策略，以最大化长期回报
-
+  
 - **State transition**：状态转移（$p(s_k|s_i,a_j)$），环境的“物理法则”，描述了环境和动作对状态的作用
 
   - 迷宫游戏中指当前智能体在当前位置移动一格的下一个格，可通过表格或者条件概率分布描述
@@ -62,7 +61,7 @@ comments: true
   - 定义了强化学习问题的目标，一种即时反馈，告诉智能体某个动作在某个状态下是好是坏
   - 0 没有惩罚，一般看作为奖励信号
 
-- Trajectory：轨迹（$τ = (S₀, A₀, R₁, S₁, A₁, R₂, S₂, A₂, R₃, ..., S_T)$），智能体在一段时间内，与环境进行完整一次交互的全过程记录，包含了从起始状态到终止状态的一系列状态、动作和奖励
+- Trajectory：轨迹（$τ = (s₀, a₀, r₁, s₁, a₁, r₂, s₂, a₂, r₃, ..., s_T)$），智能体在一段时间内，与环境进行完整一次交互的全过程记录，包含了从起始状态到终止状态的一系列状态、动作和奖励
 
   - Return：累积奖励，最大化其长期获得的总奖励，而不是眼前的即时奖励，更能衡量一个状态或一个轨迹的长期价值
   - Episode：有限轨迹，从初始状态开始，到终止状态结束的一次完整交互过程，与之相对的是 Continuing，持续轨迹
@@ -100,7 +99,7 @@ G_t=R_{t+1}+{\gamma}R_{t+2}+{\gamma }^2R_{t+3}+...
 $$
 递归推导可以发现，**当前状态的理想累计未来奖励依赖于其他状态的**：
 $$
-G(t)=R_{t+1} + \gamma G(t+1)
+G_t=R_{t+1} + \gamma G_{t+1}
 $$
 状态价值（$V^{\pi}(s)$），指从某个状态 $s$ 开始出发，经过一致的 $\pi$，所能获得的 Return：
 $$
@@ -153,7 +152,7 @@ $$
 >    $$
 >
 
-固定$\mathbf{r}_\pi$、$\gamma$ 和系统$\mathbf{P}_\pi$，随机初始化$\mathbf{v}_\pi$，求新策略 $\pi^{*}$ 使得状态价值最大，即要求使最大化最大动作价值的权重，即 $\pi^*$为选择动作价值最大的那个（参考背包问题，**在一个关联系统中，你无法孤立地优化某一个状态的价值，正因为存在这种“牵一发而动全身”的依赖关系，我们不能简单地、独立地为每个状态选择当前看起来最好的动作。这直接引申出了不同的优化算法来解决这个挑战**）
+固定$\mathbf{r}_\pi$、$\gamma$ 和系统$\mathbf{P}_\pi$，随机初始化$\mathbf{v}_\pi$，求新策略 $\pi^{*}$ 使得状态价值最大，即要求使最大化最大动作价值的权重，即 $\pi^*$为选择动作价值最大的那个（**在一个关联系统中，你无法孤立地优化某一个状态的价值，正因为存在这种“牵一发而动全身”的依赖关系，我们不能简单地、独立地为每个状态选择当前看起来最好的动作。这直接引申出了不同的优化算法来解决这个挑战**）
 $$
 \text{For any s} \in S：
 \pi^*(a|s) =
@@ -175,6 +174,8 @@ $$
 
 
 ## Algorithm
+
+==价值估计 + 策略优化==
 
 ### Model-Based
 
@@ -217,7 +218,7 @@ n_actions = len(A)
 V = np.zeros(n_states)
 while True:
     delta = 0
-    
+
     # Create temporary value function for synchronous update
     V_new = np.zeros(n_states)
     for s in range(n_states):
@@ -593,7 +594,7 @@ $$
 
 #### Sarsa
 
-对于一个无模型的环境，我们需要求解贝尔曼方程动作价值（由于这里是基于数据，$\mathbf{P}_\pi$已被融入$q_\pi$的计算中）：
+对于一个无模型的环境，我们需要求解贝尔曼方程动作价值：
 $$
 q_\pi(s,a) = \mathbb{E}[R_\pi + \gamma q_\pi(S',A')|s,a]
 $$
@@ -815,8 +816,6 @@ $$
   - behavior policy：和环境交互并采集数据的策略
   - target policy：算法评估和改进的策略
 
-- every  can be online & on-policy.
-
 ```python
 # Q-learning off-policy
 episodes_history
@@ -867,7 +866,7 @@ $$
 
 ### Value Function Approximation
 
-拟合状态价值函数，减小（带状态权重）损失函数：
+拟合状态价值函数，减小（带状态权重的）状态价值损失函数：
 $$
 J(w) = \sum_{s \in S}d_\pi(s)(v_\pi(s) - \hat{v}(s,w))^2 \\
 d_\pi(s) = \frac{n_\pi(s)}{\sum_{s' \in S}n_\pi(s')} \\
@@ -877,7 +876,7 @@ $$
 $$
 w_{t+1} = w_{t} - \alpha_t \nabla_wJ(w_t) = w_{t} + \alpha_t (v_\pi(s_t) - \hat{v}(s_t,w_t)) \nabla_w\hat{v}(s_t,w_t)
 $$
-其中，$v_\pi(s_t)$未知，可通过MC或者TD融合，双倍迭代估计：
+其中，$v_\pi(s_t)$未知，可通过MC或者TD估计：
 $$
 \begin{align*}
 &\textbf{MC:}  \quad w_{t+1} = w_{t} + \alpha_t (g_t - \hat{v}(s_t,w_t)) \nabla_w\hat{v}(s_t,w_t) \\
@@ -886,25 +885,22 @@ $$
 $$
 $\hat{v}(s,w)$具有多种对状态价值的拟合函数，主流是神经网络！
 
-- **Sarsa with Function**：$w_{t+1} = w_{t} + \alpha_t (r_{t+1}+\gamma \hat{q}(s_{t+1},a_{t+1},w_t) - \hat{q}(s_t,a_t,w_t)) \nabla_w\hat{q}(s_t,a_t,w_t)$
-- **Q-learning with Function**：$w_{t+1} = w_{t} + \alpha_t (r_{t+1}+\gamma \underset{a \in A(s_{t+1})}{max}\hat{q}(s_{t+1},a,w_t) - \hat{q}(s_t,a_t,w_t)) \nabla_w\hat{q}(s_t,a_t,w_t)$
-
 #### DQN
 
-给主流神经网络框架损失函数附加间断式离线优化项 — 动作价值估计反馈：
 $$
 J(w) = \mathbb{E} \left[ (R + \gamma \underset{a \in A(S')}{max} \hat{q}(S',a,w_T) - \hat{q}(S,a,w))^2 \right] \\
 \nabla_wJ(w) = \mathbb{E} \left[ (R + \gamma \underset{a \in A(S')}{max} \hat{q}(S',a,w_T) - \hat{q}(S,a,w)) \nabla_w\hat{q}(S,a,w) \right]
 $$
 
-- two net
-  1. main network（$\hat{q}(s,a,w)$） same to  target network
-  2. iters：use main network drawing mini-batch of samples（$\hat{q}(s,a,w_T)$），
-  3. use samples to min-opt TD error/loss of main network，target network to caculate TD target
-  4. assign main network to taget network
-- experience replay（efficiency）
-  - store replay buffers $(s,a,r,s')$ when sampling
-  - uniformly draw a mini-batch of random samples
+- 双网络架构
+  - 主网络（$\hat{q}(s,a,w)$）为当前正在训练的网络，用于生成动作选择
+  - 目标网络（$\hat{q}(s,a,w_T)$）相对固定，用于计算TD目标，初始时与主网络相同
+  
+- 经验回放缓冲
+  - 使用主网络与环境交互，生成样本，存入缓冲区$(s,a,r,s')$
+  - 采样最小化目标网络的TD目标与主网络估计值的差距
+  - 主网络赋值给目标网络
+
 
 
 ```python
@@ -1026,26 +1022,27 @@ def train_dqn(env, n_episodes=1000):
 
 ### Policy Gradient Methods
 
-拟合动作策略函数，提升指标（metrics）函数：
+拟合动作策略函数，提升累计折扣回报：
 $$
-\overline{v}_\pi = \sum_{s \in S}d_\pi(s)v_\pi(s) = \sum_{s \in S}d_\pi(s) (r_\pi(s) + \gamma v_\pi(s')) = \mathbb{E} [ \sum_{t=0}^{\infty}\gamma^t R_{t+1} ]\\
-\overline{r}_\pi = \sum_{s \in S}d_\pi(s)r_\pi(s) = \sum_{s \in S}d_\pi(s) \sum_{a \in A}\pi (a|s)r(s,a) = \underset{n \rightarrow \infty}{lim}\frac{1}{n} \mathbb{E}[\sum_{k=1}^nR_{n+k}] \\
-\overline{r}_\pi = (1- \gamma)\overline{v}_\pi \\
+J(\theta) = \overline{v}_\pi = \sum_{s \in S}d_\pi(s)v_\pi(s) = \sum_{s \in S}d_\pi(s) (r_\pi(s) + \gamma v_\pi(s')) = \mathbb{E} [ \sum_{t=0}^{\infty}\gamma^t R_{t+1} ]\\
 d_\pi(s) = \frac{n_\pi(s)}{\sum_{s' \in S}n_\pi(s')} \\
 d^T_\pi = d^T_\pi P_\pi
 $$
 
-$$
-\nabla_\theta J(\theta) \cong \sum_{s \in S} \eta(s) \sum_{a \in A} \nabla_\theta \pi(a|s,\theta)q_\pi(s,a) = \mathbb{E}_{S\sim\eta,A\sim\pi} [ \nabla_\theta \ln \pi(A|S,\theta)q_\pi(S,A) ]\\
-\text{where } J(\theta) \text{ can be } \overline{v}_\pi \text{ or } \overline{r}_\pi \text{ or } \overline{v}_\pi^0 \\
-\pi(a|s,\theta) = \frac{e^{(h(s,a,\theta))}}{\sum_{a' \in \mathcal{A}} e^{(h(s,a',\theta))}} > 0
-$$
-
 梯度上升优化：
 $$
-\theta_{t+1} = \theta_{t} + \alpha_t \nabla_\theta J(\theta_t) =  \theta_{t} + \alpha_t \nabla_\theta \ln \pi(a_t|s_t,\theta_t)q_\pi(s_t,a_t)
+\nabla_\theta J(\theta) \cong \sum_{s \in S} \eta(s) \sum_{a \in A} \nabla_\theta \pi(a|s,\theta)q_\pi(s,a) = \mathbb{E}_{S\sim\eta,A\sim\pi} [ \nabla_\theta \ln \pi(A|S,\theta)q_\pi(S,A) ]\\
+\theta_{t+1} = \theta_{t} + \alpha_t \nabla_\theta J(\theta_t) =  \theta_{t} + \alpha_t \nabla_\theta \ln \pi(a_t|s_t,\theta_t)q_\pi(s_t,a_t) \\
+\theta_{t+1} = \theta_{t} + \alpha_t \nabla_\theta J(\theta_t) =  \theta_{t} + \alpha_t  \frac{q_\pi(s_t,a_t)}{\pi(a_t|s_t,\theta_t)} \nabla_\theta \pi(a_t|s_t,\theta_t)
 $$
-其中，$q_\pi(s_t,a_t)$未知，可通过MC或者TD融合，双倍迭代估计：
+
+平衡探索与利用！
+
+- 如果之前数据中表现出较大的$q(s,a)$，则会加强这种动作，加强利用
+
+- 如果之前数据中表现出较小的$\pi(a_t|s_t,\theta_t)$，则会加强这种动作，加强探索
+
+其中，$q_\pi(s_t,a_t)$未知，可通过MC或者TD估计：
 $$
 \begin{align*}
 &\textbf{MC:}  \quad \theta_{t+1} =  \theta_{t} + \alpha_t \nabla_\theta \ln \pi(a_t|s_t,\theta_t)g_t \\
@@ -1055,20 +1052,7 @@ $$
 
 #### REINFORCE
 
-$$
-\theta_{t+1} = \theta_{t} + \alpha_t \nabla_\theta J(\theta_t) =  \theta_{t} + \alpha_t  \frac{q_\pi(s_t,a_t)}{\pi(a_t|s_t,\theta_t)} \nabla_\theta \pi(a_t|s_t,\theta_t)
-$$
-
-令$\beta_t = \frac{q_\pi(s_t,a_t)}{\pi(a_t|s_t,\theta_t)}$ ：
-
-- $\beta_t>0$：$\pi(a_t|s_t,\theta_t)$增大，即在$s_t$时执行$a_t$动作的概率增大
-- $\beta_t<0$：$\pi(a_t|s_t,\theta_t)$减小，即在$s_t$时执行$a_t$动作的概率减小
-
-用于平衡探索与利用！
-
-- 如果之前数据中表现出较大的$q(s,a)$，则会加强这种动作，加强利用
-
-- 如果之前数据中表现出较小的$\pi(a_t|s_t,\theta_t)$，则会加强这种动作，加强探索
+MC估计
 
 ```python
 # REINFORCE on policy

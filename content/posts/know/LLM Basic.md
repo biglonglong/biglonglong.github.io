@@ -84,6 +84,8 @@ $$
 - 多标签分类：以 FFN 将上游特征传播至【标签数】个神经元上，经 sigmoid 计算各标签概率，取超过设定阈值的标签作为分类结果
 - 文本|语音翻译：采用 Transformer 架构，编码器将源语言语句编码为语义表示，解码器依据该表示自回归生成目标语言词序列（内部同样经 softmax 转换为词汇表概率分布，取概率最高的词汇作为该轮预测结果）
 - 文本生成：原任务转化为基于上下文的下一个词预测问题，一般采用 Transformer-Decoder 架构
+- 权重共享：神经网络不同层之间共享相同的权重矩阵。在语言模型中，最常见的是输入嵌入层（Input Embedding）- 将单词转换为向量，和输出层（LM Head）-  将向量转换为单词共享权重，允许其中之一权重丢失
+
 - QA：合并 Question 和 Answer  为单个词序列，原任务转化为文本生成问题
 - 涌现：当模型参数量（层数、宽度、token维度、隐藏层维度）和数据量（上下文长度、词汇表大小）疯狂扩大，无需改变此基础结构，会产生更强大的学习能力
 - 套壳：利用闭源大模型API生成训练数据，预处理后全监督微调开源预训练模型，并用闭源大模型API评估训练效果
@@ -93,6 +95,8 @@ $$
 
 
 ## Experiences
+
+### Talks
 
 1. 模型训练三大件：
 
@@ -113,6 +117,79 @@ $$
 5. 五个循序渐进**预训练任务**：
 
    Token掩码、句子重排、文本旋转、Token删除、文本填充
+
+7. 强化学习前的**SFT初始化**
+
+   对公开偏好数据集`prompt, res_better, res_lower`，通常希望先通过`prompt, res_better`来初始化 $\pi_{ref}$，该过程有助于缓解真实 $\pi_{ref}$ 分布偏移
+
+### OOM
+
+1. 减小批次大小，线性降低训练速度
+
+```python
+per_device_train_batch_size=1  # 减小批次处理
+gradient_accumulation_steps=4   # 补偿大批次效果
+```
+
+2. **开启梯度检查点**，训练耗时增加约 30%
+
+```python
+model = AutoModelForCausalLM.from_pretrained(
+    ...,
+    use_cache=False  # 禁用训练无用 transformer KV缓存
+)
+model.gradient_checkpointing_enable()	# 检查点分块 前/后向传播
+```
+
+3. 使用更低精度，减小数据宽度，可能存在梯度消失
+
+```python
+dtype=torch.bfloat16 # 模型用bf16
+bf16=True  # 优化器用bf16
+```
+
+4. 缩短序列长度，降低输入数据完整性，矩阵级减少显存占用
+
+```python
+max_length=512  # 减小注意力矩阵大小
+```
+
+5. 模型加载优化
+
+```python
+model = AutoModelForCausalLM.from_pretrained(
+    ...,
+    device_map="auto",  # 显存不足，自动分配设备
+    low_cpu_mem_usage=True	# double 内存不足，边加载边移动
+)
+```
+
+6. 数据加载优化
+
+```python
+ds = load_dataset("openai/gsm8k", "main", streaming=True) # 返回 IterableDataset
+```
+
+7. 使用DeepSpeed（ZeRO-3）
+
+```python
+# pip install deepspeed
+training_args = TrainingArguments(
+    ...,
+    deepspeed="ds_config.json"
+)
+```
+
+### Metrics
+
+| 字段名                | batch/step级含义           | 说明                                                         | 指导建议                                                     |
+| --------------------- | -------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `loss`                | 训练损失                   | 通常为 token 级交叉熵损失，衡量模型在当前 batch 上的拟合误差。值越小表示拟合越好，但需警惕过拟合。 | ✅ **正常**：持续平滑下降。<br/>⚠️ **下降缓慢**：尝试增大学习率、检查数据质量或模型容量是否不足。<br/>❌ **震荡/上升**：学习率过高、batch size 过小、存在脏数据或数值不稳定（如 log(0)）。可尝试梯度裁剪、降低 lr 或启用混合精度稳定性检查。 |
+| `grad_norm`           | 梯度 L2 范数               | 所有可训练参数梯度的 L2 范数，反映更新步长的整体强度。       | 即使 `grad_norm=50`，只要 loss 平稳下降、accuracy 上升，就可能是正常的（尤其在千亿参数模型中）<br>🔍 **对比 `max_grad_norm`（如 1.0）**：<br/>若频繁 ≈ `max_grad_norm` → 梯度被裁剪，可能 lr 过高。<br/>若长期 << 0.1 → 可能梯度消失（如深层网络、激活函数饱和）。<br/>若 >> 10 → 梯度爆炸风险，需检查初始化、lr 或数据归一化。 |
+| `learning_rate`       | 当前实际学习率             | 由调度器（如 linear warmup + cosine decay）动态决定的优化步长。 | 📈 **预期行为**：warmup 阶段上升，主训练阶段按 schedule 下降。<br/>🛠️ **异常排查**：若 lr 未变化 → 调度器未绑定 optimizer。<br/>若骤降 → 可能误触发 early stopping 或 scheduler step 错误。 |
+| `entropy`             | token 预测分布的平均信息熵 | 衡量模型输出的“确定性”：高熵 = 不确定（分布平坦），低熵 = 自信（分布尖锐）。 | 📉 **理想趋势**：随训练逐步下降。<br/>❗ **过高且不降**：模型未学到规律（欠拟合）、标签噪声大、任务模糊。<br/>❗ **过早趋近 0**：模型过度自信，可能过拟合或 memorize 噪声 → 可加 label smoothing 或 dropout。 |
+| `num_tokens`          | 有效 token 总数            | 当前 batch 中非 padding 的 token 数量，反映实际计算负载。    | ⚖️ **波动属正常**：因动态 batching 或变长序列导致。<br/>💡 **用途**：用于 loss/accuracy 归一化、吞吐量（tokens/sec）计算。<br/>⚠️ **异常提示**：若该值极小（如 < 100），可能 batch 构造异常。 |
+| `mean_token_accuracy` | token 级准确率             | 正确预测的 token 数 / 有效 token 总数，细粒度性能指标。      | 🔄 **应与 loss 负相关**：<br/>若 loss ↓ 但 acc ↑ 缓慢 → 模型在困难样本上挣扎，可检查数据分布或引入 focal loss。<br/>若 acc 停滞而 loss 仍降 → 可能 label 错误或存在不可学习样本。<br/>若 acc 快速达 100% → 警惕过拟合或数据泄露。 |
 
 
 
@@ -304,6 +381,43 @@ for i, model in enumerate(model_data):
 - `null`：等同于`none`
 - `required`：强制模型必须调用一个工具，如果模型无法选择合适的工具，可能会出错或返回无效调用。
 
+### File
+
+#### upload
+
+```python
+file_object = client.files.create(file=Path("example.pdf"), purpose="file-extract")
+```
+
+#### get extract
+
+```python
+file_content = client.files.content(file_id=file_object.id).text
+# JSON string
+# {"role": "system", "content": file_content}
+# 作为 Prompt 载入
+```
+
+#### list
+
+```python
+file_list = client.files.list()
+for file in file_list.data:
+    print(file)
+```
+
+#### get info
+
+```python
+file_object = client.files.retrieve(file_id=file_id)
+```
+
+#### delete
+
+```python
+client.files.delete(file_id=file_id)
+```
+
 
 
 ## Agent
@@ -325,7 +439,7 @@ for i, model in enumerate(model_data):
 
 当前大模型指基于大规模文本语料库的自回归生成式语言模型，通过对token序列的参数化概率分布随机采样实现；
 
-基座模型的选择，需要考虑模态与语言支持、生态开源或闭源、规模与成本、专业能力与领域数据、上下文长度、文档解析能力，现有的大模型不计其数，可以借助大模型检索能力推荐；
+基座模型的选择，需要考虑**模态与语言支持、生态开源或闭源、规模与成本、专业能力与领域数据、上下文长度、文档解析能力**，现有的大模型不计其数，可以借助大模型检索能力推荐；
 
 经过评估在特定任务上表现不错的基座模型，通过有针对性地投入高质量数据和算力，能够**激发**其在该任务上的潜力，最终锻造出一个在该领域表现卓越的专业化模型，否则不适合作为基座模型；
 
@@ -337,65 +451,35 @@ for i, model in enumerate(model_data):
 
 ### GPT
 
-> Transformer 解码器堆叠架构
->
-> [GPT 系列论文精读：从 GPT-1 到 GPT-4_gpt 论文-CSDN博客](https://blog.csdn.net/weixin_42426841/article/details/145123776)
->
-> [GPT 1.0](https://openai.com/index/language-unsupervised/)
->
-> [GPT 2.0](https://openai.com/index/better-language-models/)
->
-> [GPT 3.0](https://openai.com/index/language-models-are-few-shot-learners/)
->
-> [GPT 4.0](https://openai.com/index/gpt-4-research/)
->
-> [GPT 5.0](https://openai.com/index/introducing-gpt-5/)
+> [GPT 系列论文精读：从 GPT-1 到 GPT-4_gpt 论文-CSDN博客](https://blog.csdn.net/weixin_42426841/article/details/145123776)：[GPT 1.0](https://openai.com/index/language-unsupervised/)、[GPT 2.0](https://openai.com/index/better-language-models/)、[GPT 3.0](https://openai.com/index/language-models-are-few-shot-learners/)、[GPT 4.0](https://openai.com/index/gpt-4-research/)、[GPT 5.0](https://openai.com/index/introducing-gpt-5/)
 
-### [DeepSeek](https://api-docs.deepseek.com/zh-cn/)
-
-### Intern-S1
-
-- **专业**：深度融合科学领域知识，例如解析化学结构、理解蛋白质序列、规划化合物合成路径等
-
-### Llama
-
-> [LLaMA 系列模型 | Yue Shui 博客](https://syhya.github.io/zh/posts/2025-04-06-llama/)
->
-> [Llama 1](https://ai.meta.com/blog/large-language-model-llama-meta-ai/)
->
-> [Llama 2](https://ai.meta.com/blog/llama-2/)
->
-> [Llama 3](https://ai.meta.com/blog/meta-llama-3/)
->
-> [Llama 4](https://ai.meta.com/blog/llama-4-multimodal-intelligence/)
-
-开源，规模相对较小
+Transformer 解码器堆叠架构
 
 ### [Qwen](https://help.aliyun.com/zh/model-studio/what-is-model-studio?spm=a2c4g.11174283.0.i1)
-
-### [Kimi](https://www.moonshot.cn/)
-
-- 文档解析接口
-
-### Gemma
 
 ### GLM
 
 开源生态，国产GPU适配
 
-### Baichuan
+### [InternLM](https://internvl.readthedocs.io/en/latest/index.html)
 
-### BERT
+中文开源科学领域与知识库纯语言模型，提供了与浦语系列视觉模型的对接方案（例如`InternVL`或`InternViT`作为视觉编码器），可以冻结视觉编码器的参数，只微调语言模型部分和连接两者的投影层，这将显存占用和计算量降低了几个数量级，社区提供了大量关于如何实施QLoRA微调和基于 PPO 的强化学习的详细教程、代码和实践案例。
 
-### InterVL/InternLM
+### Llama
 
-[Welcome to InternVL’s tutorials! — InternVL](https://internvl.readthedocs.io/en/latest/index.html)
+> [LLaMA 系列模型 | Yue Shui 博客](https://syhya.github.io/zh/posts/2025-04-06-llama/)：[Llama 1](https://ai.meta.com/blog/large-language-model-llama-meta-ai/)、[Llama 2](https://ai.meta.com/blog/llama-2/)、[Llama 3](https://ai.meta.com/blog/meta-llama-3/)、[Llama 4](https://ai.meta.com/blog/llama-4-multimodal-intelligence/)
 
-中文开源科学领域与知识库纯语言模型，提供了与浦语系列视觉模型的对接方案（例如`InternVL`或`InternViT`作为视觉编码器），可以冻结视觉编码器的参数，只微调语言模型部分和连接两者的投影层，，这将显存占用和计算量降低了几个数量级，社区提供了大量关于如何实施QLoRA微调和基于 PPO 的强化学习的详细教程、代码和实践案例。
+开源，规模相对较小
 
-### Tech
+### [DeepSeek](https://api-docs.deepseek.com/zh-cn/)
 
-#### MoEs
+### [Kimi](https://www.moonshot.cn/)
+
+
+
+## NN Tech
+
+### MoEs
 
 混合专家模型，为由多个单独网络（“专家”）组成的系统建立一个监管机制，每个“专家”处理训练样本的不同子集，专注于输入空间的特定区域；设置门控网络|路由分配每个“专家”的权重或决定哪些Token被发送到哪些“专家”；在训练过程中，这些专家和门控网络都同时接受训练，以优化它们的性能和决策能力。
 
@@ -416,23 +500,23 @@ for i, model in enumerate(model_data):
 
 - 共享专家（Shared Expert）：所有 tokens 都会经过的共享专家，每个 token 会用计算的 Router 权重，来选择 topK 个专家，然后和共享的专家的输出一起加权求和；捕捉**通用**、全局的特征信息，减少不同专家间的知识冗余，提升计算效率
 
-#### Pre-LN
+### Pre-LN
 
 前置层归一化
 
-#### RMSNorm
+### RMSNorm
 
 均方根标准化，在每个子层输入前进行归一化，通过省略均值中心化步骤，仅依据向量元素的均方根进行缩放，从而降低了计算复杂度，同时有效维持了训练过程的稳定性
 
-#### SwiGLU
+### SwiGLU
 
 激活函数， 结合了 Swish 激活函数的平滑非线性和门控机制，增强了模型的表达能力，调整了 FFN 的隐藏层维度，以在引入门控参数的同时，大致保持 FFN 层的总参数量和计算量不变
 
-#### RoPE
+### RoPE
 
 旋转位置编码，通过对 Query 和 Key 向量施加与位置相关的旋转操作，将相对位置信息有效融入自注意力计算中，增强了模型处理长序列和捕捉长距离依赖关系的能力
 
-#### GQA
+### GQA
 
 分组查询注意力，允许多个查询头共享同一组键（Key）和值（Value）头，不影响模型性能的前提下显著减少了推理过程中 KV 缓存的内存占用和计算开销，从而提高了大模型的推理速度和部署效率
 
@@ -456,9 +540,7 @@ for i, model in enumerate(model_data):
    - 思维树（ToT）：指令要求“多分支推理”触发，或者构建树式程序
    - 一致性优化：指令要求”给出多个推理过程并选择最佳结果“，或者构建投票或权重程序
 
-3. 上下文背景 或 RAG：分块向量化入库、数据检索，重排过滤注入
-
-   <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/rag.jpg" alt="rag" style="zoom: 50%;" />
+3. 上下文背景 或 RAG：可供参考的背景**知识**
 
 4. 提供样本输入输出示例
 
@@ -507,56 +589,38 @@ for i, model in enumerate(model_data):
 
 ## Parser
 
-让模型获取文件中的信息作为上下文，核心挑战是提取关键信息，**减小 token**，纳入上下文范围！
+将多样化的数据源格式进行高效解析与提取，并统一转换为标准化文本，从而更好地适配大模型的输入与输出要求
 
-### Interface
-
-#### upload
-
-```python
-file_object = client.files.create(file=Path("example.pdf"), purpose="file-extract")
-```
-
-#### get extract
-
-```python
-file_content = client.files.content(file_id=file_object.id).text
-# JSON string
-# {"role": "system", "content": file_content}
-# 作为 Prompt 载入
-```
-
-#### list
-
-```python
-file_list = client.files.list()
-for file in file_list.data:
-    print(file)
-```
-
-#### get info
-
-```python
-file_object = client.files.retrieve(file_id=file_id)
-```
-
-#### delete
-
-```python
-client.files.delete(file_id=file_id)
-```
+| 解析来源                                                     | 源格式支持 | 特性     |
+| ------------------------------------------------------------ | ---------- | -------- |
+| langchain_community.document_loaders                         | …          | 完整解析 |
+| [KIMI 文件接口](https://platform.moonshot.cn/docs/api/files) | …          | 完整解析 |
+| [Python  PDF编程模块](https://geek-blogs.com/blog/python-pdf-to-text/) | `.pdf`     | 完整解析 |
 
 
 
+## RAG
 
+依据任务指令（Prompt），提炼用户查询请求（Query），通过检索器（Retriever）在知识库中查找相关内容，以作为大语言模型进行工具调用或生成回答时的补充上下文。
 
-## [RAG](https://www.zhihu.com/tardis/zm/art/675509396?source_id=1003)
+<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/rag.jpg" alt="rag" style="zoom: 50%;" />
 
-[前言 | SwanLab官方文档](https://docs.swanlab.cn/course/prompt_engineering_course/01-preface/README.html)
+主要依赖以下几个关键模块：：知识库原数据文本解析与分块，文本摘要，**句子嵌入模型（Sentence Embedding）**、**[向量]数据库（[Vector] DB）**及其检索器（Retriever）
 
-关键词：**LangChain** 和 LlamaIndex
+### Sentence Embedding
 
-插入Prompt：可供参考的背景知识：{cotent from vector lib related to image}
+| 嵌入模型来源           | 部署 | 速度 | 成本        | 特性                    |
+| ---------------------- | ---- | ---- | ----------- | ----------------------- |
+| HuggingFace Embeddings | 本地 | 快   | 免费        | 离线使用                |
+| OpenAI Embeddings      | 云端 | 中   | 付费API key | 更高精度、 更多语言支持 |
+
+### Vector DB
+
+| 数据库   | 部署 | 速度 | 扩展性 | 成本   | 易用性 | 特性                                     | 场景        |
+| -------- | ---- | ---- | ------ | ------ | ------ | ---------------------------------------- | ----------- |
+| Chroma   | 本地 | 中   | 小规模 | 免费   | 高     | 基础语义完整                             | 开发        |
+| Pinecone | 云端 | 快   | 大规模 | 免费层 | 高     | 最新检索算法、命名空间、元数据过滤、监控 | 生产        |
+| FAISS    | 本地 | 最快 | 中规模 | 免费   | 中     | 丰富的索引算法、GPU 加速                 | 离线/高性能 |
 
 
 
@@ -803,34 +867,244 @@ print(choice.message.content)
 
 ## Fine-tuing
 
-### Direction-Tuning
+### Full-Tuning
 
-需要考虑模型参数量，显存是否足够、算力是否足够、数据量是否足够…
+全量微调，在**预训练大模型**的基础上，使用**特定领域或任务的文本对**对模型的所有参数进行端到端的更新，**不冻结任何层**，通过反向传播根据新任务的损失梯度精细调整**全部权重**，相当于对模型进行一次“再训练”或“深度进修”，以最大化其在特定场景（如医疗、法律等）中的性能表现。
 
-### Prefix-Tuning
+训练流程与预训练基本一致：
 
-在模型的输入或者隐层添加k个额外可训练的前缀tokens，只训练这些前缀参数
+1. 在新数据上执行前向传播，计算任务特定的损失。
+2. 执行反向传播，计算损失相对于所有模型参数的梯度。
+3. 使用优化器（如 AdamW）根据梯度更新所有参数。
 
-### Adapter-Tuning
+**产生一个完整的、可直接部署的模型文件：**模型的参数被整体调整，使其输出分布更贴近目标任务的需求。
 
-将较小的神经网络层或模块（adapter）插入预训练模型的每一层，下游任务微调时只训练adapter参数
+**适用场景：**追求领域极致性能、数据丰富、算力和显存【模型参数、梯度、优化器状态】充足、目标任务与预训练任务差异巨大
 
-### LoRA
+**存在问题：**
 
-通过学习小参数的低秩矩阵来近似近似模型权重矩阵的参数更新。下游任务微调时只训练低秩矩阵参数，极大减少显存占用
+- 灾难性遗忘的风险：如果任务数据量小或领域过于狭窄，模型可能过度适应新数据，而丢失宝贵的通用知识和能力。
+- 容易过拟合：在数据量有限的情况下，拥有海量参数的全量微调非常容易过拟合到训练集上。
+- 不易进行多任务切换：每个微调模型都是独立的，切换任务需要切换整个模型，不如使用一个基础模型加多个轻量适配器灵活。
+
+**关键技术细节：**
+
+- 学习率：通常会使用一个比预训练时小得多（例如 1e-5 到 1e-4） 的学习率。这是因为模型已有较好的初始权重，只需细微调整，大幅更新可能导致“灾难性遗忘”（忘记通用知识）。从小学习率开始！
+- **训练策略：**
+  - **数据泛化**：在任务数据中混入少量通用数据，来缓解灾难性遗忘。
+  - **分阶段训练**：先对模型的顶层或分类头进行几轮微调，再解冻整个网络进行全量微调。
+  - **早停**：密切监控验证集性能，防止过拟合到有限的任务数据上。
+  - **权重衰减**：常用来防止过拟合，保持权重较小。
+
+### LoRA-Tuning
+
+模型在适应新任务时，**参数变化具有低秩特性**，即可以用更小的矩阵来近似表示：
+$$
+h = W_0 x + \Delta W x = W_0 x + BA x \\
+
+\begin{equation}
+s.t.
+\begin{cases}
+ B \in \mathbb{R}^{d \times r} \quad 下投影矩阵 \\
+ A \in \mathbb{R}^{r \times k} \quad 上投影矩阵 \\
+ r ≪ min(d,k) \quad 秩 \\
+\end{cases}
+\end{equation}
+$$
+降低梯度计算算力与显存需求，具体伪代码如下：
+
+```python
+class LoRALayer(nn.Module):
+    def __init__(self, base_layer, r=8, alpha=16, dropout=0.1):
+        super().__init__()
+        self.base_layer = base_layer  # 冻结的预训练层
+        self.r = r
+        self.alpha = alpha
+        self.scaling = alpha / r  # 缩放因子
+        
+        # LoRA适配器
+        self.lora_A = nn.Linear(base_layer.in_features, r, bias=False)
+        self.lora_B = nn.Linear(r, base_layer.out_features, bias=False)
+        self.dropout = nn.Dropout(dropout)
+        
+        # 初始化：A用随机高斯，B用零初始化
+        nn.init.normal_(self.lora_A.weight, std=1/r)
+        nn.init.zeros_(self.lora_B.weight)
+        
+    def forward(self, x):
+        base_output = self.base_layer(x)
+        lora_output = self.lora_B(self.lora_A(self.dropout(x)))
+        return base_output + self.scaling * lora_output
+```
+
+**产生一个与基础模型适配的“插件”文件：**基础模型被冻结，适配器使基础模型输出分布偏向目标任务的需求。
+
+**适用场景：**资源数据有限、通用模型的多任务学习与适配、防止灾难性遗忘和过拟合（原始权重冻结，保留原始能力；低秩空间训练，泛化任务调整）、目标任务与预训练任务相似
+
+**存在问题：**
+
+- 低秩空间无法达到任务的精确控制
+
+关键技术细节：
+
+```python
+lora_hyperparameters = {
+    "核心参数": {
+        "r": {"范围": [1, 64], "默认": 8, "作用": "控制适配器容量"},
+        "alpha": {"范围": [1, 256], "默认": 16, "作用": "控制学习速率"},
+        "dropout": {"范围": [0.0, 0.5], "默认": 0.1, "作用": "防止过拟合"}
+    },
+    "目标模块": {
+        "query": {"启用": True, "作用": "注意力查询投影"},
+        "key": {"启用": False, "作用": "注意力键投影"},
+        "value": {"启用": True, "作用": "注意力值投影"},
+        "output": {"启用": True, "作用": "注意力输出投影"},
+        "mlp": {"启用": True, "作用": "前馈网络"},
+        "embed_tokens": {"启用": False, "作用": "词嵌入层"}
+    },
+    "训练参数": {
+        "lr": {"范围": [1e-5, 1e-3], "默认": 1e-4, "说明": "比全量微调大10倍"},
+        "weight_decay": {"范围": [0.0, 0.1], "默认": 0.01},
+        "optimizer": {"推荐": "AdamW", "原因": "对LoRA稳定"}
+    }
+}
+```
+
+- 秩（r）的选择策略，默认 8
+  $$
+  r \propto taskComplexity \\
+  r \propto daraSize
+  $$
+
+  - 任务类型
+    - 情感分析|简单分类  `[1, 4]`
+    - 指令微调|多样任务 `[8, 16]`
+    - 代码生成|语法严格 `[16, 32]`
+    - 数学求解|精确推理`[32, 64]`
+    - 专业文档|领域知识 `[8, 32]`
+  - 模型规模
+    - `<7B` –> `r_max = 32`
+    -  `7B~70B` –> `r_max = 64`
+    - `> 70B` –> `r_max = 128`
+  
+- Alpha（$\alpha$），默认 16
+  $$
+  \alpha \propto taskComplexity \\
+  \alpha \propto learningRate
+  $$
+  
+- **训练策略：**
+
+  - **不同层使用不同配置**：初始层使用较小 r 和 $\alpha$，逐渐到中间层，到末尾层增大
+
+  - **四步调参**：
+
+    - 基线配置
+      - 秩（r）：8
+      - 缩放系数（alpha）：16
+      - 目标模块：`q_proj`、`v_proj`
+      - 学习率：1e-4
+      - 训练轮数：3
+
+    - 增加容量（当验证集性能不足时）
+      - 增加秩（r）：逐步从8调至16，再到32
+      - 扩展目标模块：添加`output_proj`、`mlp`等模块
+    - 防止过拟合（当训练损失下降但验证损失上升时）
+      - 增加Dropout率：从0.1逐步提高到0.2、0.3
+      - 降低秩（r）：从32降至16
+      - 采用早停策略：监控验证损失变化
+    - 精细优化（当接近目标性能时）
+      - 使用学习率调度策略：如余弦退火
+      - 增加梯度累积步数：扩大有效批次大小
+      - 针对性选择层：仅微调模型上层部分
+
+
+~~~yaml
+# 指令微调模板
+instruction_tuning:
+  base_model: "llama-2-7b"
+  lora_config:
+    r: 16
+    lora_alpha: 32
+    target_modules: ["q_proj", "v_proj", "k_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+    task_type: "CAUSAL_LM"
+  training_args:
+    per_device_train_batch_size: 4
+    gradient_accumulation_steps: 4
+    learning_rate: 2e-4
+    num_train_epochs: 3
+    warmup_ratio: 0.03
+    logging_steps: 10
+
+# 代码生成模板
+code_generation:
+  base_model: "codellama-7b"
+  lora_config:
+    r: 32  # 代码需要更高容量
+    lora_alpha: 64
+    target_modules: ["q_proj", "v_proj", "k_proj"]
+    lora_dropout: 0.05  # 代码任务容易过拟合
+  training_args:
+    learning_rate: 1e-4  # 更小的学习率
+    max_seq_length: 4096  # 长序列
+    num_train_epochs: 5  # 更多epoch
+
+# 对话微调模板
+chat_finetuning:
+  base_model: "llama-2-7b-chat"
+  lora_config:
+    r: 8  # 对话相对简单
+    lora_alpha: 16
+    target_modules: ["q_proj", "v_proj"]  # 只调注意力层
+  training_args:
+    learning_rate: 3e-4
+    per_device_train_batch_size: 8
+    num_train_epochs: 2  # 对话任务容易过拟合
+```
+~~~
+
+#### QLoRA
+
+将预训练模型的权重从高精度（如FP16/BF16）量化为低精度 **NF4（NormalFloat 4-bit）** 的基础模型，再进行LoRA训练
+
+### Structure-Tuning
+
+对预训练模型的部分层，或者对预训练模型输入或隐层添加模块，进行微调
+
+### Others
+
+- Rejection sampling Fine-Tuning (RFT)
+- Negative-aware Fine-Tuning (NFT)
 
 
 
 ## RL
 
-`RL Basic` 具体内容暂不公开
+[TRL - Transformer 强化学习 - Hugging Face 文档](https://hugging-face.cn/docs/trl/index)
+
+[RL Fundamental | 龙犊&小窝🪹~ | 从零开始理解强化学习](https://biglonglong.github.io/home/posts/know/rl-fundamental/)
+
+[RL for LLM | 龙犊&小窝🪹~ | 强化学习助力大模型](https://biglonglong.github.io/home/posts/know/rl-for-llm/)
 
 
 
 ## WorkFlow
 
+- [LangChain](https://www.langchain.com/)
+
 -  [Coze](https://coze.cn/)
+
+   [Dify](https://github.com/langgenius/dify/)
+
 - [Bisheng](https://github.com/dataelement/bisheng)
-- [Dify](https://github.com/langgenius/dify/)
-- [LangChain](https://github.com/langchain-ai/langchain) 
+
 - MCP
+
+
+
+## Logs
+
+### mini-qwen-sft
+
+#### [mini-qwen-sft-20251208-144607](https://swanlab.cn/@biglonglong/test/runs/vuehzt33anvvq0fgs3sai/chart)
+

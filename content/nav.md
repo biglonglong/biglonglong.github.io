@@ -119,6 +119,7 @@ ShowBreadCrumbs: false
   - [Site - Yanyan's Wiki（南京大学 蒋炎岩）](https://jyywiki.cn/)
   - [Book - 现代操作系统原理与实现](https://book.douban.com/subject/35208251/)
   - [Site - ucore实验指导书](https://learningos.github.io/ucore_os_webdocs/)
+- [Site - 程序员八股文（卡码）](https://notes.kamacoder.com/bagu)
 - [Video - 线性代数的本质（3Blue1Brown）](https://www.bilibili.com/video/BV1ys411472E/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Video - 线性代数（MIT）](https://www.bilibili.com/video/BV1xS4y1L7w5/?vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Github - notes-linear-algebra（zlotus）](https://github.com/zlotus/notes-linear-algebra)
@@ -131,11 +132,20 @@ ShowBreadCrumbs: false
   - [Video - Pytorch框架与经典卷积神经网络与实战（炮哥）](https://www.bilibili.com/video/BV1e34y1M7wR/?spm_id_from=333.337.search-card.all.click)
   - [Video - 手撕“Everything”系列，Transformer, Diffusion，LLM（happy魇）](https://www.bilibili.com/video/BV1Fw4m1C7Tq/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Video - 深度学习系列（李宏毅）](https://www.bilibili.com/video/BV1TAtwzTE1S/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
-  - [Github - minimind（jingyaogong）](https://github.com/jingyaogong/minimind)
+- [Github - minimind（jingyaogong）](https://github.com/jingyaogong/minimind)
+  - [Site - 先进的AI团队协作与模型创新引擎（SwanLab）](https://docs.swanlab.cn/guide_cloud/general/what-is-swanlab.html)
+  - [Github - aliyun_acp_learning（AlibabaCloudDocs）](https://github.com/AlibabaCloudDocs/aliyun_acp_learning)
+  - [Github - llm_learning（AlibabaCloudDocs）](https://github.com/AlibabaCloudDocs/llm_learning)
 - [Github - MathFoundationRL（WindyLab）](https://github.com/MathFoundationRL/Book-Mathematical-Foundation-of-Reinforcement-Learning)
   - [Site - 蘑菇书（easy-rl）](https://datawhalechina.github.io/easy-rl/#/)
   - [Video - 强化学习系列（李宏毅）](https://www.bilibili.com/video/BV15hw9euExZ/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
-
+  - [Video - 一文理清强化学习RL基本原理（大白话）](https://www.bilibili.com/video/BV1rooaYVEk8/?vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Video - 一文理清强化学习PPO和GRPO算法流程（大白话）](https://www.bilibili.com/video/BV15cZYYvEhz/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Site - Transformer 强化学习（Hugging Face）](https://hugging-face.cn/docs/trl/index)
+- [Site - LangChainDocs（LangChain）](https://docs.langchain.com/)
+  - [Site - LangChain 中文教程（LangChain）](https://langchain-doc.cn/)
+  - [Github - Langchain1.0-Study（Mason-zy）](https://github.com/Mason-zy/Langchain1.0-Study)
+  
 - [Video - ROS2理论与实践（赵虚左）](https://www.bilibili.com/video/BV1VB4y137ys/?vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Site - ROS2理论与实践讲义（猛狮集训营）](https://www.zhihu.com/people/41-69-11-75-42/posts)
   - [Site - ROS理论与实践（Autolabor）](http://www.autolabor.com.cn/book/ROSTutorials/)
@@ -146,10 +156,7 @@ ShowBreadCrumbs: false
 
 ### Look Around
 
-- [大语言模型(LLM)入门学习路线图](https://blog.csdn.net/2401_84494441/article/details/143867081)
-- [ROS2的学习经验](https://blog.csdn.net/qq_64079631/article/details/133621574)
 - [24届就业学长纯干货总结：C++智能驾驶学习路线](https://blog.csdn.net/weixin_58208840/article/details/144295108)
-- [(47 封私信 / 82 条消息) Robotics R&D - 知乎](https://www.zhihu.com/column/c_1387574965043171328)
 - [校招｜C++后台开发学习路线（已签腾讯sp，附学习资料） - 知乎](https://zhuanlan.zhihu.com/p/61457047)
 - [C++实习速成学习路线](https://www.wolai.com/ustcse/69ChCiD9xPBx9NAjpjyR3J)
 - [CodeTop 面试题目总结](https://codetop.cc/home)

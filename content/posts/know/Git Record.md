@@ -6,7 +6,7 @@ description: "管理代码仓库时的 Git 命令集记录"
 date: 2024-11-26
 author: ["biglonglong"]
 
-tags: ["summary", "git"]
+tags: ["summary", "tools", "git"]
 summary: ""
 
 math: false
@@ -156,7 +156,7 @@ Git 是一个分布式版本控制系统，用于高效地管理代码版本历�
 
 - `git restore --staged <files>`：将暂存区内容撤回到工作区
 
-- `git commit --amend`：此次暂存区内容与上次提交内容合并为单个提交
+- `git commit --amend`：此次暂存区预提交内容与上次提交内容合并为单个提交
 
 - `git reset --<mode> <hash>`：移动HEAD到<hash>版本而回退，此时该分支本地和远程提交记录不一致，需要强制推送（`push -f`）覆盖
 
