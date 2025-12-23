@@ -142,6 +142,8 @@ ShowBreadCrumbs: false
   - [Video - 一文理清强化学习RL基本原理（大白话）](https://www.bilibili.com/video/BV1rooaYVEk8/?vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Video - 一文理清强化学习PPO和GRPO算法流程（大白话）](https://www.bilibili.com/video/BV15cZYYvEhz/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Site - Transformer 强化学习（Hugging Face）](https://hugging-face.cn/docs/trl/index)
+- [Video - 40分钟的Docker实战攻略（技术爬爬虾）](https://www.bilibili.com/video/BV1THKyzBER6/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  
 - [Site - LangChainDocs（LangChain）](https://docs.langchain.com/)
   - [Site - LangChain 中文教程（LangChain）](https://langchain-doc.cn/)
   - [Github - Langchain1.0-Study（Mason-zy）](https://github.com/Mason-zy/Langchain1.0-Study)

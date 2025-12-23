@@ -6,7 +6,7 @@ description: "CMake 配合 VsCode 及其插件构建 C++ 项目"
 date: 2025-12-21
 author: ["biglonglong"]
 
-tags: ["summary", "tools", "cmake"]
+tags: ["summary", "tools", "cmake", "linux"]
 summary: ""
 
 math: false
@@ -63,6 +63,8 @@ myproject/
 
 ##  `CMakeLists.txt` 
 
+### src + include
+
 ```cmake
 # Minimum CMake version required
 cmake_minimum_required(VERSION 3.15)
@@ -77,11 +79,21 @@ elseif(MSVC)
 endif()
 
 # Project name
-project(<myproject>)
+project(<projectname>)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Build type: Debug or Release
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DDEBUG -g3 -O0)
+else()
+    add_definitions(-O2)
+endif()
 
 # Include directories
 include_directories(include)
@@ -90,17 +102,198 @@ include_directories(include)
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE HEADERS "include/*.h" "include/*.hpp")
 
-# Get the absolute path of the data directory
-get_filename_component(DATA_DIR "${CMAKE_SOURCE_DIR}/data" ABSOLUTE)
-
-# Add the absolute path as a definition
-add_definitions(-DDATA_DIR="${DATA_DIR}")
-
 # Set the output directory for the executable
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # Add the executable
-add_executable(<myproject> ${SOURCES} ${HEADERS})
+add_executable(<exename> ${SOURCES} ${HEADERS})
+```
+
+### src + include + main
+
+```cmake
+# Minimum CMake version required
+cmake_minimum_required(VERSION 3.15)
+
+# Ensure IDE and IO uses UTF-8
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    add_compile_options(-fexec-charset=UTF-8)
+    add_compile_options(-finput-charset=UTF-8)
+elseif(MSVC)
+    add_compile_options(/execution-charset:utf-8)
+    add_compile_options(/source-charset:utf-8)
+endif()
+
+# Project name
+project(<projectname>)
+
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Build type: Debug or Release
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DDEBUG -g3 -O0)
+else()
+    add_definitions(-O2)
+endif()
+
+# Set the output directory
+# CMAKE_LIBRARY_OUTPUT_DIRECTORY for Linux shared library
+# CMAKE_RUNTIME_OUTPUT_DIRECTORY for Windows DLL
+# CMAKE_ARCHIVE_OUTPUT_DIRECTORY for static library
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+
+# Generate shared library
+aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC_LISTS)
+add_library(<libname>
+SHARED
+${SRC_LISTS}
+)
+target_include_directories(<libname>
+PUBLIC
+${PROJECT_SOURCE_DIR}/include
+)
+
+# Generate executable
+add_executable(<exename> main.cpp)
+target_include_directories(<exename>
+PUBLIC
+${PROJECT_SOURCE_DIR}/include
+)
+
+# Link library to executable
+target_link_libraries(<exename>
+PUBLIC
+<libname>
+)
+```
+
+### all in src
+
+```cmake
+# Minimum CMake version required
+cmake_minimum_required(VERSION 3.15)
+
+# Ensure IDE and IO uses UTF-8
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    add_compile_options(-fexec-charset=UTF-8)
+    add_compile_options(-finput-charset=UTF-8)
+elseif(MSVC)
+    add_compile_options(/execution-charset:utf-8)
+    add_compile_options(/source-charset:utf-8)
+endif()
+
+# Project name
+project(<projectname>
+    VERSION 1.0
+    DESCRIPTION "<demo for CMakeLists.txt>"
+    PROJECT_HOMEPAGE_URL "<https://example.com>"
+    LANGUAGES CXX
+)
+
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Build type: Debug or Release
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DDEBUG -g3 -O0)
+else()
+    add_definitions(-O2)
+endif()
+
+# Set the output directory
+# CMAKE_LIBRARY_OUTPUT_DIRECTORY for Linux shared library
+# CMAKE_RUNTIME_OUTPUT_DIRECTORY for Windows DLL
+# CMAKE_ARCHIVE_OUTPUT_DIRECTORY for static library
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+set(Sub_FUNC1_DIR ${PROJECT_SOURCE_DIR}/src/<subfuncdir1>)
+set(Sub_FUNC2_DIR ${PROJECT_SOURCE_DIR}/src/<subfuncdir2>)
+
+# recurison to subdirectories
+add_subdirectory(src)
+
+
+
+##########################################
+##      SRC CMakeLists.txt example      ##
+##########################################
+# Project name
+project(<srcprojectname>)
+
+# recurison to subdirectories
+add_subdirectory(<subfuncdir1>)
+add_subdirectory(<subfuncdir2>)
+
+# Generate executable
+add_executable(${PROJECT_NAME} main.cpp)
+target_include_directories(${PROJECT_NAME}
+PUBLIC
+${Sub_FUNC1_DIR}
+)
+
+# Link library to executable
+target_link_libraries(${PROJECT_NAME}
+PUBLIC
+<lib1name>
+)
+
+
+
+##########################################
+##   subfuncdir1 CMakeLists.txt example ##
+##########################################
+# Project name
+project(<subfuncdir1projectname>)
+
+# Generate shared library
+aux_source_directory(${CMAKE_SOURCE_DIR} SRC_LISTS)
+add_library(<lib1name>
+SHARED
+${SRC_LISTS}
+)
+target_include_directories(<lib1name>
+PUBLIC
+${Sub_FUNC2_DIR}
+)
+
+# Link shared library to library
+target_link_libraries(${PROJECT_NAME}
+PUBLIC
+<lib2name>
+)
+
+# find_package(OpenCV REQUIRED)
+# if(TARGET OpenCV::core)
+#     message(STATUS "OpenCV found: ${OpenCV_VERSION}")
+# endif()
+
+# Link extern static library to library
+target_link_libraries(${PROJECT_NAME}
+PUBLIC
+<staticlibname>
+)
+
+
+##########################################
+##   subfuncdir2 CMakeLists.txt example ##
+##########################################
+# Project name
+project(<subfuncdir2projectname>)
+
+# Generate shared library
+aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC_LISTS)
+add_library(<lib2name>
+SHARED
+${SRC_LISTS}
+)
 ```
 
 
@@ -114,17 +307,17 @@ VSCode 会自动识别项目中的 `CMakeLists.txt` 文件，并提示你安装 
 1. 选择编译器工具链：按 `Ctrl+Shift+P`，搜索 `CMake: Select a Kit`，从自动检测的编译器列表中选择一个
 2. 配置项目：再次按 `Ctrl+Shift+P`，搜索 `CMake: Configure`，例如 Unix Makefiles（默认）或 Ninja。
 
-> 等价于：`mkdir build; cd build; cmake [-G "MinGW Makefiles"] ..` 
+> 等价于：`mkdir build; cd build; cmake .. [-DCMAKE_BUILD_TYPE=Debug -G "MinGW Makefiles"]` 
 
-配置完成后， `build/` 目录下生成`Makefile`。
+配置完成后， `build/` 目录下生成`Makefile`，此时已经配置好了当前环境依赖。
 
 ### 2. 构建项目
 
-按 `Ctrl+Shift+P`，搜索 `CMake: Build`运行，或者点击 VSCode 状态栏中的 Build 按钮
+按 `Ctrl+Shift+P`，搜索 `CMake: Build`运行，或者点击 VSCode 状态栏中的 Build 按钮（最好先清理 `build\` 和 `bin\` 目录）
 
-> 等价于：`cd build; cmake --build .`
+> 等价于：`cd build; cmake --build .`（最好先清空 `build\` 和 `bin\` 目录）
 
-构建完成后， `build/` 目录下生成`*.exe`。
+构建完成后， `build/` 目录下生成`*.exe`，这里主要是对代码进行编译，一般修改代码后重复此操作。
 
 ### 3. 调试项目
 
@@ -180,6 +373,8 @@ VSCode 会自动识别项目中的 `CMakeLists.txt` 文件，并提示你安装 
 ```
 
 配置完成后，点击调试按钮来开始调试。
+
+> C++ `system`命令调试器无法跟踪，慎用！
 
 ### 4. CMake Presets
 
