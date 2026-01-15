@@ -189,39 +189,37 @@ void qsort(int *arr,int left,int right){
 6. merge_sort
 
 ```cpp
-void merger(int arr[],int temparr[],int left,int mid,int right){
+void merger(vector<int>& nums, int left, int mid, int right) {
     int l_pos=left;
     int r_pos=mid+1;
     int pos=left;
-    while(l_pos<=mid&&r_pos<=right)
-    {
-        if(arr[l_pos]<arr[r_pos])
-            temparr[pos++]=arr[l_pos++];
-        else
-            temparr[pos++]=arr[r_pos++];
+    vector<int> res(nums.size());
+    while(l_pos<=mid && r_pos<=right) {
+        if(nums[l_pos]<nums[r_pos]) {
+            res[pos++] = nums[l_pos++];
+        }
+        else {
+            res[pos++] = nums[r_pos++];
+        }
     }
-    while(l_pos<=mid)
-    {
-        temparr[pos++]=arr[l_pos++];
+    while(l_pos<=mid) {
+        res[pos++] = nums[l_pos++];
     }
-    while(r_pos<=right)
-    {
-        temparr[pos++]=arr[r_pos++];
+    while(r_pos<=right) {
+        res[pos++] = nums[r_pos++];
     }
-    while(left<=right)
-    {
-        arr[left]=temparr[left];
-        left++;
+
+    for(int i=left; i<=right; i++) {
+        nums[i]=res[i];
     }
 }
 
-void merge_sort(int arr[],int temparr[],int left,int right)
-{
-    if(left<right){
-        int mid=(left+right)/2;
-        merge_sort(arr,temparr,left,mid);
-        merge_sort(arr,temparr,mid+1,right);
-        merger(arr,temparr,left,mid,right);
+void mergeSort(vector<int>& nums, int s, int e) {
+    if (s<e) {
+        int mid = s + (e-s)/2; 
+        mergeSort(nums, s, mid);
+        mergeSort(nums, mid+1, e);
+        merger(nums, s, mid, e);
     }
 }
 ```
@@ -232,7 +230,7 @@ void merge_sort(int arr[],int temparr[],int left,int right)
 
 > 原理：针对`sortedArr`，目标位于`[left,right]`之间，对`middle`搜索，`right+1=left`时终止。
 >
-> 变化：对`nums[middle]==target`及`return`情况讨论
+> 变化：对`nums[middle]`及`return`情况讨论
 
 1. [无重复插入](https://leetcode.cn/problems/search-insert-position/description/)
 
@@ -327,7 +325,7 @@ bool search(vector<int>& nums, int target) {
 >
 > 滑动窗口：
 >
-> - 原理：用`end`遍历序列，当窗口[start,end]合法时，再`start++`优化窗口，不合法后继续遍历
+> - 原理：用`end`遍历序列，当窗口[start,end]不合法时，`start++`优化窗口，fou'z继续遍历
 > - 变化：对`checkLegal([start,end],target)`和合法`deal(res, [start,end])`讨论
 
 1. [快慢指针](https://leetcode.cn/problems/remove-element/description/)
@@ -517,7 +515,7 @@ void setZeroes(vector<vector<int>>& matrix) {
                 row[i]=col[j]=true;
             }
         }
-    } 
+    }
     for(int i=0; i<m; i++) {
         for(int j=0; j<n; j++) {
             if(row[i] || col[j]) {
@@ -1242,10 +1240,10 @@ private:
 
 ```cpp
 class cmp {
-    public:
+public:
     bool operator()(const pair<int, int>& lhs, const pair<int, int>& rhs) {
         return lhs.second > rhs.second;
-    }      
+    }
 };
 
 priority_queue<pair<int,int>, vector<pair<int,int>>, cmp> pri_que;
@@ -1257,7 +1255,7 @@ for(pair<int,int> p:umap) {
 }
 ```
 
-4. 循环队列
+4. [循环队列](https://leetcode.cn/problems/dota2-senate/)
 
 ```cpp
 //参议院
@@ -1449,7 +1447,7 @@ vector<vector<int>> levelOrder(TreeNode* root) {
 }
 ```
 
-3. 翻转
+3. [翻转](https://leetcode.cn/problems/invert-binary-tree/)
 
 ```cpp
 TreeNode* invertTree(TreeNode* root) {
@@ -1459,9 +1457,16 @@ TreeNode* invertTree(TreeNode* root) {
         invertTree(root->left);         // 注意 这里依然要遍历左孩子，因为中间节点已经翻转了
         return root;
 }
+-------------------------------------------------
+void invert(TreeNode* cur) {
+    if(cur==nullptr) return;
+    swap(cur->left, cur->right);
+    invert(cur->left);
+    invert(cur->right);
+}
 ```
 
-4. 对称
+4. [对称](https://leetcode.cn/problems/symmetric-tree/)
 
 ```cpp
 bool compare(TreeNode* left, TreeNode* right) {
@@ -1473,7 +1478,7 @@ bool compare(TreeNode* left, TreeNode* right) {
 }
 ```
 
-5. 构造
+5. [构造](https://leetcode.cn/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
 
 ```cpp
 TreeNode* traversal(vector<int>& inorder,int inorderBegin, int inorderEnd, vector<int>& postorder, int postorderBegin, int postorderEnd) {
@@ -1512,7 +1517,7 @@ TreeNode* traversal(vector<int>& inorder,int inorderBegin, int inorderEnd, vecto
 }
 ```
 
-6. 合并
+6. [合并](https://leetcode.cn/problems/merge-two-binary-trees/)
 
 ```cpp
 TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
@@ -1524,7 +1529,7 @@ TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
     return root1;
 ```
 
-7. 公共祖先
+7. [公共祖先](https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/)
 
 ```cpp
 TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
@@ -1647,7 +1652,7 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
      }
      ```
 
-   - 修剪
+   - [修剪](https://leetcode.cn/problems/trim-a-binary-search-tree/)
 
      ```cpp
      TreeNode* trimBST(TreeNode* root, int low, int high) {
@@ -1675,7 +1680,7 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
      }
      ```
 
-   - 公共祖先
+   - [公共祖先](https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-search-tree/)
 
      ```cpp
      TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {   	//二叉搜索树版
@@ -2459,7 +2464,7 @@ int numTrees(int n) {
                  if(j<weight[i]) dp[i][j]=dp[i-1][j];
                  else dp[i][j]=max(dp[i-1][j], dp[i-1][j-weight[i]]+value[i]);
              }
-         }
+         } 
          return dp[n-1][bagWeight];
      }
      ------------------------------------------------------------------------------

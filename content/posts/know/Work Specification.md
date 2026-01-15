@@ -2,11 +2,11 @@
 draft: false
 
 title: "Work Specification"
-description: "代码规范、README规范、Git Msg规范、装机必备"
-date: 2024-04-13
+description: "开发配置及其规范"
+date: 2025-04-13
 author: ["biglonglong"]
 
-tags: ["summary", "specification", "cpp"]
+tags: ["skills", "specification"]
 summary: ""
 
 math: false
@@ -36,8 +36,8 @@ comments: true
 | `USB flash drive` | 便携资料           |
 
 - [ ] [Clash](https://github.com/clashdownload/Clash?tab=readme-ov-file)：profiles
-- [ ] [‌‍⁤⁣⁤⁡⁡TASK - 飞书云文档](https://har0ukrko0d.feishu.cn/wiki/CTCEw1Gq2iMLE0kV57vcEwu1n2g)
-- [ ] [Google Chrome](https://www.google.com/chrome/)：Default browser、log in、turn on Sync（Extensions、BookMark）、search engine setting
+
+- [ ] [Google Chrome](https://www.google.com/chrome/)：default browser、log in、turn on Sync（Extensions、BookMark）、search engine setting
 
 - [ ] [VS Code](https://code.visualstudio.com/)：log in、Backup and Sync Settings
 
@@ -45,10 +45,10 @@ comments: true
 
 - [ ] [Git for Windows](https://git-scm.com/downloads/win)：SSH key、alias config（autocrlf）
 
-  ```.gitconfig
+  ```
   [core]
   	safecrlf = true
-  	autocrlf = !!!!!!!!!!!!!!!!!!!!!!!!!!
+  	autocrlf = true
   
   [alias]
   	st = status
@@ -351,153 +351,4 @@ source ~/.bashrc
 > 校验提交格式：[commitlint](https://commitlint.js.org/)
 >
 > 自动生成changelog：[README | semantic-release](https://semantic-release.gitbook.io/semantic-release)
-
-
-
-## README
-
-### Overview
-
-这是一份规范文档，如果采用别人的仓库，就以该仓库规范为准，否则可以采用该规范，具体依情况而定。
-
-This repository describes some guidelines, [simple introduction]
-
-### Features
-
-### Directory Structure
-
-### Installation and Usage
-
-#### Prerequisites
-
-#### Installation
-
-#### Usage
-
-### Logs
-
-### Guide
-
-### More
-
-本仓库包括源代码和详细文档，您可以通过阅读 [Guide]() 了解算法的详细设计、原理和实验。
-
-### FAQ
-
-### TODO List
-
-### References
-
-### Pull Request
-
-1. **Issue**：描述你要解决的问题或新增的功能（格式、变量名、逻辑…），确保与维护者达成共识；
-2. **Fork & Clone & Commit & Push**：在自己账户下拉取仓库分支，克隆仓库到本地进行开发，请尽可能复现原代码和提交信息的风格；
-3. **New Pull Request & Merge**：确认你的分支与上游 main 分支，回应审查意见直到代码合并；
-
-如果以上步骤有任何问题，咨询仓库拥有者，或将你的改动交给他审查并提交。
-
-1. **Issue**: Describe the problem you plan to solve or the new feature you want to add (including format, variable names, logic, etc.). Ensure you reach a consensus with the maintainers before proceeding.
-2. **Fork & Clone & Commit & Push**: Fork the repository to your own account and clone it to your local machine for development. Please strive to replicate the style of the original code and commit messages.
-3. **New Pull Request & Merge**: Create a new Pull Request, ensuring your branch is up to date with the upstream `main` branch. Respond to review comments until the code is approved and merged.
-
-If you encounter any issues with the steps above, consult the repository owner or provide your changes to them for review and submission.
-
-### Contributor
-
-```html
-<a href="https://github.com/<UserName>/<RepoName>/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=<UserName>/<RepoName>" />
-</a>
-```
-
-### License
-
-### About the Author
-
-
-
-## Guide
-
-### Abstract
-
-[introduction] [Input] [Output]
-
-![diagram]()
-
-### Works
-
-#### Function/Class/Inovation
-
-[introduction]
-
-```
-// ...
-```
-
-- [input]
-- [[output]
-- [function]
-
-### Results
-
-
-
-## Research
-
-从领域内综述和硕博论文开始，掌握**各类方法核心思想及其优缺点**，梳理研究方向发展脉络，明确当下**SOTA方法**，今天要读的是：
-
-> [Name - Author.etc](https://arxiv.org/abs/...)
->
-> [Repo]: https://github.com/…
-> [Hugging Face]: https://huggingface.co/…
-
-### Introduction（yellow）
-
-了解论文的 Abstract & Conclusion，明确论文解决的问题及其潜在工业应用价值，快速评估其创新性和实用性，确定是否有继续读下去的必要；
-
-结合Introduction & Figures，确定论文核心思想；
-
-### Base（orange）
-
-查找相关资料，了解论文的主要假设，主要公式、基线方法；
-
-### Approach（red）
-
-论文核心方案的实现或创新点；
-
-### Result（blue）
-
-#### Scene
-
-#### Evaluation
-
-#### Effect
-
-### Discussion（purple）
-
-讨论与局限性
-
-### Opinion（comment）
-
-”文章内容、结构、方法为什么有效“的总结与改进
-
-### Writing（green）
-
-#### Structure
-
-#### Phrase
-
-### Code
-
-
-
-## Blog
-
-### 前言
-
-### 正文标题1
-
-### 正文标题2
-
-### …
 
