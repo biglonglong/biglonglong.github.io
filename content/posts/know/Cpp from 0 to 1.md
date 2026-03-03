@@ -599,17 +599,31 @@ void Circle::setCenter(Point center) {
 ```
 
 ```cpp
-Point p1;  						// 无参构造
-Point p2(0, 0);  				// 括号有参构造
-Point p3 = Point(p2); 			// 显示有参构造，匿名对象
-Point p4 = p3;					// 隐式有参构造
-// 不能拷贝构造匿名对象
+// 无参构造
+Point p1;  
+Point p2{};  // Point p11 = {};
+
+// 有参构造
+Point p3(10, 20);
+Point p4{5, 15};  // Point p10 = {5, 15};
+// 拷贝构造
+Point p6(p3);         // 显示拷贝构造
+Point p5 = p3;        // 隐式拷贝构造
+Point p7 = Point(p3); // 匿名对象拷贝构造
+// 拷贝赋值运算符
+Point p8;
+p8 = p3;
+// 移动赋值运算符
+Point p9;
+p9 = Point(p3);
+p9 = std::move(p2);
+// 不允许单独构造匿名对象
 // Point(p4);
+// 这是一个函数声明
+ // Point p1();
 
 p1.flag = 1;  				// Point::flag
 p1.setFlag(1);				// Point::setFlag(1);
-
-
 
 Point *p = NULL;
 p->nullCheck();
@@ -654,12 +668,12 @@ pa.constfix();
 └─────────────────────────────┘
 ```
 
-- 空对象占用一个字节，以确保每个对象在内存中都有唯一的地址。
-- 对象空指针也是可以调用成员函数的，但要保证不存在访问`this`指针的可能性。
+- 空对象占用一个字节，以确保每个对象在内存中都有唯一的地址，以作区分。
+- 空指针对象可以调用成员函数，但每个非静态成员函数调用都隐式地传递了一个 `this` 指针参数，若函数体内使用空指针对象的`this`时，会发生错误，否则无碍。
 
 ### 构造函数
 
-对象自动初始化，可以重载，编译器提供空实现的无参构造和浅拷贝的拷贝构造及赋值重载
+对象自动初始化，可以重载，编译器提供空实现的无参构造、浅拷贝构造和赋值重载
 
 `类名(形参列表){}`
 
@@ -674,7 +688,7 @@ pa.constfix();
 
 - 对象按执行顺序构造，析构反之
 
-- 先构造对象成员，再构造本对象，析构反之
+- 构造嵌套类时，0先构造对象成员，再构造本对象，析构反之
 
 - 构造子类时，先构造父类，再构造子类，析构反之
 
@@ -710,6 +724,10 @@ pa.constfix();
 
 - 常函数不可以修改成员变量，但成员变量声明时加关键字mutable后，在常函数中依然可以修改；
 - 常对象只能调用常函数或修改mutable变量
+
+#### explicit修饰构造
+
+用于修饰单参数构造函数或转换构造函数，阻止编译器进行不希望的隐式类型转换，让代码更安全、更清晰
 
 ### 友元
 
@@ -830,7 +848,7 @@ ostream& operator<<(ostream& os, const Person& p) {
 
 呈树型的类关系，派生类（子类）除了拥有基类（父类）的成员，还有自己独有的成员。
 
-继承类：`class 子类：继承方式 父类{};`，可多继承，即 `class 子类 ：继承方式1 父类1, 继承方式2 父类2...{};`。
+继承类：`class 子类: 继承方式 父类{};`，可多继承，即 `class 子类: 继承方式1 父类1, 继承方式2 父类2...{};`。
 
 继承方式：
 
@@ -903,33 +921,76 @@ public:
 ### 继承模型
 
 ```txt
-CatDog 菱形继承对象：
-┌─────────────────┐
-│ Cat 部分         │
-│   ├ Animal数据   │ ← name (副本1)
-│   └ CatId   	  │
-├─────────────────┤
-│ Dog 部分         │
-│   ├ Animal数据   │ ← name (副本2)
-│   └ DogId   	  │
-├─────────────────┤
-│ CatDog 部分	     │
-└─────────────────┘
-CatDog 虚继承对象（父类数据不在虚继承子类中）：
-┌─────────────────┐
-│ Cat 部分         │
-| 虚基类指针(Cat)   | ← 指向 Animal部分
-│   └ CatId   	  │
-├─────────────────┤
-│ Dog 部分         │
-| 虚基类指针(Dog)   | ← 指向 Animal部分
-│   └ DogId   	  │
-├─────────────────┤
-│ CatDog部分       │
-├─────────────────┤
-│ Animal部分       │ ← 只有一个共享副本！
-│  └ name          │
-└─────────────────┘
+DogCat 菱形继承对象：
++-----------------------+  ← 0x00 (Dog部分开始)
+| Dog::Animal::vptr (8) | → Dog::Animal 虚函数表（指向DogCat覆盖后的版本）
++-----------------------+  ← 0x08
+| Dog::Animal::name (32)| → Animal::name (Dog版本)
++-----------------------+  ← 0x28
+| Dog::Animal::DogId (4)|
+| 对齐填充 (4)           |
++-----------------------+  ← 0x30 (Cat部分开始)
+| Cat::Animal::vptr (8) | → Cat::Animal 虚函数表（指向DogCat覆盖后的版本）
++-----------------------+  ← 0x38
+| Cat::Animal::name (32)| → Animal::name (Cat版本)
++-----------------------+  ← 0x58
+| Cat::Animal::CatId (4)|
+| 对齐填充 (4)           |
++-----------------------+  ← 0x60 (DogCat自身成员开始)
+| DogCat成员（暂无）      |
++-----------------------+
+总大小：~96字节+（两个完整的Animal副本）
+
+DogCat 虚继承对象：
++-----------------+  ← 0x00 (Dog部分开始)
+| Dog::vptr (8)   | → Dog虚函数表（指向DogCat覆盖后的版本,包含虚基类偏移信息）
++-----------------+  ← 0x08
+| Dog::DogId (4)  |
+| 对齐填充 (4)     |
++-----------------+  ← 0x10 (Cat部分开始)
+| Cat::vptr (8)   | → Cat虚函数表（指向DogCat覆盖后的版本,包含虚基类偏移信息）
++-----------------+  ← 0x18
+| Cat::CatId (4)  |
+| 对齐填充 (4)     |
++-----------------+  ← 0x20 (DogCat自身成员开始)
+| DogCat成员（暂无）|
++-----------------+  ← 0x28 (Animal虚基类部分开始)
+| Animal::vptr (8)| → Animal虚函数表（指向DogCat覆盖后的版本）
++-----------------+  ← 0x30
+| Animal::name(32)| → 唯一的name对象
++-----------------+
+总大小：~72字节+
+```
+
+```
+Dog虚函数表（在DogCat中）：
++---------------------+
+| typeinfo for DogCat |
++---------------------+
+| offset to top: 0    |
++---------------------+
+| vbase offset: 40    | ← 从Dog子对象到Animal的偏移
++---------------------+
+| Dog::makeSound()    | ← 实际指向DogCat::makeSound()
++---------------------+
+
+Cat虚函数表（在DogCat中）：
++---------------------+
+| typeinfo for DogCat |
++---------------------+
+| offset to top: 16   | ← 到DogCat对象顶部的偏移
++---------------------+
+| vbase offset: 24    | ← 从Cat子对象到Animal的偏移
++---------------------+
+| Cat::makeSound()    | ← 实际指向DogCat::makeSound()
++---------------------+
+
+Animal虚函数表（在DogCat中）：
++---------------------+
+| typeinfo for DogCat |
++---------------------+
+| DogCat::makeSound() | ← 实际指向DogCat::makeSound()
++---------------------+
 ```
 
 - 子类对象访问同名成员，子类同名成员直接访问，父类同名成员使用作用域区分访问
@@ -943,8 +1004,9 @@ CatDog 虚继承对象（父类数据不在虚继承子类中）：
 
 - 编译时静态多态：函数重载、运算符重载、模板
 - 运行时动态多态：通过虚函数和继承实现
-  - 父类指针或引用可以指向子类成员；指向父类对象只能调用父类函数及子类重写虚函数，要想调用子类函数需要指向子类对象
-  - 子类可以重载父类的虚函数；未重载时该函数采用父类实现，重载时该函数采用子类实现
+  - 父类指针（或引用）可以指向子类对象；
+  - 子类可以重载父类的虚函数：未重载时该函数采用父类实现，重载时该函数采用子类实现；
+  - 父类指针指向子类对象时，可以调用父类中定义的所有函数， 可以调用子类重写的虚函数，不能直接调用子类特有的函数
 
 
 ```cpp
@@ -958,26 +1020,97 @@ speak(new Dog("Rover"));
 
 ### 多态模型
 
-当一个类声明了至少一个虚函数（或继承了虚函数），编译器就会为这个类**生成一个唯一的虚函数表**，表中的每个条目指向该类的一个虚函数的实际代码地址。
+当一个类声明了至少一个虚函数（或虚继承），编译器就会为这个类**生成一个唯一的虚函数表**，表中的每个条目指向该类的一个虚函数的实际代码地址或或虚基类地址。
 
-当你通过父类指针或引用调用虚函数时，通过下面的对象模型找到对应的虚函数表及其虚函数实现。
+当你通过父类指针或引用调用虚函数时，通过下面的对象模型找到实际的虚函数表及其虚函数实现：
 
 ```txt
-+-------------------+
-| vfptr (vtable)      |  <- 指向该对象所属类的虚函数表！
-+-------------------+
-| 成员变量            |
-+-------------------+
+Dog对象内存布局（独立时）：
++----------------+
+| Dog::vptr (8)  | → Dog虚函数表
++----------------+
+| DogId (4)      |
+| padding (4)    | → 对齐到8字节边界
++----------------+
+| Animal部分     | → 虚基类
+| - Animal::vptr |
+| - name         |
++----------------+
+
+Cat对象内存布局（独立时）：
++----------------+
+| Cat::vptr (8)  | → Cat虚函数表
++----------------+
+| CatId (4)      |
+| padding (4)    |
++----------------+
+| Animal部分     | → 虚基类
+| - Animal::vptr |
+| - name         |
++----------------+
 ```
 
-- 虚函数通常内容无用，可用纯虚函数简化；常用于构造抽象类，不可实例化，其子类必须重写，为子类提供公共接口和基本实现
+```txt
+Dog vtable for Dog (独立对象)：
++---------------------+
+| typeinfo for Dog    |  ← RTTI信息
++---------------------+
+| offset to top: 0    |  ← 到Dog对象顶部的偏移（总是0）
++---------------------+
+| vbase offset: 16    |  ← Dog子对象到Animal部分的偏移
+                       // 计算公式：Animal地址(0x10) - Dog地址(0x00) = 0x10(16)
++---------------------+
+| Dog::~Dog()         |  ← 析构函数（Dog版本）
++---------------------+
+| Dog::makeSound()    |  ← Dog自己的makeSound实现
++---------------------+
+
+Animal vtable for Dog (独立对象)：
++---------------------+
+| typeinfo for Dog    |  ← RTTI信息
++---------------------+
+| Dog::~Dog()         |  ← 析构函数（最终覆盖）
++---------------------+
+| Dog::makeSound()    |  ← Dog覆盖的makeSound
++---------------------+
+
+Cat vtable for Cat (独立对象)：
++---------------------+
+| typeinfo for Cat    |  ← RTTI信息
++---------------------+
+| offset to top: 0    |  ← 到Cat对象顶部的偏移（总是0）
++---------------------+
+| vbase offset: 16    |  ← Cat子对象到Animal部分的偏移
+                       // 计算公式：Animal地址(0x10) - Cat地址(0x00) = 0x10(16)
++---------------------+
+| Cat::~Cat()         |  ← 析构函数（Cat版本）
++---------------------+
+| Cat::makeSound()    |  ← Cat自己的makeSound实现
++---------------------+
+
+Animal vtable for Cat (独立对象)：
++---------------------+
+| typeinfo for Cat    |  ← RTTI信息
++---------------------+
+| Cat::~Cat()         |  ← 析构函数（最终覆盖）
++---------------------+
+| Cat::makeSound()    |  ← Cat覆盖的makeSound
++---------------------+
+```
+
+- 当基类无法提供有意义的默认实现，或者需要强制派生类必须实现某个功能时，可以使用纯虚函数。
+
+  - 纯虚函数会使类成为抽象类，抽象类不能被实例化，其派生类必须重写所有的纯虚函数才能成为具体类。
 
   ```cpp
   virtual void makeSound() const = 0;
   ```
 
-- 当通过父类指针析构子类对象时，会导致子类的析构函数不被调用，从而产生资源泄漏。虚析构会先调用子类析构，再自动调用父类析构
-  - 纯虚析构也可以创建抽象类，但必须添加手动的析构逻辑
+- 当基类的析构函数不是虚函数时，如果通过基类指针删除派生类对象，那么只会调用基类的析构函数，派生类的析构函数不会被调用。这可能导致派生类独有的资源（如动态分配的内存、文件句柄等）无法正确释放，从而产生资源泄漏。
+
+  - 将基类的析构函数声明为虚函数后，通过基类指针删除派生类对象时，会首先调用派生类的析构函数，然后自动调用基类的析构函数。
+
+  - 纯虚析构函数也可以使类成为抽象类，但与其他纯虚函数不同，纯虚析构函数必须在类外提供具体的实现（即使是空实现）。这是因为在销毁派生类对象时，仍然需要调用基类的析构函数来完成对象销毁链。
 
 
 
@@ -987,35 +1120,17 @@ speak(new Dog("Rover"));
 
 `template <typename T>`：告诉编译器下面这个函数或类里的 `T` 是一个类型占位符，且使用相同的`T`，可以定义多个同名的`T`供不同个对象使用
 
-## 函数模板
+## 基本使用
+
+### 函数模板
 
 ```cpp
-#include <iostream>
-using namespace std;
-
-// 主模板声明
-template <typename T>
-bool myCompare(T a, T b);
-
-// 精确匹配的普通函数
 bool myCompare(int a, int b)
 {
     cout << "普通函数被调用" << endl;
     return a != b;
 }
- 
-// 特化模板函数
-template <>
-bool myCompare<int *>(int *a, int *b)
-{
-    cout << "特化模板函数被调用" << endl;
-    return *a != *b;
-}
 
-// 显式实例化
-template bool myCompare<int>(int a, int b);
-
-// 泛化模板函数
 template <typename T>
 bool myCompare(T a, T b)
 {
@@ -1023,85 +1138,37 @@ bool myCompare(T a, T b)
     return a != b;
 }
 
-int main()
-{
-    int x = 1, y = 2;
-    myCompare(x, y);      // 自动推导，调用普通函数
-    myCompare<>(x, y);    // 自动推导，强制调用模板函数
-    myCompare(&x, &y);    // 显示指定，调用特化模板函数
-    myCompare<int>(x, y); // 显示指定，调用泛化模板函数
+template <>
+bool myCompare<int *>(int *a, int *b) {
+    cout << "特化模板函数被调用" << endl;
+    return *a != *b;
 }
+
+template bool myCompare<int>(int a, int b); // 声明显式实例化
+
+// 隐式实例化
+myCompare(1, 1); // 自动推导，int, 不可隐式转换
+myCompare<int>(1, 1); // 显式指定, int，可隐式转换
+// myCompare(3, 3.14)  error, 类型不一致或不确定
+myCompare<>(1, 1);    // 强制模板, int
 ```
 
-隐式实例化方法 ：
-
-- 自动推导：类型要一致且可确定，不存在隐式类型转换
-- 显示指定：可以隐式类型转换
-
-调用规则：
+调用优先级：
 
 1. （显示指定模板|空模板）强制调用函数模板
 2. 精确匹配的普通函数
 3. 特化函数模板/显示实例化
 4. 泛化函数模板
-5. 类型转换后的普通函数
+5. 需要隐式类型转换的普通函数
 
-
-
-## 类模板
+### 类模板
 
 ```cpp
-// 含默认类模板
-template<typename NameType, typename AgeType = int> 
-class Person
-{
-public:
-	Person(NameType name, AgeType age) {
-		this->mName = name;
-		this->mAge = age;
-	}
-	void showPerson() {
-		cout << "name: " << this->mName << " age: " << this->mAge << endl;
-	}
-public:
-	NameType mName;
-	AgeType mAge;
-};
-
-// 部分特化类模板
-template <typename NameType>
-class Person<NameType, int>
-{
-public:
-    Person(NameType name, int age)
-    {
-        this->mName = name;
-        this->mAge = age;
-    }
-    void showPerson()
-    {
-        cout << "姓名: " << this->mName << " 年龄: " << this->mAge << endl;
-    }
-    void func()
-    {
-        cout << "这是模板的全特化版本" << endl;
-    }
-
-public:
-    NameType mName;
-    int mAge;
-};
-
-Person<string> P1("孙悟空", 999);		// 没有自动类型推导
-P1.showPerson();
-```
-
-```cpp
+// 类外实现成员函数
 template<typename T1, typename T2>
 class Person {
 public:
 	Person(T1 name, T2 age);
-	void showPerson();
 public:
 	T1 m_Name;
 	T2 m_Age;
@@ -1112,56 +1179,68 @@ Person<T1, T2>::Person(T1 name, T2 age) {
 	this->m_Name = name;
 	this->m_Age = age;
 }
-template<typename T1, typename T2>
-void Person<T1, T2>::showPerson() {
-	cout << "姓名: " << this->m_Name << " 年龄:" << this->m_Age << endl;
-}
-```
 
-- 类模板隐式实例化方法只允许显示指定
-- 特化类模板不需要和主模板成员保持完全一致
-- 类模板不具备继承属性
-
-特殊用法：
-
-```cpp
-// 非类型参数类模板 常量、引用、指针
-template <typename NameType, int N>
-class Person
-{
+// 含默认参数
+template<typename NameType, typename AgeType = int> 
+class Person {
 public:
-    Person(NameType name, int age)
-    {
-        this->mName = name;
-        this->mAge = age;
-    }
-    void showPerson()
-    {
-        cout << "name: " << this->mName << " age: " << this->mAge << endl;
-    }
-
-public:
+    Person(NameType name, AgeType age) 
+        : mName(name), mAge(age) {}
+private:
     NameType mName;
-    int mAge = N;
+    AgeType mAge;
 };
 
-// 嵌套模板
-template <template <typename> typename Container, typename T>
-class Wrapper
-{
+// 部分特化的类模板成员不需要和泛化模板成员保持完全一致
+template <typename NameType>
+class Person<NameType, int> {
+public:
+    Person(NameType name, int age)
+		: mName(name), mAge(age) {}
+    void func() {
+        cout << "这是模板的部分特化版本" << endl;
+    }
 private:
-    Container<T> data;
+    NameType mName;
+    int mAge;
+};
 
+// 只允许显式指定，不存在自动推导
+Person<string> p1("孙悟空", 999); 
+Person<string, double> p2("唐僧", 30.5);
+```
+
+## 特殊用法
+
+```cpp
+// 非类型参数类模板，是编译期常量
+template <typename NameType, int N>
+class Person {
+public:
+    Person(NameType name, int age) 
+        : mName(name), mAge(age) {}
+private:
+    NameType mName;
+    int mAge;
+    int mDefaultAge = N;
+};
+
+Person<string, 100> p("默认年龄100", 50);
+```
+
+```cpp
+// 嵌套模板
+template <typename T， template<typename> class Container>
+class Wrapper {
 public:
     Wrapper(const Container<T> &d) : data(d) {}
-    void display()
-    {
+    void display() {
         for (const auto &item : data)
-        {
             cout << item << " ";
-        }
         cout << endl;
     }
+private:
+    Container<T> data;
 };
 
 vector<int> v = {1, 2, 3, 4, 5};
@@ -1169,53 +1248,28 @@ Wrapper<vector, int> example(v);
 example.display();
 ```
 
-### 函数参数
-
-- 指定传入的类型
-
-
 ```cpp
-void printPerson1(Person<string> &p);
-```
+// 模板参数传递
+void printPerson1(Person<string> &p);  // 指定传入的类型
 
-- 参数模板化
+template <typename T>
+void printPerson2(Person<T> &p);   // 模板参数模板化
 
-
-```cpp
-template <typename T1>
-void printPerson2(Person<T1> &p);
-```
-
-- 整个类模板化
-
-
-```cpp
 template<typename T>
-void printPerson3(T & p);
+void printPerson3(T & p);			// 模板整体模板化
 ```
 
-### 继承
-
-* 当子类继承的父类是一个类模板时，子类要指定出父类中模板类型
-
 ```cpp
+// 模板继承
 class Son :public Base<int>
+    
+template<typename T>
+class Son :public Base<T>		// 灵活指定
 ```
 
-* 如果想灵活指定出父类中T的类型，子类也需变为类模板
-
-
 ```cpp
-template<typename T1, typename T2>
-class Son :public Base<T2>
-```
-
-### 友元
-
-- 全局函数类内实现
-
-
-```cpp
+// 模板友元
+// 友元全局函数类内实现
 template<typename T1, typename T2>
 class Person
 {
@@ -1225,14 +1279,11 @@ class Person
     // ...
 };
 printPerson(p);
-```
 
-- 全局函数类外实现
-
-
-```cpp
+// 友元全局函数类外实现
 template<typename T1, typename T2> class Person;
-template<typename T1, typename T2> void printPerson(Person<T1, T2> & p);
+template<typename T1, typename T2>
+void printPerson(Person<T1, T2> & p);
 
 template<typename T1, typename T2>
 class Person

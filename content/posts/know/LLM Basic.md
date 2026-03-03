@@ -1101,4 +1101,13 @@ chat_finetuning:
 
 - [mini-qwen-sft-20251208-144607](https://swanlab.cn/@biglonglong/test/runs/vuehzt33anvvq0fgs3sai/chart)：采用全量微调方式，整体参数量改动较大，训练过程收敛难度较高，同时也会显著增加计算资源开销。
 
-- [mini-qwen-lora-20251219-001357](https://swanlab.cn/@biglonglong/test/runs/gwy4o3nrlpu8hrhac04z3/chart)：使用 LoRA 方法进行微调，结合较高的批处理大小，有效增强模型对数据中通用知识的捕获能力，从而提升其泛化性能。
+- [mini-qwen-lora-20251219-001357](https://swanlab.cn/@biglonglong/test/runs/gwy4o3nrlpu8hrhac04z3/chart)：使用 LoRA 方法进行微调，配合大 Batch Size，能更好地学习通用规律，泛化能力强，性价比高。
+
+模型容易“死记硬背”训练数据（过拟合），导致在真实场景或新数据上表现不佳。因此，所有技巧都围绕如何**最大化学习通用模式，而非记忆细节**。
+
+- LoRA，如果效果未达预期，可以探索 **DoRA**（效果更强）或 **QLoRA**（更省显存）
+- 数据需要**极度干净**，去掉错误、重复和噪声，格式要统一，适当做数据增强。
+- **构建验证集**，用于实时监控泛化能力。
+
+- 训练策略关键点：使用较小的学习率、高batch、训练轮数少量多次（监控验证集早停）、
+

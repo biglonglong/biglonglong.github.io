@@ -100,8 +100,8 @@ ShowBreadCrumbs: false
 
 - [Github - notes-python3（lijin-THU）](https://github.com/lijin-THU/notes-python3)
 - [Video - C++教程从0到1（黑马程序员）](https://www.bilibili.com/video/BV1et411b73Z/)
+  - [Video- 每天5分钟了解现代C++新特性（0CCh）](https://www.bilibili.com/video/BV1644y1c7pp/?spm_id_from=333.1387.homepage.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Site - C++参考手册](https://cppreference.cn/w/)
-  - [Video - 每天5分钟了解现代C++新特性（0CCh）](https://www.bilibili.com/video/BV1644y1c7pp/?spm_id_from=333.337.search-card.all.click)
   - [Book - Effective C++（侯捷）](https://book.douban.com/subject/1842426/)
   - [Site - 现代 C++ 教程: 高速上手 C++ 11/14/17/20（changkun）](https://changkun.de/modern-cpp/zh-cn/00-preface/)
   - [Book - C++ Primer（第 5 版 中文版）](https://book.douban.com/subject/25708312/)
@@ -131,6 +131,7 @@ ShowBreadCrumbs: false
   - [Video - 概率论（3Blue1Brown）](https://space.bilibili.com/88461692/lists/1528924?type=series)
   - [Github - Statistics-note（ChanceQZ）](https://github.com/ChanceQZ/Statistics-note)
 - [Video - 微积分（矿爷）](https://www.bilibili.com/video/BV1Lt411r7NQ/?spm_id_from=333.337.search-card.all.click)
+- [AI算法工程师手册](https://www.huaxiaozhuan.com/)
 - [Video - 从函数到神经网络【白话DeepSeek】（闪客）](https://www.bilibili.com/video/BV1uGA3eLEeu/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Video - Pytorch框架与经典卷积神经网络与实战（炮哥）](https://www.bilibili.com/video/BV1e34y1M7wR/?spm_id_from=333.337.search-card.all.click)
   - [Video - 手撕“Everything”系列，Transformer, Diffusion，LLM（happy魇）](https://www.bilibili.com/video/BV1Fw4m1C7Tq/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
@@ -146,11 +147,9 @@ ShowBreadCrumbs: false
   - [Video - 一文理清强化学习PPO和GRPO算法流程（大白话）](https://www.bilibili.com/video/BV15cZYYvEhz/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Site - Transformer 强化学习（Hugging Face）](https://hugging-face.cn/docs/trl/index)
 - [Video - 40分钟的Docker实战攻略（技术爬爬虾）](https://www.bilibili.com/video/BV1THKyzBER6/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
-  
 - [Site - LangChainDocs（LangChain）](https://docs.langchain.com/)
   - [Site - LangChain 中文教程（LangChain）](https://langchain-doc.cn/)
-  - [Github - Langchain1.0-Study（Mason-zy）](https://github.com/Mason-zy/Langchain1.0-Study)
-  
+  - [Github - Langchain1.0-Langgraph1.0-Learning（BrandPeng）](https://github.com/BrandPeng/Langchain1.0-Langgraph1.0-Learning)
 - [Video - ROS2理论与实践（赵虚左）](https://www.bilibili.com/video/BV1VB4y137ys/?vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Site - ROS2理论与实践讲义（猛狮集训营）](https://www.zhihu.com/people/41-69-11-75-42/posts)
   - [Site - ROS理论与实践（Autolabor）](http://www.autolabor.com.cn/book/ROSTutorials/)
@@ -161,16 +160,7 @@ ShowBreadCrumbs: false
 
 ### Look Around
 
-- [24届就业学长纯干货总结：C++智能驾驶学习路线](https://blog.csdn.net/weixin_58208840/article/details/144295108)
-- [校招｜C++后台开发学习路线（已签腾讯sp，附学习资料） - 知乎](https://zhuanlan.zhihu.com/p/61457047)
-- [C++实习速成学习路线](https://www.wolai.com/ustcse/69ChCiD9xPBx9NAjpjyR3J)
-- [CodeTop 面试题目总结](https://codetop.cc/home)
-- [youngyangyang04/TechCPP: 【C++面试&C++学习指南】](https://github.com/youngyangyang04/TechCPP)
-- [huihut/interview: 📚 C/C++ 技术面试基础知识总结.](https://interview.huihut.com/#/)
-- [🧙关于我们🧙 | 自动驾驶小白说](https://www.helloxiaobai.cn/about)
-- [【全】无人驾驶系列知识入门到提高_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV137411E7oC/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
-- 百度 Apollo
-- [AI算法工程师手册](https://www.huaxiaozhuan.com/)
+- 
 
 
 
