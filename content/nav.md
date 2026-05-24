@@ -151,6 +151,7 @@ ShowBreadCrumbs: false
   - [Github - Langchain1.0-Langgraph1.0-Learning（BrandPeng）](https://github.com/BrandPeng/Langchain1.0-Langgraph1.0-Learning)
 - [Github - RecommenderSystem（wangshusen）](https://github.com/wangshusen/RecommenderSystem)
 - [GitHub - SearchEngine（wangshusen）](https://github.com/wangshusen/SearchEngine)
+- [Site - docker、tmux、git、md、latex（Lance）](https://weiruyi.github.io/posts/工具/)
 
 
 
