@@ -1,6 +1,6 @@
 .post-content img {
     cursor: zoom-in;
-    transition: transform 0.2s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
     /* Override zoom styles */
     zoom: 1 !important;
     -webkit-transform: scale(1) !important;
@@ -10,6 +10,12 @@
     /* Fix image size */
     max-width: 480px !important;
     max-height: 360px !important;
+    border-radius: 6px;
+}
+
+.post-content img:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18) !important;
+    transform: scale(1.01) !important;
 }
 
 .post-content table img {
@@ -24,21 +30,23 @@
     max-height: 90px !important;
 }
 
+/* 图片点击放大：带遮罩过渡 */
 .post-content img:active {
-    /* Fixed size for all images when zoom*/
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) !important;
-    width: 800px !important;
-    height: 600px !important;
-    max-width: 800px !important;
-    max-height: 600px !important;
+    width: min(800px, 90vw) !important;
+    height: auto !important;
+    max-width: min(800px, 90vw) !important;
+    max-height: 90vh !important;
     object-fit: contain;
     z-index: 1000;
-    background: rgba(0, 0, 0, 0.9);
-    padding: 10px;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 12px;
+    border-radius: 12px;
     cursor: zoom-out;
+    box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.6);
 }
 
 .post-content img[loading="lazy"] {

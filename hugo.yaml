@@ -30,6 +30,8 @@ languages:
           url: "/home/tags"
         - name: Know
           url: "/home/posts/know"
+        - name: Cases
+          url: "/home/posts/cases"
 
       homeInfoParams:
         Title:

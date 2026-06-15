@@ -5,9 +5,9 @@
 {{- else }} {{/* if not profileMode */}}
 
 {{- if not .IsHome | and .Title }}
-<header class="page-header">
+<header class="page-header hero-header">
   {{- partial "breadcrumbs.html" . }}
-  <h1>
+  <h1 class="hero-title">
     {{ .Title }}
     {{- if and (or (eq .Kind `term`) (eq .Kind `section`)) (.Param "ShowRssButtonInSectionTermList") }}
     {{- with .OutputFormats.Get "rss" }}
@@ -23,7 +23,7 @@
     {{- end }}
   </h1>
   {{- if .Description }}
-  <div class="post-description">
+  <div class="hero-desc">
     {{ .Description | markdownify }}
   </div>
   {{- end }}
@@ -63,7 +63,8 @@
 {{- $class = "post-entry tag-entry" }}
 {{- end }}
 
-<article class="{{ $class }}">
+{{- $sectionSlug := index (split (strings.TrimSuffix "/" $page.File.Dir) "/") 1 | default $page.Section }}
+<article class="{{ $class }}" data-section="{{ $sectionSlug }}">
   {{- $isHidden := (.Param "cover.hiddenInList") | default (.Param "cover.hidden") | default false }}
   {{- partial "cover.html" (dict "cxt" . "IsSingle" false "isHidden" $isHidden) }}
   <header class="entry-header">

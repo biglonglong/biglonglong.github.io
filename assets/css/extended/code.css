@@ -1,4 +1,54 @@
+/* 代码块字体：优先使用连字等宽字体 */
+code, pre, kbd, samp {
+    font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'Source Code Pro',
+                 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-feature-settings: "liga" 1, "calt" 1; /* 启用连字 */
+}
+
+/* 代码块高度限制 */
 .post-content pre code {
     max-height: 40em;
     overflow: auto;
+}
+
+/* ===== 代码块语言标签 ===== */
+div.highlight {
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+/* 通过 data-lang 属性（Hugo chroma 自动生成）显示语言标签 */
+div.highlight::before {
+    content: attr(data-lang);
+    display: block;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(200, 200, 210, 0.7);
+    font-size: 11px;
+    font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    user-select: none;
+    min-height: 24px;
+    line-height: 16px;
+}
+
+/* 只有设置了 data-lang 时才显示（空字符串隐藏） */
+div.highlight:not([data-lang])::before,
+div.highlight[data-lang=""]::before {
+    display: none;
+}
+
+/* ===== 行内代码样式美化 ===== */
+.post-content code:not(pre code) {
+    font-size: 0.82em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+}
+
+.dark .post-content code:not(pre code) {
+    border-color: var(--tertiary);
 }

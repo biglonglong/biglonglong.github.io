@@ -20,6 +20,8 @@
 .archive-month-header {
     margin: 25px 0;
     width: 200px;
+    font-weight: 600;
+    color: var(--accent);
 }
 
 .archive-month:not(:last-of-type) {
@@ -28,13 +30,29 @@
 
 .archive-entry {
     position: relative;
-    padding: 5px;
+    padding: 5px 5px 5px 12px;
     margin: 10px 0;
+    border-left: 2px solid transparent;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    transition: border-color 0.2s ease, background 0.2s ease,
+                padding-left 0.2s ease, transform 0.2s ease;
+}
+
+/* hover 时左侧色条滑入 */
+.archive-entry:hover {
+    border-left-color: var(--accent);
+    background: var(--accent-soft);
+    padding-left: 16px;
 }
 
 .archive-entry-title {
     margin: 5px 0;
     font-weight: 400;
+    transition: color 0.2s ease;
+}
+
+.archive-entry:hover .archive-entry-title {
+    color: var(--accent);
 }
 
 .archive-count,

@@ -1,3 +1,21 @@
+/* ===== 导航栏整体 ===== */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    /* 毛玻璃背景 */
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.dark .header {
+    background: rgba(29, 30, 32, 0.85);
+    border-bottom-color: var(--border);
+}
+
 .nav {
     display: flex;
     flex-wrap: wrap;
@@ -25,6 +43,11 @@
 .logo a {
     font-size: 24px;
     font-weight: 700;
+    transition: opacity 0.2s ease;
+}
+
+.logo a:hover {
+    opacity: 0.75;
 }
 
 .logo a img, .logo a svg {
@@ -36,9 +59,18 @@
     margin-inline-end: 8px;
 }
 
+/* ===== 主题切换按钮 ===== */
 button#theme-toggle {
     font-size: 26px;
     margin: auto 0px;
+    padding: 4px 6px;
+    border-radius: var(--radius);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+button#theme-toggle:hover {
+    transform: rotate(15deg) scale(1.1);
+    background: var(--accent-soft);
 }
 
 body.dark #moon {
@@ -50,6 +82,7 @@ body:not(.dark) #sun {
     display: none;
 }
 
+/* ===== 菜单项 hover 动效 ===== */
 #menu {
     list-style: none;
     word-break: keep-all;
@@ -63,13 +96,33 @@ body:not(.dark) #sun {
 
 #menu a {
     font-size: 18px;
+    position: relative;
+}
+
+/* 下划线滑入动效 */
+#menu a span:not(.active)::after {
+    content: '';
+    position: absolute;
+    bottom: 14px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 1px;
+    transition: width 0.25s ease;
+}
+
+#menu a:hover span:not(.active)::after {
+    width: 100%;
 }
 
 #menu .active {
     font-weight: 675;
-    border-bottom: 2px solid currentColor;
+    border-bottom: 2px solid var(--accent);
+    color: var(--accent);
 }
 
+/* ===== 语言切换 ===== */
 .lang-switch li,
 .lang-switch ul,
 .logo-switches {
@@ -79,6 +132,14 @@ body:not(.dark) #sun {
 
 .search-icon {
     margin-right: 25px;
+    padding: 4px 6px;
+    border-radius: var(--radius);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.search-icon:hover {
+    transform: scale(1.15);
+    background: var(--accent-soft);
 }
 
 .lang-switch {
@@ -90,6 +151,11 @@ body:not(.dark) #sun {
     margin: auto 3px;
     font-size: 16px;
     font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.lang-switch a:hover {
+    color: var(--accent);
 }
 
 .logo-switches {

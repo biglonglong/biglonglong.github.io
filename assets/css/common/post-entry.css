@@ -36,15 +36,47 @@
 .post-entry {
     position: relative;
     margin-bottom: var(--gap);
-    padding: var(--gap);
+    padding: var(--gap) var(--gap) var(--gap) calc(var(--gap) + 4px);
     background: var(--entry);
     border-radius: var(--radius);
-    transition: transform 0.1s;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     border: 1px solid var(--border);
+    /* 左侧默认色条 */
+    border-left: 4px solid var(--accent);
+    overflow: hidden;
+}
+
+.post-entry:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    border-color: var(--accent);
+    border-left-color: var(--accent);
+}
+
+.dark .post-entry:hover {
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
 }
 
 .post-entry:active {
-    transform: scale(0.96);
+    transform: scale(0.97) translateY(0);
+    box-shadow: none;
+}
+
+/* 分类专属色条：know=蓝紫，journal=橙暖，cases=青绿 */
+.post-entry[data-section="know"] {
+    border-left-color: var(--accent);
+}
+.post-entry[data-section="journal"] {
+    border-left-color: #e8855a;
+}
+.dark .post-entry[data-section="journal"] {
+    border-left-color: #f0a070;
+}
+.post-entry[data-section="cases"] {
+    border-left-color: #3db88a;
+}
+.dark .post-entry[data-section="cases"] {
+    border-left-color: #4ecba0;
 }
 
 .tag-entry .entry-cover {
@@ -52,8 +84,10 @@
 }
 
 .entry-header h2 {
-    font-size: 24px;
-    line-height: 1.3;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
 }
 
 .entry-content {

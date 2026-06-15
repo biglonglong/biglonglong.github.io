@@ -24,11 +24,20 @@ h6 {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    /* 英文优先 sans-serif，中文回退 Noto Serif SC 带来衬线气质 */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+                 'Helvetica Neue', sans-serif;
     font-size: 18px;
-    line-height: 1.6;
+    line-height: 1.75;
     word-break: break-word;
     background: var(--theme);
+}
+
+/* 正文内容区使用衬线中文字体，提升阅读气质 */
+.post-content,
+.hero-desc,
+.entry-content {
+    font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', Georgia, serif;
 }
 
 article,
@@ -115,4 +124,17 @@ textarea:-webkit-autofill {
 img {
     display: block;
     max-width: 100%;
+}
+
+/* ===== 自定义文字选中颜色（含发光感） ===== */
+::selection {
+    background: var(--accent-soft);
+    color: var(--accent);
+    text-shadow: 0 0 8px var(--accent-glow);
+}
+
+::-moz-selection {
+    background: var(--accent-soft);
+    color: var(--accent);
+    text-shadow: 0 0 8px var(--accent-glow);
 }

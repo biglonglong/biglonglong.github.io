@@ -4,8 +4,9 @@
 }
 
 .post-title {
-    margin-bottom: 2px;
+    margin-bottom: 8px;
     font-size: 40px;
+    line-height: 1.25;
 }
 
 .post-description {
@@ -16,9 +17,12 @@
 .post-meta,
 .breadcrumbs {
     color: var(--secondary);
-    font-size: 14px;
+    font-size: 13px;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin-top: 10px;
 }
 
 .post-meta .i18n_list li {
@@ -34,6 +38,39 @@
 
 .post-content {
     color: var(--content);
+    line-height: 1.85;
+}
+
+/* 中文段落首行缩进（no-prose 页如 nav 跳过） */
+.post-content:not(.no-prose) p {
+    text-indent: 2em;
+    margin-bottom: calc(var(--content-gap) * 0.8);
+}
+
+/* 代码块、引用、图片、列表、表格内的 p 不缩进 */
+.post-content pre p,
+.post-content blockquote p,
+.post-content figure p,
+.post-content li p,
+.post-content table p {
+    text-indent: 0;
+}
+
+/* 外链自动加 ↗ 图标（no-prose 页如 nav 跳过） */
+.post-content:not(.no-prose) a[href^="http"]::after,
+.post-content:not(.no-prose) a[href^="https"]::after {
+    content: '\202F↗';
+    font-size: 0.72em;
+    font-style: normal;
+    opacity: 0.65;
+    vertical-align: super;
+    line-height: 0;
+    transition: opacity 0.2s ease;
+}
+
+.post-content:not(.no-prose) a[href^="http"]:hover::after,
+.post-content:not(.no-prose) a[href^="https"]:hover::after {
+    opacity: 1;
 }
 
 .post-content h3,
@@ -51,10 +88,17 @@
 .post-content h2 {
     margin: 32px auto 24px;
     font-size: 32px;
+    padding-left: 14px;
+    border-left: 4px solid var(--accent);
+    border-radius: 0 4px 4px 0;
 }
 
 .post-content h3 {
     font-size: 24px;
+    padding-left: 10px;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 3px 3px 0;
+    opacity: 0.85;
 }
 
 .post-content h4 {
@@ -92,6 +136,7 @@
 .post-content figure,
 .post-content ul {
     margin-bottom: var(--content-gap);
+    line-height: 1.85;
 }
 
 .post-content ol,
@@ -211,29 +256,47 @@
 
 .post-content blockquote {
     margin: 20px 0;
-    padding: 0 14px;
-    border-inline-start: 3px solid var(--primary);
+    padding: 12px 16px 12px 18px;
+    border-inline-start: 4px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    color: var(--secondary);
+    font-style: italic;
 }
 
+/* dark mode blockquote 背景复用 accent-soft，无需额外覆盖 */
+
 .post-content hr {
-    margin: 30px 0;
-    height: 2px;
-    background: var(--tertiary);
+    margin: 32px 0;
+    height: 1px;
+    background: linear-gradient(to right, var(--accent), var(--border), transparent);
     border: 0;
+    opacity: 0.6;
 }
 
 .post-content iframe {
     max-width: 100%;
 }
 
-.post-content img {
+/* 正文内容图片（排除友链卡片头像） */
+.post-content img:not(.link img) {
     border-radius: 4px;
     margin: 1rem auto;
     display: block;
     max-width: 100%;
+    /* 图片模糊渐入动画 */
+    filter: blur(0px);
+    transition: filter 0.4s ease, opacity 0.4s ease;
+    opacity: 1;
 }
 
-.post-content img[src*="#center"] {
+/* 图片加载中状态 */
+.post-content img.lazy-loading:not(.link img) {
+    filter: blur(8px);
+    opacity: 0.4;
+}
+
+.post-content img:not(.link img)[src*="#center"] {
     margin: 1rem auto;
 }
 
@@ -330,9 +393,14 @@
     background: var(--code-bg);
 }
 
-.post-tags a:hover,
+.post-tags a:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
 .paginav a:hover {
-    background: var(--border);
+    background: var(--accent-soft);
 }
 
 .share-buttons {
@@ -368,6 +436,15 @@ h6:hover .anchor {
 .paginav {
     display: flex;
     line-height: 30px;
+    transition: box-shadow 0.2s ease;
+}
+
+.paginav:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.dark .paginav:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .paginav a {

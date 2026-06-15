@@ -6,13 +6,24 @@
 
 .terms-tags a {
     display: block;
-    padding: 3px 10px;
+    padding: 3px 12px;
     background: var(--tertiary);
-    border-radius: 6px;
-    transition: transform 0.1s;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    transition: transform 0.2s ease, background 0.2s ease,
+                color 0.2s ease, border-color 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+.terms-tags a:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--accent-glow);
 }
 
 .terms-tags a:active {
-    background: var(--tertiary);
-    transform: scale(0.96);
+    transform: scale(0.95) translateY(0);
+    box-shadow: none;
 }

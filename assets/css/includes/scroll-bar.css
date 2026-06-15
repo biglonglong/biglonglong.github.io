@@ -55,9 +55,9 @@
 /* from zmedia */
 @media screen and (min-width: 768px) {
 
-    /* reset */
+    /* reset: 缩减至更优雅的 8px 宽度 */
     ::-webkit-scrollbar {
-        width: 19px;
-        height: 11px;
+        width: 8px;
+        height: 8px;
     }
 }

@@ -2,6 +2,7 @@
 showToc: false
 hidemeta: true
 ShowBreadCrumbs: false
+noProse: true
 ---
 
 
@@ -166,40 +167,85 @@ ShowBreadCrumbs: false
 
 
 <style>
+  /* ===== 友链卡片容器 ===== */
   .links-container {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    padding: 10px; 
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(105, 105, 105, 0.2);
+    padding: 12px;
+    border-radius: 12px;
+    gap: 10px;
   }
+
+  /* ===== 单个友链卡片 ===== */
   .link-box {
     display: flex;
-    margin: 0.6%;
     max-width: 32%;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    flex: 1 1 200px;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--border);
+    background: var(--entry);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   }
+
+  .link-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px var(--accent-glow);
+    border-color: var(--accent);
+  }
+
+  /* ===== 友链内容 ===== */
   .link {
-    display: block;
+    display: flex;
+    align-items: center;
     text-align: left;
     color: var(--content);
+    text-decoration: none;
+    width: 100%;
+    gap: 10px;
   }
+
   .link img {
-    width: 30%;
-    height: auto;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    max-width: 48px;
+    flex-shrink: 0;
     border-radius: 50%;
-    margin-right: 8px;
-    float: left;
+    object-fit: cover;
+    border: 2px solid var(--border);
+    transition: border-color 0.25s ease;
   }
+
+  .link-box:hover .link img {
+    border-color: var(--accent);
+  }
+
+  .link > div {
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+  }
+
   .link .name {
     font-size: 0.9em;
     font-weight: bold;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+
   .link .description {
     font-size: 0.75em;
     font-weight: normal;
+    color: var(--secondary);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    margin-top: 2px;
   }
 </style>
