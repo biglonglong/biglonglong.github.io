@@ -6,7 +6,7 @@ description: "Cpp 的多线程编程"
 date: 2025-02-17
 author: ["biglonglong"]
 
-tags: ["summary", "multi threads", "cpp"]
+tags: ["summary", "cpp", "tools"]
 summary: ""
 
 math: false

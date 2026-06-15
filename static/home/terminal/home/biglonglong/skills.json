@@ -1,0 +1,7 @@
+{
+  "algorithms": {
+    "llm": ["Prompt", "RAG", "Tools", "Fine-tuning", "RL"],
+    "ad": ["Decision", "Planning", "Mining"]
+  },
+  "tools": ["ROS", "PyTorch", "TensorFlow", "Docker", "Git"]
+}

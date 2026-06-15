@@ -8,7 +8,9 @@
         {{- end }}
 
         {{/* 卫星轨道容器 */}}
+        <div class="profile-orbit">
         <div class="orbit-wrap">
+            <div class="planet-face">
             {{- if $img }}
                 {{- $processableFormats := (slice "jpg" "jpeg" "png" "tif" "bmp" "gif") -}}
                 {{- if hugo.IsExtended -}}
@@ -27,13 +29,16 @@
                     {{- end }}
                 {{- end }}
                 <img draggable="false" src="{{ $img.Permalink }}" alt="{{ .imageTitle | default "profile image" }}" title="{{ .imageTitle }}"
-                    height="{{ .imageHeight | default 150 }}" width="{{ .imageWidth | default 150 }}" />
+                    height="{{ .imageHeight | default 150 }}" width="{{ .imageWidth | default 150 }}"
+                    decoding="async" fetchpriority="high" />
             {{- else }}
             <img draggable="false" src="{{ .imageUrl | absURL }}" alt="{{ .imageTitle | default "profile image" }}" title="{{ .imageTitle }}"
-                height="{{ .imageHeight | default 150 }}" width="{{ .imageWidth | default 150 }}" />
+                height="{{ .imageHeight | default 150 }}" width="{{ .imageWidth | default 150 }}"
+                decoding="async" fetchpriority="high" />
             {{- end }}
+            </div>
 
-            {{/* 卫星图标：按顺序排列，CSS 通过 nth-child 分配初始角度 */}}
+            {{/* 卫星图标的位置由轨道脚本计算 */}}
             <div class="orbit-ring">
                 {{- range $i, $icon := site.Params.socialIcons }}
                 <a class="orbit-satellite" href="{{ trim $icon.url " " | safeURL }}" target="_blank"
@@ -43,30 +48,34 @@
                 {{- end }}
             </div>
         </div>
-        {{- end }}
-
-        <h1>{{ .title | default site.Title | markdownify }}</h1>
-        <span>{{ .subtitle | markdownify }}</span>
-
-        {{- with .buttons }}
-        <div class="buttons">
-            {{- range . }}
-            <a class="button" href="{{ trim .url " " }}" rel="noopener" title="{{ .name }}">
-                <span class="button-inner">
-                    {{ .name }}
-                    {{- if (findRE "://" .url) }}&nbsp;
-                    <svg fill="none" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round"
-                        stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" height="14" width="14">
-                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
-                        <path d="M15 3h6v6"></path>
-                        <path d="M10 14L21 3"></path>
-                    </svg>
-                    {{- end }}
-                </span>
-            </a>
-            {{- end }}
         </div>
         {{- end }}
+
+        <div class="profile-copy">
+            <h1>{{ .title | default site.Title | markdownify }}</h1>
+            <span class="profile-subtitle">{{ .subtitle | markdownify }}</span>
+            {{- with .note }}<p class="profile-note">{{ . }}</p>{{ end }}
+
+            {{- with .buttons }}
+            <div class="buttons">
+                {{- range . }}
+                <a class="button" href="{{ trim .url " " }}" rel="noopener" title="{{ .name }}">
+                    <span class="button-inner">
+                        {{ .name }}
+                        {{- if (findRE "://" .url) }}&nbsp;
+                        <svg fill="none" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" height="14" width="14">
+                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
+                            <path d="M15 3h6v6"></path>
+                            <path d="M10 14L21 3"></path>
+                        </svg>
+                        {{- end }}
+                    </span>
+                </a>
+                {{- end }}
+            </div>
+            {{- end }}
+        </div>
     </div>
     {{- end}}
 </div>

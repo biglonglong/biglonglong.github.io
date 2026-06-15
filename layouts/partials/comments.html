@@ -9,7 +9,7 @@
 
 <div id="tw-comment"></div>
 <script>
-    const getStoredTheme = () => localStorage.getItem("pref-theme") === "dark" ? "{{ .Site.Params.giscus.darkTheme }}" : "{{ .Site.Params.giscus.lightTheme }}";
+    const getStoredTheme = () => document.body.classList.contains("dark") ? "{{ .Site.Params.giscus.darkTheme }}" : "{{ .Site.Params.giscus.lightTheme }}";
     const setGiscusTheme = () => {
         const sendMessage = (message) => {
             const iframe = document.querySelector('iframe.giscus-frame');
@@ -46,13 +46,8 @@
         document.querySelector("#tw-comment").appendChild(giscusScript);
 
         // 页面主题变更后，变更 giscus 主题
-        const themeSwitcher = document.querySelector("#theme-toggle");
-        if (themeSwitcher) {
-            themeSwitcher.addEventListener("click", setGiscusTheme);
-        }
-        const themeFloatSwitcher = document.querySelector("#theme-toggle-float");
-        if (themeFloatSwitcher) {
-            themeFloatSwitcher.addEventListener("click", setGiscusTheme);
-        }
+        new MutationObserver(setGiscusTheme).observe(document.body, {
+            attributes: true, attributeFilter: ['class']
+        });
     });
 </script>

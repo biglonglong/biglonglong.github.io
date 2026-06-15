@@ -1,0 +1,14 @@
+{{- $target := urls.Parse .Permalink -}}
+<!doctype html>
+<html lang="{{ site.Language.Lang }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex">
+    <meta http-equiv="refresh" content="0; url={{ $target.Path }}">
+    <link rel="canonical" href="{{ .Permalink }}">
+    <title>Redirecting</title>
+</head>
+<body>
+    <a href="{{ $target.Path }}">Continue</a>
+</body>
+</html>

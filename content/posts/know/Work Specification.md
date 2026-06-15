@@ -6,7 +6,7 @@ description: "开发配置及其规范"
 date: 2025-04-13
 author: ["biglonglong"]
 
-tags: ["skills", "specification"]
+tags: ["skills", "summary"]
 summary: ""
 
 math: false

@@ -1,0 +1,52 @@
+{{- define "main" }}
+{{- $entries := partial "terminal/manifest.html" (dict "dir" "static/home/terminal" "prefix" "") -}}
+{{- $manifest := resources.FromString "terminal/manifest.json" ($entries | jsonify) -}}
+<div id='terminal-container' data-index-url='{{ "index.json" | relLangURL }}'
+     data-default-user='{{ .Site.Params.terminalDefaultUser | default "guest" }}'
+     data-files-root='{{ "terminal/" | relLangURL }}'
+     data-manifest-url='{{ $manifest.RelPermalink }}'
+     data-password='{{ .Site.Params.terminalPassword }}'
+     data-chat-key='{{ .Site.Params.chatApiKey }}'
+     data-chat-api-url='{{ .Site.Params.chatApiUrl }}'
+     data-chat-model='{{ .Site.Params.chatModel }}'
+     data-news-key='{{ .Site.Params.gnewsApiKey }}'
+     data-weather-key='{{ .Site.Params.openweatherApiKey }}'>
+    <div class='terminal-header'>
+        <div class='terminal-buttons' aria-hidden='true'>
+            <span class='button-close'></span>
+            <span class='button-minimize'></span>
+            <span class='button-maximize'></span>
+        </div>
+        <div id='terminal-title'>{{ .Site.Params.terminalDefaultUser | default "guest" }}@localhost: ~</div>
+    </div>
+    <div id='terminal-window'>
+        <div id='history-output'></div>
+        <div class='input-line'>
+            <span class='prompt-user'>{{ .Site.Params.terminalDefaultUser | default "guest" }}@localhost:</span>
+            <span class='prompt-dir'>~</span>
+            <span class='prompt-arrow'>$</span>
+            <input type='text' id='cmd-input' aria-label='Terminal command' autocomplete='off' autocapitalize='off' spellcheck='false' autofocus />
+        </div>
+    </div>
+</div>
+
+{{- /* Searchable Terminal */ -}}
+{{- $fusejs := resources.Get "js/fuse.basic.min.js" }}
+{{- if not $fusejs }}
+  {{- errorf "Missing assets/js/fuse.basic.min.js – required for terminal search functionality." }}
+{{- end }}
+{{- $terminaljs := resources.Get "js/terminal/index.js" }}
+{{- if not $terminaljs }}
+  {{- errorf "Missing assets/js/terminal/index.js – main terminal logic file not found." }}
+{{- end }}
+{{- $terminaljs = $terminaljs | js.Build -}}
+
+{{- $terminalWithSearch := slice $fusejs $terminaljs | resources.Concat "assets/js/terminalWithSearch.js" | minify }}
+{{- if not site.Params.assets.disableFingerprinting }}
+  {{- $terminalWithSearch = $terminalWithSearch | fingerprint }}
+  <script defer crossorigin="anonymous" src="{{ $terminalWithSearch.RelPermalink }}" integrity="{{ $terminalWithSearch.Data.Integrity }}"></script>
+{{- else }}
+  <script defer crossorigin="anonymous" src="{{ $terminalWithSearch.RelPermalink }}"></script>
+{{- end }}
+
+{{- end }}

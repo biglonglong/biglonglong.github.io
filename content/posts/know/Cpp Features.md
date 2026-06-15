@@ -6,7 +6,7 @@ description: "在“黑马”原地踏步，来看看 CPP 的新特性"
 date: 2025-12-23
 author: ["biglonglong"]
 
-tags: ["summary", "cpp", "c++11"]
+tags: ["summary", "cpp"]
 summary: ""
 
 math: false

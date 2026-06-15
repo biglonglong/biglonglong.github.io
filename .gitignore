@@ -2,5 +2,8 @@
 public/
 .hugo_build.lock
 
+# Local review material and test artifacts
+/tmp/
+
 # Apple stuff
 .DS_Store

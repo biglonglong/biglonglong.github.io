@@ -1,0 +1,44 @@
+{{- $latest := where site.RegularPages.ByDate.Reverse "Type" "in" site.MainSections | first 5 -}}
+{{- $pins := site.Params.githubPins | default slice | first 5 -}}
+{{- if or $latest $pins }}
+<div class="home-panels">
+  {{- with $latest }}
+  <section class="home-panel" aria-labelledby="latest-posts-title">
+    <header class="home-panel-header">
+      <h2 class="home-panel-title" id="latest-posts-title">Latest Posts</h2>
+      <a class="home-panel-more" href="{{ "posts/" | relLangURL }}">All Posts <span aria-hidden="true">→</span></a>
+    </header>
+    <div class="home-panel-list">
+      {{- range . }}
+      <a class="home-panel-item" href="{{ .RelPermalink }}">
+        <span class="home-panel-item-content">
+          <span class="home-panel-item-title">{{ .Title }}</span>
+          {{- with .Summary }}<span class="home-panel-item-description">{{ . | plainify | truncate 100 }}</span>{{ end }}
+        </span>
+        <time class="home-panel-item-meta" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+      </a>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+  {{- with $pins }}
+  <section class="home-panel" aria-labelledby="github-pins-title">
+    <header class="home-panel-header">
+      <h2 class="home-panel-title" id="github-pins-title">GitHub Pins</h2>
+      <a class="home-panel-more" href="https://github.com/biglonglong" target="_blank" rel="noopener noreferrer"> Go Repos <span aria-hidden="true">→</span></a>
+    </header>
+    <div class="home-panel-list">
+      {{- range . }}
+      <a class="home-panel-item" href="{{ .url | safeURL }}" target="_blank" rel="noopener noreferrer">
+        <span class="home-panel-item-content">
+          <span class="home-panel-item-title">{{ .name }}</span>
+          {{- with .description }}<span class="home-panel-item-description">{{ . }}</span>{{ end }}
+        </span>
+        {{- with .language }}<span class="home-panel-item-meta">{{ . }}</span>{{ end }}
+      </a>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+</div>
+{{- end }}

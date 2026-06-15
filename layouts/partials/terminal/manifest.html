@@ -1,0 +1,14 @@
+{{- $entries := slice -}}
+{{- range readDir .dir -}}
+  {{- if ne .Name "AGENTS.md" -}}
+  {{- $path := .Name -}}
+  {{- with $.prefix -}}{{- $path = printf "%s/%s" . $path -}}{{- end -}}
+  {{- $entries = append (dict "path" $path "directory" .IsDir) $entries -}}
+  {{- if .IsDir -}}
+    {{- range partial "terminal/manifest.html" (dict "dir" (printf "%s/%s" $.dir .Name) "prefix" $path) -}}
+      {{- $entries = append . $entries -}}
+    {{- end -}}
+  {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $entries -}}

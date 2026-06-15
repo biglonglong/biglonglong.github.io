@@ -1,0 +1,20 @@
+{{- define "main" }}
+<article class="post-single">
+  <header class="post-header">
+    <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
+  </header>
+  <div class="post-content no-prose">
+    <h3>{{ .Params.friendsTitle }}</h3>
+    {{- partial "nav/links.html" .Params.links.friends -}}
+
+    <h3>{{ .Params.documentsTitle }}</h3>
+    {{- partial "nav/links.html" .Params.links.documents -}}
+
+    {{- with .Params.studyHeading }}
+    <h3><a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a></h3>
+    <blockquote><p>{{ .description }}</p></blockquote>
+    {{- end }}
+    {{- partial "nav/study-resources.html" .Params.studyResources -}}
+  </div>
+</article>
+{{- end }}

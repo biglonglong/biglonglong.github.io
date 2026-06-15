@@ -6,7 +6,7 @@ description: "关于阅读文献，科研小白的入门介绍"
 date: 2024-12-07
 author: ["biglonglong"]
 
-tags: ["skills", "research"]
+tags: ["skills", "research", "summary"]
 summary: ""
 
 math: false

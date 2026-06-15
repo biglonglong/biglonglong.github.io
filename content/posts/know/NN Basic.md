@@ -485,71 +485,131 @@ $$
 
 ## [Transformer](https://arxiv.org/abs/1706.03762)
 
-[史上最全Transformer：灵魂20问帮你彻底搞定Transformer-干货！ - 知乎](https://zhuanlan.zhihu.com/p/148656446)
-
-CNN像素级全局感知能力（自注意力）、RNN序列建模特性（位置编码），适合seq2seq（context + prompt -> answer）问题，hard train一发
-
 <img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/transformers.png" alt="transformers" style="zoom: 50%;" />
 
-- 编码器（Encoders）：生成带有注意力信息的$\text{Keys}/\text{Values}$向量
+仅依赖**自注意力机制（Self-Attention）** 来处理序列数据，这使得模型能够：
 
-  - 词嵌入（Token Embedding）：根据点积相似度，将离散的词符号映射到$d_{\text{model}}$维向量空间中
+1. 并行计算：序列中各位置同时处理，训练速度快
+2. 捕捉长距离依赖：注意力机制直接建模任意两个位置之间的关系
+3. 可解释性：注意力权重可视化，展示 token 间的依赖关系
+4. 训练效率高：充分利用 GPU 的并行计算能力
 
-  $$
-  \mathbf{e}_w = E[w,:] \in \mathbb{R}^{d_{\text{model}}}
-  $$
+Transformer 采用**编码器-解码器（Encoder-Decoder）** 结构：
 
-  - 位置编码（Positional Encoding）：向词向量中添加其在句子中先后关系的信息
+```txt
+编码器: 输入序列 → [编码器层 × N] → 编码器输出
+解码器: 编码器输出 + 目标序列 → [解码器层 × N] → 输出概率分布
+```
 
+首先，自然语言经过 tokenizer 划分为**词元（token）**，不同词元对应一个索引，接着，经过 Transformer 变形，核心组件包括：
+
+- **词嵌入（Input Embedding）**：依赖训练好的词嵌入矩阵查表，将输入 token 映射为固定维度的**稠密向量**
+
+  所谓词嵌入矩阵本质上是对 token 的 onehot 编码进行**数据降维**，降低模型计算复杂度。
+
+  同时使得语义相近 token 向量靠近，语义差异 token 向量分散，便于之后在向量空间中做**点积相似度**计算，表达词与词之间的特征关系。
+
+- **位置编码（Positional Encoding）**：向词向量中加入时序信息，让模型区别词在句子中的顺序，从而实现**并行计算**
   $$
   PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right) \\
   PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right) \\
+  $$
+  每个词向量、每个维度都有**独特的编码**。
+
+  任意位置 $ pos+k $ 的编码可以表示为位置 $ pos $ 的编码的线性函数，让模型能够学习到词与词之间的**相对位置关系**，更好地进行长序列泛化。
+
+- **自注意力机制**
+
+  - **缩放点积注意力（Scaled Dot-Product Attention）**：编码器使用，考虑每个词与句子中所有其他词语的关系，从而更准确地理解这个词在当下语境中的含义
+
+    每个输入 token 会生成三个向量，**查询（Query, Q）**–> 当前 token 想要关注什么，**键（Key, K）**–> 当前 token 能提供什么信息，**值（Value, V）**–> 当前 token 的实际信息内容。
+
+    利用三个线性变换矩阵 $\text{W}_q、\text{W}_k、\text{W}_v$ 将每个词向量映射为 $\text{Querys}, \text{Keys}, \text{Values}$ 向量，再以缩放点积的方式计算不同词向量之间 $\text{Querys}$-$\text{Keys}$ **相似度矩阵**，每个词向量依据其与其他词向量的相似度，求对应值向量 $\text{Values}$ 加权和，作为该词向量具有上下文信息注意力分配的新词向量表示。
+
+  $$
+  \mathbf{Q} = \mathbf{X}\mathbf{W}_q, 
+  \mathbf{K} = \mathbf{X}\mathbf{W}_k,
+  \mathbf{V} = \mathbf{X}\mathbf{W}_v \\
   
-  \mathbf{h}_i = \mathbf{e}_w + \mathbf{p}_i
+  
+  
+  \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
   $$
 
-  - 自注意力机制（Self–Attention）：利用三个线性变换矩阵$\text{W}_q、\text{W}_k、\text{W}_v$将每个词向量映射为$\text{Querys}, \text{Keys}, \text{Values}$向量；再以缩放点积的方式计算不同词向量之间$\text{Querys}$-$\text{Keys}$相似度矩阵；针对每个词向量与其他词向量的相似度，与对应值向量$\text{Values}$求加权和，生成具有注意力分配的新词向量表示。一般地，可以将$Q, K, V$均归纳为原始词向量
-    $$
-    \mathbf{Q} = \mathbf{X}\mathbf{W}_Q, 
-    \mathbf{K} = \mathbf{X}\mathbf{W}_K,
-    \mathbf{V} = \mathbf{X}\mathbf{W}_V \\
-    
-    
-    
-    \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
-    $$
+  - **多头注意力（Multi-Head Attention）**：将输入 token 经过不同的 Q、K、V 线性投影到不同的子空间并行计算注意力，然后拼接结果
 
-  - 多头注意力机制（Multi-Headed Attention）：并行化多组$\text{W}_q、\text{W}_k、\text{W}_v$注意力头，学习不同投影子空间的特征，将不同头输出拼接起来，维度不发生变化，从而捕获输入序列中不同类型的依赖关系，增强模型的表征能力
+    不同“头”学习到不同的语言模式，比如有的头关注语法关系，有的头关注语义相似性，有的头关注代词指代等，将不同头输出拼接起来，维度不发生变化，从而捕获输入序列中不同类型的依赖关系，增强模型的表征能力。
 
-  - 跳跃连接（Skip Connection）
+  - **掩码注意力（Causal Attention）**：解码器使用，在预测第 t 个位置的输出时，禁止模型“看到”第 t 个位置之后（未来）的信息。
 
-  - 层标准化（Layer Normalize）：$ \gamma, \beta$持续训练，对某一词向量调整（统一量纲、移动数据分布区间到激活函数高梯度范围），加快模型收敛速度，使模型更稳定；解决小批量训练时，小批量无法体现总体特征的问题；
-    $$
-    y_i = \gamma \cdot \left( \frac{x_i - \mu_L}{\sqrt{\sigma_L^2 + \epsilon}} \right) + \beta \\
-    \mu_L = \frac{1}{m}\sum_{i=1}^m x_i
-    \quad
-    \sigma_L^2 = \frac{1}{m}\sum_{i=1}^m (x_i - \mu_L)^2 \quad
-    \epsilon > 0
-    \quad
-    \gamma, \beta
-    $$
+    在计算不同词向量之间 $\text{Querys}$-$\text{Keys}$ 相似度矩阵后，使用一个上三角矩阵，让当前行之后的列的权重为 -inf，再经softmax 会把对应位置的注意力权重变成 0，从而生成具有**上文信息注意力分配**的新词向量表示。
 
--  解码器（Decoders）：根据编码器的$\text{Keys}/\text{Values}$向量，以当前输入$\text{Querys}$，自回归以token：BEGIN、END生成文本序列
+  - **交叉注意力（Cross Attention）**：连接编码器和解码器，**Query 来自解码器，而 Key 和 Value 则来自编码器输出**
 
-   - 掩码多头注意力机制（Masked Multi-Headed Attention）：利用$\text{Look-Ahead Mask}$矩阵抹去相似度矩阵中$\text{Querys}$先于$\text{Keys}$部分的相似度
-   - 交互多头注意力机制（Interactive Multi-Headed Attention）：编码器输出$\text{Keys}/\text{Values}$向量，掩码多头注意力机制层输出$\text{Values}$向量，以这些作为为输入，确定焦点编码器
+    解码器在生成每个词时，发出Q请求，关注到输入序列的所有K，V 信息
 
-- 扩展：复制机制、引导注意力机制、beam search、随机噪声、强化学习、鲁棒样本
+- **残差连接**：将子层的输入直接加到输出上，缓解该子层带来的梯度消失
 
-优点：可小批量，可并行化，复杂模型弹性大，小数据集过拟合，大数据集损失低（对比简单模型弹性小，小数据集训练快，大数据集损失大）
+- **层归一化**：在特征维度上进行归一化，调整数据分布，加快模型收敛，同时使使模型更稳定
 
-缺点：超参敏感、优化困难
+- **前馈神经网络（Feed-Forward Network, FFN）**：每个位置的 token 独立经过相同的两层全连接网络，先升维再降维
 
-| strcture          | position   | activation | LN           |
-| ----------------- | ---------- | ---------- | ------------ |
-| Encoder - Decoder | Sinusoidal | ReLU       | Post LN      |
-| Encoder only      | 绝对位置   | GeLU       | Pre LN       |
-| Dncoder only      | RoPE       | SwiGLU     | Post Deep LN |
-| Casual Encoder    | ALiBi      | GeGLU      | Pre RMS LN   |
-| Casual Decoder    |            |            |              |
-| Prefix Decoder    |            |            |              |
+  注意力机制主要负责在不同位置之间进行信息交流和聚合。
+
+  前馈网络则对每个位置独立地进行更复杂的特征变换和非线性映射，增强模型的表达能力。
+
+- **输出层**：解码器输出通过线性变换和 softmax，将向量映射为词汇表大小的概率分布，预测下一个 token。
+
+- **Teacher Forcing 训练**：一次性将完整的目标序列（但经过了适当的掩码）输入解码器，并行地预测每个位置的输出（下一位置 token 的预测），此时只需要将目标序列向左移动一个位置，与预测输出做多元分类交叉熵损失。
+
+- **Auto Regressive 推理**：解码器逐个生成 logits，解码出 token 并加入输入序列中，预测下一个 token（初始 token 为起始符，末尾 token 为终止符），直到预测出终止符；解码时，基于 temperature、top-p、top-k、贪心、Beam Search 采样。
+
+### RoPE
+
+### LN
+
+- Post LN
+- Pre LN
+- RMSNorm
+
+### activation
+
+- ReLU
+- GeLU
+- SwiGLU
+- GeGLU
+
+### strcture
+
+- Encoder - Decoder
+- Encoder only
+- Dncoder only
+- Casual Encoder
+- Casual Decoder
+- Prefix Decoder
+
+### architecture
+
+#### MoE
+
+混合专家模型，为由多个单独网络（“专家”）组成的系统建立一个监管机制，每个“专家”处理训练样本的不同子集，专注于输入空间的特定区域；设置门控网络|路由分配每个“专家”的权重或决定哪些Token被发送到哪些“专家”；在训练过程中，这些专家和门控网络都同时接受训练，以优化它们的性能和决策能力。
+
+- 组件专家：允许将 MoE 嵌入到多层网络中的某一层，如 Transformer 的 FFN
+- 条件计算：基于输入Token动态激活或停用网络组件
+- 负载均衡：**门控算法**抑制Token不均匀分配和“专家”训练不均匀
+  - 专家容量：Token处理阈值，”专家“都达到处理上限后，Token通过残差溢出到下一层
+  - 稀疏稳定性：容量因子、dropout
+  - 专业程度：编码器“专家”各司其职；解码器“专家”较低专业化程度。
+
+- 并行计算：MoE 层在不同设备间共享，而其他所有层则在每个设备上复制
+- 万亿参数：极高模型规模，节省计算资源，高效预训练，高速推理
+- 微调策略：稀疏部分正则化；负载均衡算法；MoE层冻结；较小批次大小和较大学习率
+- 缺点：显存消耗高；**（稀疏部分）易过拟合**，泛化能力不足，微调困难；不适合重理解任务
+- 优点：适合知识密集型任务；从指令微调中获益；多任务学习
+
+<img src="https://cdn.jsdelivr.net/gh/biglonglong/ImageHost/posts/moes.jpg" alt="moes" style="zoom: 50%;" />
+
+- 共享专家（Shared Expert）：所有 tokens 都会经过的共享专家，每个 token 会用计算的 Router 权重，来选择 topK 个专家，然后和共享的专家的输出一起加权求和；捕捉**通用**、全局的特征信息，减少不同专家间的知识冗余，提升计算效率
+
+#### Q->KV
+

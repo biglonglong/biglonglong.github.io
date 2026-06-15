@@ -1,12 +1,51 @@
 #searchbox input {
-    padding: 8px 14px;
+    min-height: 52px;
+    padding: 12px 90px 12px 16px;
     width: 100%;
     color: var(--primary);
-    font-weight: bold;
+    font-size: 16px;
+    font-weight: 500;
     border: 2px solid var(--tertiary);
     border-radius: var(--radius);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     background: var(--entry);
+}
+
+.search-field {
+    position: relative;
+}
+
+#searchStatus {
+    margin: 0 0 20px;
+    padding: 28px 20px;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    background: var(--entry);
+    color: var(--secondary);
+    font-size: 15px;
+    line-height: 1.8;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+#searchStatus[data-state="idle"] {
+    display: none;
+}
+
+#searchStatus[data-state="results"] {
+    padding: 0 2px;
+    margin-bottom: 12px;
+    border: 0;
+    background: transparent;
+    color: var(--accent);
+    text-align: start;
+    font-size: 13px;
+}
+
+#searchStatus:is([data-state="loading"], [data-state="error"]) {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--primary);
 }
 
 /* 聚焦时发光效果 */
@@ -29,6 +68,7 @@
     position: relative;
     font-weight: 500;
     border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
     background: var(--entry);
     transition: transform 0.15s ease, box-shadow 0.15s ease,
                 border-color 0.15s ease, background 0.15s ease;
@@ -61,4 +101,30 @@
     border-color: var(--accent);
     background: var(--accent-soft);
     transform: translateX(3px);
+}
+
+#searchbox {
+    position: relative;
+}
+
+#searchResults li {
+    animation: slideInSearch 0.2s ease both;
+}
+#searchResults li:nth-child(1) { animation-delay: 0.02s; }
+#searchResults li:nth-child(2) { animation-delay: 0.05s; }
+#searchResults li:nth-child(3) { animation-delay: 0.08s; }
+#searchResults li:nth-child(4) { animation-delay: 0.11s; }
+#searchResults li:nth-child(5) { animation-delay: 0.14s; }
+@keyframes slideInSearch {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+mark.search-highlight {
+    background: rgba(var(--accent-rgb, 99,102,241), 0.22);
+    color: var(--accent);
+    border-radius: 3px;
+    padding: 0 2px;
+    font-weight: 600;
+    font-style: normal;
 }

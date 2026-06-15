@@ -1,0 +1,9 @@
+{{- $asset := . -}}
+{{- if eq (printf "%T" .) "string" -}}
+  {{- $asset = resources.Get . -}}
+{{- end -}}
+{{- $asset = $asset | minify -}}
+{{- if not site.Params.assets.disableFingerprinting -}}
+  {{- $asset = $asset | fingerprint -}}
+{{- end -}}
+<link rel="stylesheet" href="{{ $asset.RelPermalink }}"{{ with $asset.Data.Integrity }} integrity="{{ . }}" crossorigin="anonymous"{{ end }}>

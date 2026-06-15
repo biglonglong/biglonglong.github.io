@@ -6,7 +6,7 @@ description: "刷 LeetCode 算法题的 Cpp 模板"
 date: 2024-08-11
 author: ["biglonglong"]
 
-tags: ["summary", "leetcode", "algorithm", "cpp"]
+tags: ["summary", "algorithm", "cpp"]
 summary: ""
 
 math: false

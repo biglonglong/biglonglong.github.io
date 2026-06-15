@@ -6,7 +6,7 @@ description: "ROS2 轮式机器人工具链—从仿真到导航"
 date: 2024-01-12
 author: ["biglonglong"]
 
-tags: ["summary", "ros2", "gazebo", "navigation"]
+tags: ["summary", "ros2", "cpp", "python", "navigation"]
 summary: ""
 
 math: false
@@ -285,7 +285,7 @@ ros2 launch [package] [gazebo_sim].launch.py model:=`ros2 pkg prefix --share [pa
 
 - collision：link子标签，如果机器人link是标准的几何体形状，和link的 visual 属性设置一致即可
 - inertial：link子标签，惯性矩阵需结合link的质量与外形参数动态生成，标准球体、圆柱与立方体的惯性矩阵公式封装在inertialhead.xacro
-- gazebo：robot子标签，配置gazebo颜色、摩擦、刚度系数等等，**添加各传感器的仿真插件**（具体见[gazebo：环境仿真](# gazebo：环境仿真)），其需要reference到link
+- gazebo：robot子标签，配置gazebo颜色、摩擦、刚度系数等等，**添加各传感器的仿真插件**（具体见[gazebo：环境仿真](#gazebo环境仿真)），其需要reference到link
 
 ```xml
 <robot name="model" xmlns:xacro="http://wiki.ros.org/xacro">

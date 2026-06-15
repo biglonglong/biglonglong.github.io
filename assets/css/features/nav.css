@@ -1,0 +1,204 @@
+/* ===== Nav 页章节标题装饰 ===== */
+.no-prose h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 36px 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  color: var(--primary);
+}
+
+.no-prose h3::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 1.1em;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.no-prose h3 a {
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+.no-prose h3 a:hover {
+  color: var(--accent);
+}
+
+/* ===== 友链卡片容器 ===== */
+.links-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+/* ===== 单个友链卡片：竖向布局 ===== */
+.link-box {
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--entry);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  overflow: hidden;
+}
+
+.link-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px var(--accent-glow);
+  border-color: var(--accent);
+}
+
+/* ===== 友链内容：竖向 ===== */
+.link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--content);
+  text-decoration: none;
+  padding: 18px 12px 14px;
+  gap: 8px;
+  height: 100%;
+}
+
+.link img {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  display: block;
+  margin: 0 auto;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.link-box:hover .link img {
+  border-color: var(--accent);
+  transform: scale(1.08);
+}
+
+.link .name {
+  font-size: 0.88em;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--primary);
+  word-break: break-word;
+}
+
+.link .description {
+  font-size: 0.72em;
+  color: var(--secondary);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* ===== Resource 列表样式 ===== */
+.no-prose ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+
+.no-prose ul li {
+  position: relative;
+  padding: 5px 0 5px 12px;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  border-left: 2px solid transparent;
+  transition: border-color 0.2s ease, background 0.2s ease, padding-left 0.2s ease;
+  border-radius: 0 6px 6px 0;
+}
+
+.no-prose ul li:hover {
+  border-left-color: var(--accent);
+  background: var(--accent-soft);
+  padding-left: 16px;
+}
+
+.no-prose ul ul {
+  margin: 2px 0 2px 16px;
+  border-left: 1px dashed var(--border);
+  padding-left: 12px;
+}
+
+.no-prose ul ul li {
+  font-size: 0.88rem;
+  padding: 3px 0 3px 8px;
+}
+
+.no-prose ul li a {
+  color: var(--content);
+  transition: color 0.2s ease;
+}
+
+.no-prose ul li:hover a {
+  color: var(--accent);
+}
+
+/* ===== 资源类型 badge ===== */
+.res-badge {
+  display: inline-block;
+  font-size: 0.65em;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  margin-right: 5px;
+  vertical-align: middle;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+.badge-video  { background: rgba(239,68,68,0.12);  color: #ef4444; }
+.badge-site   { background: rgba(59,130,246,0.12); color: #3b82f6; }
+.badge-book   { background: rgba(245,158,11,0.12); color: #d97706; }
+.badge-github { background: rgba(107,114,128,0.12);color: #4b5563; }
+.badge-mooc   { background: rgba(16,185,129,0.12); color: #10b981; }
+.badge-blog   { background: rgba(139,92,246,0.12); color: #8b5cf6; }
+
+.dark .badge-video  { background: rgba(239,68,68,0.18);  color: #f87171; }
+.dark .badge-site   { background: rgba(59,130,246,0.18); color: #60a5fa; }
+.dark .badge-book   { background: rgba(245,158,11,0.18); color: #fbbf24; }
+.dark .badge-github { background: rgba(156,163,175,0.18);color: #9ca3af; }
+.dark .badge-mooc   { background: rgba(16,185,129,0.18); color: #34d399; }
+.dark .badge-blog   { background: rgba(167,139,250,0.18);color: #a78bfa; }
+
+/* ===== 引用块 ===== */
+.no-prose blockquote {
+  margin: 0 0 16px;
+  padding: 10px 16px;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 0 8px 8px 0;
+  color: var(--secondary);
+  font-size: 0.9rem;
+}
+
+.no-prose blockquote p {
+  margin: 0;
+}
+
+/* ===== 移动端响应式 ===== */
+@media (max-width: 600px) {
+  .links-container {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+  }
+  .link img {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    max-width: 48px;
+  }
+}

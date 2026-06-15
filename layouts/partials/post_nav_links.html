@@ -1,18 +1,38 @@
 {{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
 {{- if and (gt (len $pages) 1) (in $pages . ) }}
-<nav class="paginav">
+<nav class="paginav paginav-cards">
   {{- with $pages.Next . }}
-  <a class="prev" href="{{ .Permalink }}">
-    <span class="title">« {{ i18n "prev_page" | default "Prev" }}</span>
-    <br>
-    <span>{{- .Name -}}</span>
+  {{- $section := .Section }}
+  <a class="paginav-card paginav-prev" href="{{ .Permalink }}" data-section="{{ $section }}">
+    <div class="paginav-card-bar paginav-bar-{{ $section }}"></div>
+    <div class="paginav-card-inner">
+      <span class="paginav-card-dir">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        {{ i18n "prev_page" | default "Prev" }}
+      </span>
+      <span class="paginav-card-section paginav-section-{{ $section }}">{{ $section }}</span>
+      <span class="paginav-card-title">{{ .Name }}</span>
+      {{- with .Summary }}
+      <span class="paginav-card-summary">{{ . | plainify | truncate 60 }}</span>
+      {{- end }}
+    </div>
   </a>
   {{- end }}
   {{- with $pages.Prev . }}
-  <a class="next" href="{{ .Permalink }}">
-    <span class="title">{{ i18n "next_page" | default "Next" }} »</span>
-    <br>
-    <span>{{- .Name -}}</span>
+  {{- $section := .Section }}
+  <a class="paginav-card paginav-next" href="{{ .Permalink }}" data-section="{{ $section }}">
+    <div class="paginav-card-bar paginav-bar-{{ $section }}"></div>
+    <div class="paginav-card-inner">
+      <span class="paginav-card-dir">
+        {{ i18n "next_page" | default "Next" }}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      <span class="paginav-card-section paginav-section-{{ $section }}">{{ $section }}</span>
+      <span class="paginav-card-title">{{ .Name }}</span>
+      {{- with .Summary }}
+      <span class="paginav-card-summary">{{ . | plainify | truncate 60 }}</span>
+      {{- end }}
+    </div>
   </a>
   {{- end }}
 </nav>

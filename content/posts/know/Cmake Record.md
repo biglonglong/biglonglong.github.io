@@ -6,7 +6,7 @@ description: "CMake 配合 VsCode 及其插件构建 C++ 项目"
 date: 2025-12-21
 author: ["biglonglong"]
 
-tags: ["summary", "tools", "cmake", "linux"]
+tags: ["summary", "tools", "cpp"]
 summary: ""
 
 math: false

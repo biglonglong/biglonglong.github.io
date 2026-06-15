@@ -1,0 +1,4 @@
+{{- $html := partial "404.html" . -}}
+{{- $root404 := resources.FromString "404.html" $html -}}
+{{- $root404.Publish -}}
+{{- $html | safeHTML -}}

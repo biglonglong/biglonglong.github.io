@@ -5,7 +5,7 @@ title: "算法题：小于n的最大数"
 date: 2026-03-03
 author: ["biglonglong"]
 
-tags: ["algorithm", "bytedance", "interview"]
+tags: ["algorithm", "408", "cpp"]
 summary: ""
 
 math: false

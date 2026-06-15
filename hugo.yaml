@@ -21,6 +21,7 @@ languages:
         enabled: true
         title: biglonglong
         subtitle: "USTCer🎓 | noter📝 | coder🧑‍💻️ | beginner💪"
+        note: "没有女朋友👸，没有约会💞，我和我的电脑💻，日夜相对🌓..."
         imageUrl: "image/avatar.jpg"
         imageTitle: 
         imageWidth: 275
@@ -30,8 +31,8 @@ languages:
           url: "/home/tags"
         - name: Know
           url: "/home/posts/know"
-        - name: Cases
-          url: "/home/posts/cases"
+        - name: Terminal
+          url: "/home/terminal"
 
       homeInfoParams:
         Title:
@@ -51,9 +52,9 @@ languages:
           name: 📝Posts
           url: posts
           weight: 2
-        - identifier: console
-          name: 📟Console
-          url: console
+        - identifier: terminal
+          name: 📟Terminal
+          url: terminal
           weight: 3
         - identifier: nav
           name: 🌐Nav
@@ -75,6 +76,28 @@ params:
   author: biglonglong # author: ["Me", "You"] # multiple authors
   images: ["image/thumbnail.png"]
 
+  githubPins:
+    - name: "NNABC"
+      url: "https://github.com/biglonglong/NNABC"
+      description: "神经网络到大模型：算法演进与实践"
+      language: "Python"
+    - name: "BaseLineRec"
+      url: "https://github.com/biglonglong/BaseLineRec"
+      description: "Some recommendation algorithms（SASRec、GRU、Caser、Onetrans）"
+      language: "Python"
+    - name: "ChemVLMer"
+      url: "https://github.com/biglonglong/ChemVLMer"
+      description: "A robot engineering development"
+      language: "Python"
+    - name: "BRAstar"
+      url: "https://github.com/biglonglong/BRAstar"
+      description: "a Research on global path planning algorithm based on improved A*"
+      language: "Python"
+    - name: "Storage&Buffer Manager"
+      url: "https://github.com/biglonglong/Storage-and-Buffer-Manager"
+      description: "一个存储与缓冲管理器，关于数据库管理系统结构"
+      language: "C++/CMake/Python"
+    
   defaultTheme: auto # dark, light
   disableThemeToggle: false
   disableSearch: false
@@ -92,8 +115,11 @@ params:
     icon: image/logo.jpg
     iconHeight: 35
 
-  terminalPassword: "DragonNest"
-  siliconApiKey: "sk-hzdomvycthcpjhpeorywgygjxmmezwriwdljigkpbisipzyg"
+  terminalDefaultUser: guest
+  terminalPassword: DragonNest
+  chatApiKey: ""
+  chatApiUrl: "https://api.siliconflow.cn/v1/chat/completions"
+  chatModel: "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
   gnewsApiKey: "e942bead1767f9e68bc2bd48e0b3c739"
   openweatherApiKey: "e6b9d8edc04a0cae91059e1fe12052d0"
 
@@ -106,7 +132,7 @@ params:
   ShowBreadCrumbs: true
   DateFormat: "January 2, 2006"
   buildDate: "2024-11-25"
-  ShowReadingTime: true
+  ShowReadingTime: false
   ShowWordCount: false
 
   # toc
@@ -165,16 +191,18 @@ params:
     #   url: "https://pan.baidu.com/s/1wnWmn3X_gpiKWOF0bo36TQ?pwd=1234"
     - name: easteregg
       title: Click Downloads
-      url: "./surprise.exe"
+      url: "/home/surprise.exe"
 
   fuseOpts:
+      ignoreLocation: false
       isCaseSensitive: false
       shouldSort: true
       location: 0
       distance: 1000
-      threshold: 0.4
+      threshold: 0.3
+      limit: 20
       minMatchCharLength: 0
-      keys: ["title", "permalink", "summary", "content"]
+      keys: ["title", "summary", "content"] # "permalink"
 
   analytics:
     google:
@@ -234,6 +262,9 @@ enableEmoji: true
 hasCJKLanguage: true
 
 # Build
+build:
+  noJSConfigInAssets: true
+
 buildDrafts: false
 buildFuture: false
 buildExpired: false
@@ -249,7 +280,7 @@ enableRobotsTXT: true
 # Redirects 404 HOME
 redirects:
 - from: /
-  to: /home/console/
+  to: /home/terminal/
   status: 200
 - from: /**
   to: /404.html

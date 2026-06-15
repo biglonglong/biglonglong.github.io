@@ -1,0 +1,15 @@
+import './features/navigation.js';
+import './features/code-copy.js';
+import './features/progress.js';
+import './features/tag-cloud.js';
+import './features/code-collapse.js';
+import './features/site-runtime.js';
+import './features/search-shortcut.js';
+import './features/blockquote.js';
+import './features/footer-quote.js';
+import './features/cards.js';
+import './features/section-links.js';
+import './features/back-top.js';
+import './features/toc.js';
+import './features/tag-preview.js';
+import './features/lightbox.js';

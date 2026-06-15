@@ -1,0 +1,10 @@
+<ul>
+  {{- range . }}
+  <li>
+    <a href="{{ .url }}">{{ .label }}</a>
+    {{- with .children }}
+      {{- partial "nav/study-resources.html" . -}}
+    {{- end }}
+  </li>
+  {{- end }}
+</ul>

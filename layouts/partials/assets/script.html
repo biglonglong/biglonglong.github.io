@@ -1,0 +1,5 @@
+{{- $asset := resources.Get . | js.Build | minify -}}
+{{- if not site.Params.assets.disableFingerprinting -}}
+  {{- $asset = $asset | fingerprint -}}
+{{- end -}}
+<script defer src="{{ $asset.RelPermalink }}"{{ with $asset.Data.Integrity }} integrity="{{ . }}" crossorigin="anonymous"{{ end }}></script>

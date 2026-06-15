@@ -6,7 +6,7 @@ description: "GDB 快速入门教程"
 date: 2025-12-22
 author: ["biglonglong"]
 
-tags: ["summary", "tools", "gdb", "linux"]
+tags: ["summary", "tools", "cpp"]
 summary: ""
 
 math: false

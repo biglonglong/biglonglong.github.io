@@ -6,7 +6,7 @@ description: "主体宣讲组织总结"
 date: 2024-05-25
 author: ["biglonglong"]
 
-tags: ["summary", "publicity"]
+tags: ["summary", "skills"]
 summary: ""
 
 math: false

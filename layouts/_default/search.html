@@ -20,9 +20,12 @@
     {{- end }}
 </header>
 
-<div id="searchbox">
-    <input id="searchInput" autofocus placeholder="{{ .Params.placeholder | default (printf "%s ↵" .Title) }}"
-        aria-label="search" type="search" autocomplete="off" maxlength="64">
+<div id="searchbox" data-home-url="{{ "" | relLangURL }}">
+    <div class="search-field">
+        <input id="searchInput" autofocus placeholder="{{ .Params.placeholder | default "输入标题或关键词…" }}"
+            aria-label="搜索文章" type="search" autocomplete="off" maxlength="64">
+    </div>
+    <p id="searchStatus" role="status" aria-live="polite" data-state="idle"></p>
     <ul id="searchResults" aria-label="search results"></ul>
 </div>
 

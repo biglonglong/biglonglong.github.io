@@ -1,0 +1,93 @@
+.section-latest {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    gap: 8px;
+    margin-top: 16px;
+}
+.section-latest a {
+    flex: none;
+    width: max-content;
+    max-width: 100%;
+    overflow: hidden;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--primary);
+    background: var(--entry);
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.section-latest a[hidden] {
+    display: none;
+}
+.section-latest a:hover,
+.section-latest a:focus-visible {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ---- 代码块折叠 ---- */
+.code-block-wrap {
+    margin: 10px 0;
+    overflow: hidden;
+    border: 1px solid var(--code-block-border, var(--border));
+    border-radius: var(--radius);
+    background: var(--code-block-bg);
+}
+
+.post-content .code-block-wrap .highlight:not(table) {
+    position: relative;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+}
+
+.code-block-wrap.collapsed .highlight::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 72px;
+    background: linear-gradient(transparent, var(--code-block-bg));
+    pointer-events: none;
+}
+.code-collapse-btn {
+    display: block;
+    width: 100%;
+    padding: 9px 14px;
+    border: 0;
+    border-top: 1px solid var(--code-block-border, rgba(255, 255, 255, 0.1));
+    background: var(--code-block-bg);
+    color: #b8bdc8;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.18s ease, color 0.18s ease;
+    user-select: none;
+}
+.code-collapse-btn:hover,
+.code-collapse-btn:focus-visible {
+    background: #30333d;
+    color: #fff;
+}
+.code-block-wrap.collapsed .highlight pre {
+    max-height: 210px;
+    overflow: hidden;
+}
+.code-block-wrap:not(.collapsed) .highlight pre {
+    max-height: none;
+    overflow: auto;
+}
+
+.code-block-wrap:not(.collapsed) pre code {
+    max-height: none;
+}
+
+/* ---- Giscus 评论区统一样式 ---- */
+.giscus {
+    margin-top: 48px;
+}

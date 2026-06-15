@@ -6,7 +6,7 @@ description: "从程序员视角观察计算机系统"
 date: 2025-05-24
 author: ["biglonglong"]
 
-tags: ["summary", "八股文", "c"]
+tags: ["summary", "408"]
 summary: ""
 
 math: true

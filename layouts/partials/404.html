@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="{{ site.LanguageCode | default "en" }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>404 — 迷失深空</title>
+    <style>
+        *, ::before, ::after { box-sizing: border-box; }
+        html, body {
+            width: 100%; height: 100%;
+            margin: 0; padding: 0;
+            background: #0d0e12;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+        canvas#stars {
+            position: fixed; inset: 0;
+            width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 0;
+        }
+        .fof-wrap {
+            position: relative; z-index: 1;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 100vh; text-align: center;
+            gap: 14px; padding: 0 24px;
+        }
+        .fof-code {
+            font-size: clamp(80px, 18vw, 150px);
+            font-weight: 800; line-height: 1;
+            letter-spacing: -0.05em;
+            background: linear-gradient(135deg, #7b8fe8, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 30px rgba(123,143,232,0.5));
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50%      { transform: translateY(-14px); }
+        }
+        .fof-emoji { font-size: 44px; animation: spin 10s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .fof-title {
+            font-size: 22px; font-weight: 700;
+            color: rgba(220,222,240,0.95); margin: 0;
+        }
+        .fof-desc {
+            font-size: 14px; color: rgba(155,158,180,0.9);
+            max-width: 360px; line-height: 1.7; margin: 0;
+        }
+        .fof-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin-top: 6px; padding: 10px 26px;
+            background: linear-gradient(135deg, #5b6bd5, #7b8fe8);
+            color: #fff; border-radius: 24px;
+            font-size: 14px; font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 20px rgba(91,107,213,0.45);
+        }
+        .fof-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(91,107,213,0.6);
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="stars"></canvas>
+    <div class="fof-wrap">
+        <div class="fof-code">404</div>
+        <div class="fof-emoji">🛸</div>
+        <p class="fof-title">迷失在深空了…</p>
+        <p class="fof-desc">你访问的页面可能已被黑洞吞噬，或者从未存在于这个宇宙中。</p>
+        <a class="fof-back" href="{{ site.Home.RelPermalink }}">← 返回母星</a>
+    </div>
+    <script>
+    (function () {
+        var c = document.getElementById('stars');
+        var ctx = c.getContext('2d');
+        var W, H, stars = [];
+        function resize() {
+            W = c.width = window.innerWidth;
+            H = c.height = window.innerHeight;
+        }
+        function mkStars() {
+            stars = [];
+            var n = Math.floor((W * H) / 4000);
+            for (var i = 0; i < n; i++) {
+                stars.push({
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    r: Math.random() * 1.4 + 0.2,
+                    a: Math.random(),
+                    da: (Math.random() - 0.5) * 0.008,
+                    vx: (Math.random() - 0.5) * 0.04,
+                    vy: (Math.random() - 0.5) * 0.04
+                });
+            }
+        }
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+            stars.forEach(function (s) {
+                s.a += s.da;
+                if (s.a <= 0 || s.a >= 1) s.da *= -1;
+                s.x = (s.x + s.vx + W) % W;
+                s.y = (s.y + s.vy + H) % H;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(200,210,255,' + s.a + ')';
+                ctx.fill();
+            });
+            requestAnimationFrame(draw);
+        }
+        window.addEventListener('resize', function () { resize(); mkStars(); });
+        resize(); mkStars(); draw();
+    })();
+    </script>
+</body>
+</html>

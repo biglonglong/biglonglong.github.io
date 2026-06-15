@@ -1,0 +1,90 @@
+/* ---- Lightbox 图片灯箱 ---- */
+#lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    z-index: 9000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+    backdrop-filter: blur(4px);
+    animation: lbFadeIn 0.2s ease;
+}
+#lightbox-overlay.open {
+    display: flex;
+}
+@keyframes lbFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+#lightbox-img {
+    max-width: 90vw;
+    max-height: 88vh;
+    border-radius: var(--radius);
+    box-shadow: 0 20px 80px rgba(0,0,0,0.8);
+    animation: lbZoomIn 0.22s ease;
+    object-fit: contain;
+}
+@keyframes lbZoomIn {
+    from { transform: scale(0.88); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+}
+@keyframes lbSlideLeft {
+    from { transform: translateX(40px) scale(0.96); opacity: 0; }
+    to   { transform: translateX(0)    scale(1);    opacity: 1; }
+}
+@keyframes lbSlideRight {
+    from { transform: translateX(-40px) scale(0.96); opacity: 0; }
+    to   { transform: translateX(0)     scale(1);    opacity: 1; }
+}
+#lightbox-img.slide-left  { animation: lbSlideLeft  0.2s ease; }
+#lightbox-img.slide-right { animation: lbSlideRight 0.2s ease; }
+/* 翻图方向指示箭头 */
+#lightbox-prev, #lightbox-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 28px;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    padding: 10px 16px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+    user-select: none;
+    z-index: 9001;
+    opacity: 0;
+}
+#lightbox-prev { left: 20px; }
+#lightbox-next { right: 20px; }
+#lightbox-overlay.open #lightbox-prev,
+#lightbox-overlay.open #lightbox-next { opacity: 1; }
+#lightbox-prev:hover, #lightbox-next:hover {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+}
+#lightbox-prev.hidden, #lightbox-next.hidden { opacity: 0; pointer-events: none; }
+#lightbox-close {
+    background: transparent;
+    border: 0;
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    font-size: 28px;
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
+    line-height: 1;
+    transition: transform 0.15s ease, color 0.15s ease;
+    user-select: none;
+}
+#lightbox-close:hover {
+    transform: scale(1.15);
+    color: #fff;
+}
+
+/* ---- post-content 图片 hover 游标 ---- */
+.post-content img:not(.link img) {
+    cursor: zoom-in;
+}
+

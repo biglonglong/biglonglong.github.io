@@ -1,0 +1,11 @@
+<div class="links-container">
+  {{- range . }}
+  <div class="link-box">
+    <a class="link" href="{{ .url }}" target="_blank" rel="noopener noreferrer">
+      <img src="{{ .image }}" alt="" loading="lazy" decoding="async">
+      <span class="name">{{ .name }}</span>
+      <span class="description">{{ .description }}</span>
+    </a>
+  </div>
+  {{- end }}
+</div>

@@ -1,0 +1,102 @@
+.post-content:not(.no-prose) strong {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.post-content:not(.no-prose) em {
+    font-style: italic;
+}
+
+.post-content:not(.no-prose) mark {
+    padding-inline: 0.12em;
+    border-radius: 2px;
+    background: var(--accent-soft);
+    color: var(--primary);
+}
+
+.post-content:not(.no-prose) del {
+    color: var(--secondary);
+    text-decoration-color: var(--secondary);
+}
+
+.post-content:not(.no-prose) :is(ul, ol) {
+    margin-bottom: var(--content-gap);
+    padding-inline-start: 1.5em;
+    line-height: 1.85;
+}
+
+.post-content:not(.no-prose) li {
+    margin-block: 0.35em;
+    padding-inline-start: 0.15em;
+}
+
+.post-content:not(.no-prose) li::marker {
+    color: var(--secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.post-content:not(.no-prose) ol > li::marker {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.post-content:not(.no-prose) li > p {
+    margin-bottom: 0;
+}
+
+.post-content:not(.no-prose) li > p + p {
+    margin-top: 0.6em;
+}
+
+.post-content:not(.no-prose) li > :is(ul, ol) {
+    margin-block: 0.4em 0.6em;
+}
+
+.post-content:not(.no-prose) input[type="checkbox"] {
+    width: 1em;
+    height: 1em;
+    margin-inline: 0 0.35em;
+    vertical-align: -0.12em;
+    accent-color: var(--accent);
+}
+
+.post-content:not(.no-prose) :is(sup, sub) {
+    line-height: 0;
+}
+
+.post-content:not(.no-prose) kbd {
+    padding: 0.1em 0.35em;
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    background: var(--code-bg);
+    font-size: 0.85em;
+}
+
+.post-content:not(.no-prose) .footnotes {
+    margin-top: 2.5em;
+    padding-top: 0.7em;
+    border-top: 1px solid var(--border);
+    color: var(--secondary);
+    font-size: 0.9em;
+}
+
+.post-content:not(.no-prose) .footnotes li {
+    margin-block: 0.6em;
+}
+
+@media (max-width: 600px) {
+    .post-content:not(.no-prose) dl {
+        display: block;
+        margin-bottom: var(--content-gap);
+    }
+
+    .post-content:not(.no-prose) :is(dt, dd) {
+        width: auto;
+        padding: 0;
+    }
+
+    .post-content:not(.no-prose) dt {
+        margin-top: 0.8em;
+    }
+}

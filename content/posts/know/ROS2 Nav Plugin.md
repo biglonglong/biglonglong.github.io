@@ -6,7 +6,7 @@ description: "ROS2 规划器和控制器导航"
 date: 2024-01-25
 author: ["biglonglong"]
 
-tags: ["summary", "ros2", "navigation", "plugin"]
+tags: ["summary", "ros2", "cpp", "python", "navigation"]
 summary: ""
 
 math: true

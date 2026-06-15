@@ -1,0 +1,174 @@
+/* ====== DARK THEME ====== */
+#terminal-container {
+    background: #1a1a1a;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.terminal-header {
+    background: #2d2d2d;
+    border-bottom: 1px solid #3d3d3d;
+}
+
+#terminal-title {
+    color: #aaaaaa;
+}
+
+#terminal-window {
+    color: #e8e8e8;
+    background: #1a1a1a;
+}
+
+.prompt-arrow {
+    color: #4cd964;
+}
+
+.terminal-admin .prompt-arrow {
+    color: #e8855a;
+}
+
+.prompt-dir {
+    color: #00e0e3;
+}
+
+.prompt-user {
+    color: #a7b8ff;
+}
+
+.terminal-editor-status { background: #343b4a; color: #dce6ff; }
+
+#terminal-window::-webkit-scrollbar-thumb {
+    background: #444;
+    border: 2px solid #1a1a1a;
+}
+
+/* Scrollbar Thumb Hover */
+#terminal-window::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+/* Scrollbar Track */
+#terminal-window::-webkit-scrollbar-track {
+    background: #252525;
+}
+
+#cmd-input {
+    color: #f7f7f7;
+    caret-color: #babbbd;
+}
+
+#cmd-input::placeholder {
+    color: #888;
+}
+
+.output-pre {
+    color: #c0c0c0;
+}
+
+.output-begin,
+.output-end {
+    color: #797979;
+}
+
+.terminal-link {
+    color: #6d9efd;
+}
+
+/* Visited Link */
+.terminal-link:visited {
+    color: #c792ea;
+}
+
+.info-key {
+    color: #569cd6;
+}
+
+.info-json {
+    background: #20242b;
+    border: 1px solid #353b45;
+}
+
+.info-extract {
+    color: #BBBBBB;
+}
+
+.info-tail {
+    color: #797979;
+}
+
+.table-key {
+    color: #569cd6;
+}
+
+.table-val {
+    color: #d7ba7d;
+}
+
+.table-val-another {
+    color: #BBBBBB;
+}
+
+.list-number {
+    color: #797979;
+}
+
+.list-value {
+    color: #d7ba7d;
+}
+
+/* Status */
+.st-error {
+    color: #ff5f56;
+}
+
+.st-warning {
+    color: #FFA500;
+}
+
+.st-info {
+    color: #5DADE2;
+}
+
+.st-success {
+    color: #4CAF50;
+}
+
+.st-highlight {
+    color: #00A3CC;
+}
+
+/* File */
+.file-dir {
+    color: #4daafc;
+}
+
+.file-hidden {
+    color: #5a5a5a;
+}
+
+.file-sh {
+    color: #4A7B5A;
+}
+
+/* Dividers */
+.divider-level-one {
+    border-top: 1px solid #444 !important;
+    margin: 8px 0 !important;
+    opacity: 0.8 !important;
+}
+
+.divider-level-two {
+    border-top: 2px solid #555 !important;
+    margin: 10px 0 !important;
+    opacity: 0.9 !important;
+}
+
+.divider-level-three {
+    border-top: 1px dashed #666 !important;
+    padding: 2px 0 !important;
+    margin: 15px 0 !important;
+}
+
+/* Quote Block */
+.quote-block {
+    border-left: 3px solid #f99157;
+}

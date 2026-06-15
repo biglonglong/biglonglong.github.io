@@ -6,7 +6,7 @@ description: "管理代码仓库时的 Git 命令集记录"
 date: 2024-11-26
 author: ["biglonglong"]
 
-tags: ["summary", "tools", "git"]
+tags: ["summary", "tools"]
 summary: ""
 
 math: false

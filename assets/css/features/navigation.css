@@ -1,0 +1,146 @@
+/* 容器：flex 水平排列，间距 16px */
+.paginav-cards {
+    display: flex;
+    gap: 16px;
+    margin: 40px 0 0;
+    flex-wrap: wrap;
+}
+/* 卡片公共样式 */
+.paginav-card {
+    flex: 1;
+    min-width: 220px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--entry);
+    overflow: hidden;
+    text-decoration: none !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.paginav-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+}
+/* 顶部分类色条 */
+.paginav-card-bar {
+    height: 4px;
+    width: 100%;
+    flex-shrink: 0;
+}
+.paginav-bar-know    { background: linear-gradient(90deg, var(--accent), #a78bfa); }
+.paginav-bar-journal { background: linear-gradient(90deg, #e8855a, #f5c87a); }
+.paginav-bar-cases   { background: linear-gradient(90deg, #3db88a, #5dd6b0); }
+/* 默认色条（其他分区） */
+.paginav-card-bar:not([class*="paginav-bar-know"]):not([class*="paginav-bar-journal"]):not([class*="paginav-bar-cases"]) {
+    background: linear-gradient(90deg, var(--accent), var(--accent));
+    opacity: 0.6;
+}
+/* 卡片内容区 */
+.paginav-card-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 18px 16px;
+}
+/* 方向提示 */
+.paginav-card-dir {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--secondary);
+    margin-bottom: 2px;
+}
+.paginav-next .paginav-card-dir {
+    justify-content: flex-end;
+}
+/* 分类标签 */
+.paginav-card-section {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    width: fit-content;
+}
+.paginav-section-know    { background: var(--accent-soft); color: var(--accent); }
+.paginav-section-journal { background: rgba(232,133,90,0.13); color: #c0622e; }
+.paginav-section-cases   { background: rgba(61,184,138,0.13); color: #2a9d6a; }
+.paginav-section-know:is([class]),
+.paginav-section-journal:is([class]),
+.paginav-section-cases:is([class]) { /* already handled */ }
+/* 标题 */
+.paginav-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+    line-height: 1.4;
+    margin-top: 2px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    transition: color 0.15s ease;
+}
+.paginav-card:hover .paginav-card-title {
+    color: var(--accent);
+}
+/* 摘要预览 */
+.paginav-card-summary {
+    font-size: 12px;
+    color: var(--secondary);
+    line-height: 1.5;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin-top: 4px;
+}
+/* 右对齐（下一篇） */
+.paginav-next .paginav-card-inner {
+    align-items: flex-end;
+    text-align: right;
+}
+.paginav-next .paginav-card-section {
+    align-self: flex-end;
+}
+
+/* 标签悬浮预览气泡 */
+#tag-preview-bubble {
+    position: fixed;
+    z-index: 8000;
+    background: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--secondary);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    white-space: nowrap;
+    max-width: 200px;
+}
+#tag-preview-bubble.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+#tag-preview-bubble .tag-bubble-name {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 13px;
+    display: block;
+    margin-bottom: 2px;
+}
+#tag-preview-bubble .tag-bubble-count {
+    color: var(--secondary);
+}
+

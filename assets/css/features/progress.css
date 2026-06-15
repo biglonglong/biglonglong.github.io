@@ -1,0 +1,32 @@
+/* 阅读进度条：固定在导航栏底部 */
+#reading-progress {
+    position: fixed;
+    top: var(--sticky-header-height, var(--header-height, 60px));
+    left: 0;
+    width: 0%;
+    height: 2px;
+    /* 浅色：暖蓝紫，暗色：冷月蓝（通过 JS 切换 CSS 变量） */
+    background: var(--progress-gradient, linear-gradient(90deg, #6366f1, #a78bfa));
+    z-index: 200;
+    transition: width 0.12s linear, background 0.5s ease, opacity 0.3s ease;
+    pointer-events: none;
+    opacity: 0;
+    border-radius: 0 2px 2px 0;
+    /* 末端发光点 */
+    box-shadow: 0 0 6px 1px var(--progress-glow, rgba(99,102,241,0.6));
+}
+#reading-progress.visible {
+    opacity: 1;
+}
+/* 浅色主题：蓝紫渐变 */
+:root {
+    --progress-gradient: linear-gradient(90deg, #6366f1, #a78bfa);
+    --progress-glow: rgba(99, 102, 241, 0.55);
+}
+/* 暗色主题：冷月蓝渐变 */
+.dark {
+    --progress-gradient: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
+    --progress-glow: rgba(56, 189, 248, 0.5);
+}
+
+

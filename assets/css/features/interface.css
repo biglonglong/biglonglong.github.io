@@ -1,0 +1,114 @@
+/* ---- 导航栏滚动收缩 ---- */
+.header {
+    transition: box-shadow 0.3s ease, background 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+.header.scrolled {
+    --header-height: 52px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.header.scrolled .nav {
+    line-height: 52px;
+}
+
+@media screen and (max-width: 768px) {
+    .header.scrolled .nav {
+        line-height: 1.4;
+    }
+}
+
+/* ---- 搜索键盘快捷键提示 ---- */
+.search-shortcut {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    color: var(--secondary);
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.18s ease;
+}
+
+.search-shortcut kbd {
+    display: inline-block;
+    padding: 1px 5px;
+    background: var(--tertiary);
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-family: inherit;
+    line-height: 1.6;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+}
+
+/* ---- blockquote 引号装饰 + 类型 badge ---- */
+.post-content blockquote {
+    position: relative;
+}
+
+.post-content blockquote::before {
+    content: '\201C';
+    position: absolute;
+    top: -8px;
+    left: 8px;
+    font-size: 48px;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.25;
+    font-family: Georgia, serif;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* 类型 blockquote：> [!TIP] / [!NOTE] / [!WARN] */
+.post-content blockquote.bq-tip {
+    border-left-color: #3db88a;
+    background: rgba(61, 184, 138, 0.08);
+}
+
+.post-content blockquote.bq-note {
+    border-left-color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.post-content blockquote.bq-warn {
+    border-left-color: #e8855a;
+    background: rgba(232, 133, 90, 0.08);
+}
+
+.bq-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    margin-top: 0;
+    width: fit-content;
+}
+
+.bq-badge-tip {
+    background: rgba(61, 184, 138, 0.18);
+    color: #2a9d6a;
+}
+
+.bq-badge-note {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.bq-badge-warn {
+    background: rgba(232, 133, 90, 0.18);
+    color: #c0622e;
+}

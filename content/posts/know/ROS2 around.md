@@ -6,7 +6,7 @@ description: "ROS2 的调试工具与功能演示"
 date: 2024-01-06
 author: ["biglonglong"]
 
-tags: ["summary", "ros2"]
+tags: ["summary", "ros2", "cpp", "python"]
 summary: ""
 
 math: false
@@ -297,7 +297,7 @@ def generate_launch_description():
 
 ### 重名问题
 
-设备 -> 工作空间 -> 功能包 -> 节点 -> 话题，都可能存在重名；下面使用命令和源码解决，[launch](# launch)部分也介绍了如何解决重名问题
+设备 -> 工作空间 -> 功能包 -> 节点 -> 话题，都可能存在重名；下面使用命令和源码解决，[launch](#launch)部分也介绍了如何解决重名问题
 
 #### 功能包重名
 

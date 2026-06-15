@@ -2,6 +2,8 @@
 
 {{- if (and site.Params.profileMode.enabled .IsHome) }}
 {{- partial "index_profile.html" . }}
+{{- partial "home/panels.html" . }}
+
 {{- else }} {{/* if not profileMode */}}
 
 {{- if not .IsHome | and .Title }}
@@ -62,14 +64,19 @@
 {{- else if $term }}
 {{- $class = "post-entry tag-entry" }}
 {{- end }}
+{{- $isSectionCard := and (eq $.RelPermalink ("posts/" | relLangURL)) (eq $page.Kind "section") }}
+{{- if $isSectionCard }}{{ $class = "post-entry section-entry" }}{{ end }}
 
 {{- $sectionSlug := index (split (strings.TrimSuffix "/" $page.File.Dir) "/") 1 | default $page.Section }}
 <article class="{{ $class }}" data-section="{{ $sectionSlug }}">
+  {{- if and (eq $class "post-entry") (not $isSectionCard) }}
+  <span class="read-time-badge">⏱ {{ .ReadingTime }} min</span>
+  {{- end }}
   {{- $isHidden := (.Param "cover.hiddenInList") | default (.Param "cover.hidden") | default false }}
   {{- partial "cover.html" (dict "cxt" . "IsSingle" false "isHidden" $isHidden) }}
   <header class="entry-header">
     <h2 class="entry-hint-parent">
-      {{- .Title }}
+      {{- if $isSectionCard }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ else }}{{ .Title }}{{ end }}
       {{- if .Draft }}
       <span class="entry-hint" title="Draft">
         <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" fill="currentColor">
@@ -80,7 +87,15 @@
       {{- end }}
     </h2>
   </header>
-  {{- if (ne (.Param "hideSummary") true) }}
+  {{- if $isSectionCard }}
+    {{- with .RegularPages.ByDate.Reverse }}
+    <nav class="section-latest" aria-label="{{ $page.Title }}最新文章">
+      {{- range . }}
+      <a href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
+      {{- end }}
+    </nav>
+    {{- end }}
+  {{- else if (ne (.Param "hideSummary") true) }}
   <div class="entry-content">
     <p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p>
   </div>
@@ -90,7 +105,7 @@
     {{- partial "post_meta.html" . -}}
   </footer>
   {{- end }}
-  <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
+  {{- if not $isSectionCard }}<a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>{{ end }}
 </article>
 {{- end }}
 

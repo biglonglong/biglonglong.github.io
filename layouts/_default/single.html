@@ -2,7 +2,6 @@
 
 <article class="post-single">
   <header class="post-header">
-    {{ partial "breadcrumbs.html" . }}
     <h1 class="post-title entry-hint-parent">
       {{ .Title }}
       {{- if .Draft }}
@@ -21,13 +20,13 @@
     {{- end }}
     {{- if not (.Param "hideMeta") }}
     <div class="post-meta">
+      <div class="post-meta-details">
       {{- partial "post_meta.html" . -}}
       {{- partial "translation_list.html" . -}}
       {{- partial "edit_post.html" . -}}
       {{- partial "post_canonical.html" . -}}
-      <div class="meta-busuanzi">&nbsp·&nbsp
-        <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv">0</span> times read</span>
       </div>
+      <span class="meta-busuanzi" id="busuanzi_container_page_pv"><span class="meta-separator" aria-hidden="true">·</span><span id="busuanzi_value_page_pv">0</span> times read</span>
     </div>
     {{- end }}
   </header>
@@ -49,7 +48,8 @@
     {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}
     <ul class="post-tags">
       {{- range ($.GetTerms $tags) }}
-      <li><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></li>
+      {{- $count := len .Pages }}
+      <li><a href="{{ .Permalink }}" data-tag="{{ .LinkTitle }}" data-count="{{ $count }}">{{ .LinkTitle }}</a></li>
       {{- end }}
     </ul>
     {{- if (.Param "ShowPostNavLinks") }}

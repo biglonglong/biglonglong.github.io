@@ -6,7 +6,7 @@ description: "软件开发技术文档写作规范化模板"
 date: 2026-01-04
 author: ["biglonglong"]
 
-tags: ["skills", "template"]
+tags: ["skills", "summary"]
 summary: ""
 
 math: false

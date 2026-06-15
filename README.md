@@ -2,7 +2,7 @@
 
 这是[龙犊&小窝🪹~](https://biglonglong.github.io/home/)的网站代码源文件，基于 PaperMod，正在魔改当中...
 
-如果你感兴趣，可以看看我的一些Posts。
+感兴趣的话，可以看看我的 Posts。
 
 
 
@@ -43,14 +43,13 @@ git commit -m "Update content"
 git push origin main
 ```
 
-然后，前往 GitHub 并运行相关的工作流以完成部署。
+GitHub workflows 随后将自动构建页面并部署。
 
 
 
 ## TODO List
 
 
-## References
 
-- [adityatelange/hugo-PaperMod: A fast, clean, responsive Hugo theme.](https://github.com/adityatelange/hugo-PaperMod)
-- [Hugo PaperMod 主题精装修 | Tai's Blog](https://yunpengtai.top/posts/hugo-journey/)
+
+## References

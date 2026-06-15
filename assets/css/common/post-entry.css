@@ -39,27 +39,46 @@
     padding: var(--gap) var(--gap) var(--gap) calc(var(--gap) + 4px);
     background: var(--entry);
     border-radius: var(--radius);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     border: 1px solid var(--border);
-    /* 左侧默认色条 */
     border-left: 4px solid var(--accent);
     overflow: hidden;
 }
 
 .post-entry:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    border-color: var(--accent);
-    border-left-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
 .dark .post-entry:hover {
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+}
+
+/* 阅读时间 badge：hover 时右上角淡入 */
+.post-entry .read-time-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 11px;
+    color: var(--secondary);
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2px 8px;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.post-entry:hover .read-time-badge {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .post-entry:active {
-    transform: scale(0.97) translateY(0);
-    box-shadow: none;
+    transform: translateY(0);
 }
 
 /* 分类专属色条：know=蓝紫，journal=橙暖，cases=青绿 */
@@ -139,4 +158,51 @@
 .entry-cover a {
     color: var(--secondary);
     box-shadow: 0 1px 0 var(--primary);
+}
+
+@keyframes card-shimmer {
+    from { background-position: -400px 0; }
+    to { background-position: 400px 0; }
+}
+
+.post-entry.skeleton::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(90deg, transparent, var(--accent-soft), transparent);
+    background-size: 800px 100%;
+    animation: card-shimmer 1.4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.post-entry.skeleton .entry-header,
+.post-entry.skeleton .entry-content,
+.post-entry.skeleton .entry-footer,
+.post-entry.skeleton .read-time-badge {
+    opacity: 0;
+}
+
+@keyframes card-ripple {
+    from { transform: scale(0); opacity: 0.22; }
+    to { transform: scale(5); opacity: 0; }
+}
+
+.post-entry .ripple-dot {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border-radius: 50%;
+    background: var(--accent);
+    pointer-events: none;
+    animation: card-ripple 0.55s ease-out forwards;
+    z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .post-entry,
+    .post-entry .read-time-badge { transition: none; }
+    .post-entry.skeleton::before,
+    .post-entry .ripple-dot { animation: none; }
 }

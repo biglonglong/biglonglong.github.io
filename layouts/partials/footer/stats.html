@@ -1,0 +1,5 @@
+{{- $total := 0 -}}
+{{- range where .Site.Pages "Kind" "page" -}}
+    {{- $total = add $total .WordCount -}}
+{{- end -}}
+<div>在这里度过了<span id="site-runtime" data-start="{{ .Site.Params.buildDate }}"></span> ，写下 {{ $total }} 字，时间过得真快呐！</div>

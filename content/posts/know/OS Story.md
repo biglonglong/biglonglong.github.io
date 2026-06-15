@@ -6,7 +6,7 @@ description: "操作系统核心模块及其基本原理"
 date: 2025-07-15
 author: ["biglonglong"]
 
-tags: ["summary", "八股文", "c"]
+tags: ["summary", "408"]
 summary: ""
 
 math: false
