@@ -5,45 +5,35 @@ ShowBreadCrumbs: false
 noProse: true
 ---
 
-
-
 ### Friends
 
 <div class="links-container">
     <div class="link-box">
         <a class="link" href="https://www.miaoer.net/" target="_blank">
             <img src="https://static.miaoer.net/logo/avatar.webp" alt="icon">
-            <div>
-                <span class="name">喵二</span>
-                <div class="description">缘，妙不可言</div>
-            </div>
+            <span class="name">喵二</span>
+            <div class="description">缘，妙不可言</div>
         </a>
     </div>
     <div class="link-box">
         <a class="link" href="https://catcat.blog/" target="_blank">
             <img src="https://catcat.blog/favicon/avatar-540.avif" alt="icon">
-            <div>
-                <span class="name">猫猫博客</span>
-                <div class="description">𝙄𝙩'𝙨 𝙩𝙝𝙚 𝙤𝙣𝙡𝙮 𝙉𝙀𝙀𝙏 𝙩𝙝𝙞𝙣𝙜 𝙩𝙤 𝙙𝙤…</div>
-            </div>
+            <span class="name">猫猫博客</span>
+            <div class="description">𝙄𝙩'𝙨 𝙩𝙝𝙚 𝙤𝙣𝙡𝙮 𝙉𝙀𝙀𝙏 𝙩𝙝𝙞𝙣𝙜 𝙩𝙤 𝙙𝙤…</div>
         </a>
     </div>
     <div class="link-box">
         <a class="link" href="https://blog.lmyself.top/" target="_blank">
             <img src="https://shadownc.github.io/assets/images/logo.jpg?t=c6b98c1a-40cb-416f-8ecf-f429271faeec" alt="icon">
-            <div>
-                <span class="name">IMyself</span>
-                <div class="description">一起进步</div>
-            </div>
+            <span class="name">IMyself</span>
+            <div class="description">一起进步</div>
         </a>
     </div>
     <div class="link-box">
         <a class="link" href="https://www.cnblogs.com/lumia1998" target="_blank">
             <img src="https://raw.githubusercontent.com/lumia1998/pic/master/blog/头像.jpg" alt="icon">
-            <div>
-                <span class="name">太陽と向日葵</span>
-                <div class="description">世界正安静下来，准备它的冬日休眠</div>
-            </div>
+            <span class="name">太陽と向日葵</span>
+            <div class="description">世界正安静下来，准备它的冬日休眠</div>
         </a>
     </div>
 </div>
@@ -56,41 +46,31 @@ noProse: true
     <div class="link-box">
         <a class="link" href="https://www.xiaolincoding.com/" target="_blank">
             <img src="https://cdn.xiaolincoding.com/icon.webp" alt="icon">
-            <div>
-                <span class="name">小林coding</span>
-                <div class="description">图解408，让天下没有难懂的八股文</div>
-            </div>
+            <span class="name">小林coding</span>
+            <div class="description">图解408，让天下没有难懂的八股文</div>
         </a>
     </div>
     <div class="link-box">
         <a class="link" href="https://leetcode.cn/problemset/" target="_blank">
-            <img src="https://assets.leetcode.cn/aliyun-lc-upload/uploaded_files/2021/03/73c9f099-abbe-4d94-853f-f8abffd459cd/leetcode.png"
-                alt="icon">
-            <div>
-                <span class="name">LeetCode</span>
-                <div class="description">全球极客挚爱的技术成长平台</div>
-            </div>
+            <img src="https://assets.leetcode.cn/aliyun-lc-upload/uploaded_files/2021/03/73c9f099-abbe-4d94-853f-f8abffd459cd/leetcode.png" alt="icon">
+            <span class="name">LeetCode</span>
+            <div class="description">全球极客挚爱的技术成长平台</div>
         </a>
     </div>
     <div class="link-box">
         <a class="link" href="https://dunwu.github.io/linux-tutorial/" target="_blank">
             <img src="https://dunwu.github.io/linux-tutorial/images/dunwu-logo-100.png" alt="icon">
-            <div>
-                <span class="name">LINUX TUTORIAL</span>
-                <div class="description">📚 linux-tutorial 是一个 Linux 教程</div>
-            </div>
+            <span class="name">LINUX TUTORIAL</span>
+            <div class="description">📚 linux-tutorial 是一个 Linux 教程</div>
         </a>
     </div>
     <div class="link-box">
         <a class="link" href="https://web.qianguyihao.com/" target="_blank">
             <img src="https://img.smyhvae.com/20200919-blog-bg.jpg" alt="icon">
-            <div>
-                <span class="name">千古前端图文</span>
-                <div class="description">超详细的 Web 前端入门到进阶知识库</div>
-            </div>
+            <span class="name">千古前端图文</span>
+            <div class="description">超详细的 Web 前端入门到进阶知识库</div>
         </a>
     </div>
-    <!-- more -->
 </div>
 
 
@@ -135,7 +115,7 @@ noProse: true
 - [AI算法工程师手册](https://www.huaxiaozhuan.com/)
 - [Video - 从函数到神经网络【白话DeepSeek】（闪客）](https://www.bilibili.com/video/BV1uGA3eLEeu/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Video - Pytorch框架与经典卷积神经网络与实战（炮哥）](https://www.bilibili.com/video/BV1e34y1M7wR/?spm_id_from=333.337.search-card.all.click)
-  - [Video - 手撕“Everything”系列，Transformer, Diffusion，LLM（happy魇）](https://www.bilibili.com/video/BV1Fw4m1C7Tq/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
+  - [Video - 手撕"Everything"系列，Transformer, Diffusion，LLM（happy魇）](https://www.bilibili.com/video/BV1Fw4m1C7Tq/?spm_id_from=333.1387.collection.video_card.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
   - [Video - 深度学习系列（李宏毅）](https://www.bilibili.com/video/BV1TAtwzTE1S/?spm_id_from=333.337.search-card.all.click&vd_source=1a278fe24f00dd5c69f2875b5add5a19)
 - [Github - minimind（jingyaogong）](https://github.com/jingyaogong/minimind)
   - [Site - 先进的AI团队协作与模型创新引擎（SwanLab）](https://docs.swanlab.cn/guide_cloud/general/what-is-swanlab.html)
@@ -167,85 +147,246 @@ noProse: true
 
 
 <style>
-  /* ===== 友链卡片容器 ===== */
+/* ===== Nav 页章节标题装饰 ===== */
+.no-prose h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 36px 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  color: var(--primary);
+}
+
+.no-prose h3::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 1.1em;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.no-prose h3 a {
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+.no-prose h3 a:hover {
+  color: var(--accent);
+}
+
+/* ===== 友链卡片容器 ===== */
+.links-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+/* ===== 单个友链卡片：竖向布局 ===== */
+.link-box {
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--entry);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  overflow: hidden;
+}
+
+.link-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px var(--accent-glow);
+  border-color: var(--accent);
+}
+
+/* ===== 友链内容：竖向 ===== */
+.link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--content);
+  text-decoration: none;
+  padding: 18px 12px 14px;
+  gap: 8px;
+  height: 100%;
+}
+
+.link img {
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  max-width: 56px !important;
+  flex-shrink: 0 !important;
+  display: block !important;
+  margin: 0 auto !important;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.link-box:hover .link img {
+  border-color: var(--accent);
+  transform: scale(1.08);
+}
+
+.link .name {
+  font-size: 0.88em;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--primary);
+  word-break: break-word;
+}
+
+.link .description {
+  font-size: 0.72em;
+  color: var(--secondary);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* ===== Resource 列表样式 ===== */
+.no-prose ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+
+.no-prose ul li {
+  position: relative;
+  padding: 5px 0 5px 12px;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  border-left: 2px solid transparent;
+  transition: border-color 0.2s ease, background 0.2s ease, padding-left 0.2s ease;
+  border-radius: 0 6px 6px 0;
+}
+
+.no-prose ul li:hover {
+  border-left-color: var(--accent);
+  background: var(--accent-soft);
+  padding-left: 16px;
+}
+
+.no-prose ul ul {
+  margin: 2px 0 2px 16px;
+  border-left: 1px dashed var(--border);
+  padding-left: 12px;
+}
+
+.no-prose ul ul li {
+  font-size: 0.88rem;
+  padding: 3px 0 3px 8px;
+}
+
+.no-prose ul li a {
+  color: var(--content);
+  transition: color 0.2s ease;
+}
+
+.no-prose ul li:hover a {
+  color: var(--accent);
+}
+
+/* ===== 资源类型 badge ===== */
+.res-badge {
+  display: inline-block;
+  font-size: 0.65em;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  margin-right: 5px;
+  vertical-align: middle;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+.badge-video  { background: rgba(239,68,68,0.12);  color: #ef4444; }
+.badge-site   { background: rgba(59,130,246,0.12); color: #3b82f6; }
+.badge-book   { background: rgba(245,158,11,0.12); color: #d97706; }
+.badge-github { background: rgba(107,114,128,0.12);color: #4b5563; }
+.badge-mooc   { background: rgba(16,185,129,0.12); color: #10b981; }
+.badge-blog   { background: rgba(139,92,246,0.12); color: #8b5cf6; }
+
+.dark .badge-video  { background: rgba(239,68,68,0.18);  color: #f87171; }
+.dark .badge-site   { background: rgba(59,130,246,0.18); color: #60a5fa; }
+.dark .badge-book   { background: rgba(245,158,11,0.18); color: #fbbf24; }
+.dark .badge-github { background: rgba(156,163,175,0.18);color: #9ca3af; }
+.dark .badge-mooc   { background: rgba(16,185,129,0.18); color: #34d399; }
+.dark .badge-blog   { background: rgba(167,139,250,0.18);color: #a78bfa; }
+
+/* ===== 引用块 ===== */
+.no-prose blockquote {
+  margin: 0 0 16px;
+  padding: 10px 16px;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 0 8px 8px 0;
+  color: var(--secondary);
+  font-size: 0.9rem;
+}
+
+.no-prose blockquote p {
+  margin: 0;
+}
+
+/* ===== 移动端响应式 ===== */
+@media (max-width: 600px) {
   .links-container {
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    padding: 12px;
-    border-radius: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
     gap: 10px;
   }
-
-  /* ===== 单个友链卡片 ===== */
-  .link-box {
-    display: flex;
-    max-width: 32%;
-    flex: 1 1 200px;
-    padding: 12px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
-    border: 1px solid var(--border);
-    background: var(--entry);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-  }
-
-  .link-box:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 28px var(--accent-glow);
-    border-color: var(--accent);
-  }
-
-  /* ===== 友链内容 ===== */
-  .link {
-    display: flex;
-    align-items: center;
-    text-align: left;
-    color: var(--content);
-    text-decoration: none;
-    width: 100%;
-    gap: 10px;
-  }
-
   .link img {
     width: 48px;
     height: 48px;
     min-width: 48px;
     max-width: 48px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--border);
-    transition: border-color 0.25s ease;
   }
-
-  .link-box:hover .link img {
-    border-color: var(--accent);
-  }
-
-  .link > div {
-    flex: 1 1 0;
-    min-width: 0;
-    overflow: hidden;
-  }
-
-  .link .name {
-    font-size: 0.9em;
-    font-weight: bold;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .link .description {
-    font-size: 0.75em;
-    font-weight: normal;
-    color: var(--secondary);
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    margin-top: 2px;
-  }
+}
 </style>
+
+<script>
+(function () {
+  // 资源类型 badge 映射
+  const badgeMap = [
+    { prefix: /^video[-\s]/i,  cls: 'badge-video',  label: 'Video'  },
+    { prefix: /^site[-\s]/i,   cls: 'badge-site',   label: 'Site'   },
+    { prefix: /^book[-\s]/i,   cls: 'badge-book',   label: 'Book'   },
+    { prefix: /^github[-\s]/i, cls: 'badge-github', label: 'GitHub' },
+    { prefix: /^mooc[-\s]/i,   cls: 'badge-mooc',   label: 'MOOC'   },
+    { prefix: /^blog[-\s]/i,   cls: 'badge-blog',   label: 'Blog'   },
+    { prefix: /^video-/i,      cls: 'badge-video',  label: 'Video'  },
+  ];
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const noProse = document.querySelector('.post-content.no-prose');
+    if (!noProse) return;
+
+    noProse.querySelectorAll('ul li a').forEach(function (a) {
+      const text = a.textContent.trim();
+      for (const { prefix, cls, label } of badgeMap) {
+        if (prefix.test(text)) {
+          // 去掉前缀（如 "Video - " 部分），保留剩余内容
+          const cleanText = text.replace(/^[a-z]+[-\s]+/i, '');
+          const badge = document.createElement('span');
+          badge.className = 'res-badge ' + cls;
+          badge.textContent = label;
+          a.textContent = cleanText;
+          a.prepend(badge);
+          break;
+        }
+      }
+    });
+  });
+})();
+</script>

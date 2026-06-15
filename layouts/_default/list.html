@@ -2,6 +2,27 @@
 
 {{- if (and site.Params.profileMode.enabled .IsHome) }}
 {{- partial "index_profile.html" . }}
+
+{{- /* ---- 相关文章推荐（首页 profileMode 下） ---- */}}
+{{- $latestPost := first 1 (where site.RegularPages "Type" "in" site.MainSections) }}
+{{- range $latestPost }}
+  {{- $related := (site.RegularPages.Related .) | first 6 }}
+  {{- $related = where $related "Permalink" "ne" .Permalink | first 5 }}
+  {{- if $related }}
+  <div class="related-posts">
+    <h3 class="related-title">相关文章</h3>
+    <div class="related-list">
+      {{- range $related }}
+      <a class="related-item" href="{{ .Permalink }}">
+        <span class="related-item-title">{{ .Title }}</span>
+        <span class="related-item-meta">{{ .Date.Format "2006-01-02" }}</span>
+      </a>
+      {{- end }}
+    </div>
+  </div>
+  {{- end }}
+{{- end }}
+
 {{- else }} {{/* if not profileMode */}}
 
 {{- if not .IsHome | and .Title }}
@@ -65,6 +86,9 @@
 
 {{- $sectionSlug := index (split (strings.TrimSuffix "/" $page.File.Dir) "/") 1 | default $page.Section }}
 <article class="{{ $class }}" data-section="{{ $sectionSlug }}">
+  {{- if eq $class "post-entry" }}
+  <span class="read-time-badge">⏱ {{ .ReadingTime }} min</span>
+  {{- end }}
   {{- $isHidden := (.Param "cover.hiddenInList") | default (.Param "cover.hidden") | default false }}
   {{- partial "cover.html" (dict "cxt" . "IsSingle" false "isHidden" $isHidden) }}
   <header class="entry-header">

@@ -53,6 +53,29 @@
     border-left-color: var(--accent);
 }
 
+/* 阅读时间 badge：hover 时右上角淡入 */
+.post-entry .read-time-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 11px;
+    color: var(--secondary);
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2px 8px;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.post-entry:hover .read-time-badge {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .dark .post-entry:hover {
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
 }

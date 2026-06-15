@@ -55,6 +55,36 @@
     position: relative;
     z-index: 1;
 }
+
+/* ---- 卫星 tooltip 气泡 ---- */
+.orbit-satellite[data-tip] {
+    position: absolute;
+    overflow: visible;
+}
+.orbit-satellite[data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: var(--entry, rgba(30,34,48,0.96));
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    padding: 4px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 100;
+}
+.orbit-satellite[data-tip]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
 </style>
 <script>
 (function () {
@@ -71,6 +101,10 @@
         const ctx = canvas.getContext('2d');
         const isDark = () => document.body.classList.contains('dark');
         let stars = [], raf;
+        // themeBlend: 0=浅色, 1=深色，每帧向目标渐进 6%
+        let themeBlend = isDark() ? 1 : 0;
+
+        function lerp(a, b, t) { return a + (b - a) * t; }
 
         function resize() {
             canvas.width = window.innerWidth;
@@ -89,9 +123,17 @@
         }
 
         function frame() {
+            // 每帧 themeBlend 向目标靠近 6%，实现柔和颜色过渡
+            const targetBlend = isDark() ? 1 : 0;
+            themeBlend += (targetBlend - themeBlend) * 0.06;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const dark = isDark();
-            const opacity = dark ? 1 : 0.22;
+            // 用 themeBlend 插值星星颜色和亮度
+            const opacity = lerp(0.22, 1, themeBlend);
+            // 颜色：浅色 rgb(60,80,160)，深色 rgb(210,222,255)
+            const cr = Math.round(lerp(60, 210, themeBlend));
+            const cg = Math.round(lerp(80, 222, themeBlend));
+            const cb = Math.round(lerp(160, 255, themeBlend));
 
             stars.forEach(s => {
                 s.alpha += s.da;
@@ -99,9 +141,8 @@
                 s.y += s.vy;
                 if (s.y < -2) s.y = canvas.height + 2;
 
-                const c = dark
-                    ? `rgba(210,222,255,${(s.alpha * opacity).toFixed(3)})`
-                    : `rgba(60,80,160,${(s.alpha * opacity).toFixed(3)})`;
+                const a = (s.alpha * opacity).toFixed(3);
+                const c = `rgba(${cr},${cg},${cb},${a})`;
 
                 // 大一点的星加发光晕
                 if (s.r > 1.1) {
@@ -163,13 +204,15 @@
 
         // 各卫星当前角度（度）
         const angles = [...initAngles];
-        let paused = false;
         let lastTime = null;
 
-        // 悬停暂停
+        // 悬停减速：currentSpeed 平滑向 targetSpeed 插值
+        let currentSpeed = 1;
+        let targetSpeed = 1;
+        const SLOW_SPEED = 0.15;
         if (wrap) {
-            wrap.addEventListener('mouseenter', () => { paused = true; });
-            wrap.addEventListener('mouseleave', () => { paused = false; });
+            wrap.addEventListener('mouseenter', () => { targetSpeed = SLOW_SPEED; });
+            wrap.addEventListener('mouseleave', () => { targetSpeed = 1; });
         }
 
         // canvas 画轨道虚线圈（叠在 orbit-ring 上）
@@ -215,8 +258,11 @@
 
         function tick(ts) {
             if (!lastTime) lastTime = ts;
-            const delta = paused ? 0 : ts - lastTime;
+            const raw = ts - lastTime;
             lastTime = ts;
+            // 每帧向目标速度靠近 8%，实现平滑加减速
+            currentSpeed += (targetSpeed - currentSpeed) * 0.08;
+            const delta = raw * currentSpeed;
 
             satellites.forEach((sat, i) => {
                 const { radius, period } = config[i] || config[0];
@@ -245,6 +291,16 @@
             if (svg) { svg.style.width = `${iconSize}px`; svg.style.height = `${iconSize}px`; }
             const rad = initAngles[i] * Math.PI / 180;
             sat.style.transform = `translate(${Math.cos(rad) * radius}px, ${Math.sin(rad) * radius}px)`;
+
+            // 🛰️ tooltip：将内部 <a> 或自身的 title 属性转为 data-tip（避免原生 tooltip 延迟）
+            const linkEl = sat.querySelector('a[title]') || sat;
+            const tipText = linkEl.getAttribute('title') || sat.getAttribute('title');
+            if (tipText) {
+                sat.setAttribute('data-tip', tipText);
+                // 移除原生 title，防止双重提示
+                sat.removeAttribute('title');
+                if (linkEl !== sat) linkEl.removeAttribute('title');
+            }
         });
 
         requestAnimationFrame(tick);
@@ -401,3 +457,1060 @@
     })();
 })();
 </script>
+
+<!-- ===== 相关文章推荐 / 代码折叠 / Giscus 样式 / 翻牌计时器 ===== -->
+<style>
+/* ---- 相关文章推荐 ---- */
+.related-posts {
+    margin: 48px 0 0;
+    padding: 20px 24px;
+    background: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--accent);
+}
+.related-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+}
+.related-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.related-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: calc(var(--radius) - 2px);
+    background: transparent;
+    transition: background 0.15s ease, transform 0.15s ease;
+    text-decoration: none !important;
+}
+.related-item:hover {
+    background: var(--accent-soft);
+    transform: translateX(3px);
+}
+.related-item-title {
+    font-size: 14px;
+    color: var(--primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+}
+.related-item:hover .related-item-title {
+    color: var(--accent);
+}
+.related-item-meta {
+    font-size: 12px;
+    color: var(--secondary);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ---- 代码块折叠 ---- */
+.code-block-wrap {
+    position: relative;
+}
+.code-collapse-btn {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    background: var(--code-bg);
+    color: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    z-index: 5;
+    transition: background 0.15s, color 0.15s;
+    user-select: none;
+}
+.code-collapse-btn:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+.code-block-wrap.collapsed .highlight pre {
+    max-height: 200px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+}
+
+/* ---- TOC 激活项平滑动效 ---- */
+.toc li a {
+    display: inline-block;
+    transition: color 0.25s ease, padding-left 0.25s ease, font-weight 0.25s ease;
+}
+.toc li a.active {
+    color: var(--accent) !important;
+    font-weight: 600;
+    padding-left: 8px;
+    border-left: 2px solid var(--accent);
+}
+
+/* ---- Giscus 评论区统一样式 ---- */
+.giscus {
+    margin-top: 48px;
+}
+.giscus-frame {
+    border-radius: var(--radius) !important;
+    border: 1px solid var(--border) !important;
+}
+
+/* ---- 页脚翻牌数字 ---- */
+.flip-digit {
+    display: inline-block;
+    min-width: 1.1ch;
+    text-align: center;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.flip-digit.flip {
+    animation: flipNum 0.3s ease;
+}
+@keyframes flipNum {
+    0%   { transform: translateY(-6px); opacity: 0; }
+    100% { transform: translateY(0);    opacity: 1; }
+}
+</style>
+
+<script>
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+
+        /* ---- 标签云字体缩放 ---- */
+        var tagItems = document.querySelectorAll('.terms-tags li[data-count]');
+        if (tagItems.length) {
+            var counts = Array.from(tagItems).map(function(li) { return +li.dataset.count; });
+            var min = Math.min.apply(null, counts);
+            var max = Math.max.apply(null, counts);
+            tagItems.forEach(function(li) {
+                var c = +li.dataset.count;
+                var ratio = max > min ? (c - min) / (max - min) : 0.5;
+                // 字体范围 13px ~ 22px
+                var fs = 13 + Math.round(ratio * 9);
+                var a = li.querySelector('a');
+                if (a) a.style.fontSize = fs + 'px';
+            });
+        }
+
+        /* ---- 代码块折叠（超过 200px 才显示按钮） ---- */
+        document.querySelectorAll('.post-content .highlight').forEach(function(hl) {
+            var pre = hl.querySelector('pre');
+            if (!pre || pre.scrollHeight <= 260) return;
+            var wrap = document.createElement('div');
+            wrap.className = 'code-block-wrap collapsed';
+            hl.parentNode.insertBefore(wrap, hl);
+            wrap.appendChild(hl);
+            var btn = document.createElement('button');
+            btn.className = 'code-collapse-btn';
+            btn.textContent = '展开';
+            wrap.appendChild(btn);
+            btn.addEventListener('click', function() {
+                var col = wrap.classList.toggle('collapsed');
+                btn.textContent = col ? '展开' : '收起';
+            });
+        });
+
+        /* ---- TOC 激活项高亮（平滑渐入） ---- */
+        var tocLinks = Array.from(document.querySelectorAll('.toc li a'));
+        if (tocLinks.length) {
+            var headings = tocLinks.map(function(a) {
+                try { return document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1))); } catch(e) { return null; }
+            }).filter(Boolean);
+
+            var obs = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    var id = entry.target.id;
+                    var link = tocLinks.find(function(a) {
+                        try { return decodeURIComponent(a.getAttribute('href').slice(1)) === id; } catch(e) { return false; }
+                    });
+                    if (link) link.classList.toggle('active', entry.isIntersecting);
+                });
+            }, { rootMargin: '-10% 0px -80% 0px' });
+
+            headings.forEach(function(h) { obs.observe(h); });
+        }
+
+        /* ---- 页脚运行时间翻牌动效 ---- */
+        var rtEl = document.getElementById('site-runtime');
+        if (!rtEl) return;
+        var startStr = rtEl.dataset.start;
+        if (!startStr) return;
+        var startDate = new Date(startStr);
+
+        function pad(n) { return String(n).padStart(2, '0'); }
+
+        // 把文字节点拆分成 .flip-digit span
+        function buildSpans(el, text) {
+            el.innerHTML = '';
+            text.split('').forEach(function(ch) {
+                if (/\d/.test(ch)) {
+                    var s = document.createElement('span');
+                    s.className = 'flip-digit';
+                    s.textContent = ch;
+                    el.appendChild(s);
+                } else {
+                    el.appendChild(document.createTextNode(ch));
+                }
+            });
+        }
+
+        function updateRuntime() {
+            var now = new Date();
+            var diff = now - startDate;
+            var days = Math.floor(diff / 86400000);
+            diff %= 86400000;
+            var hours = Math.floor(diff / 3600000);
+            diff %= 3600000;
+            var mins = Math.floor(diff / 60000);
+            var secs = Math.floor((diff % 60000) / 1000);
+            var text = days + ' 天 ' + pad(hours) + ':' + pad(mins) + ':' + pad(secs);
+
+            var spans = rtEl.querySelectorAll('.flip-digit');
+            if (!spans.length) {
+                buildSpans(rtEl, text);
+                return;
+            }
+            // 逐位对比，变化的加翻牌动画
+            var digits = text.split('').filter(function(c) { return /\d/.test(c); });
+            var spArr = Array.from(rtEl.querySelectorAll('.flip-digit'));
+            if (digits.length !== spArr.length) {
+                buildSpans(rtEl, text);
+                return;
+            }
+            spArr.forEach(function(sp, i) {
+                if (sp.textContent !== digits[i]) {
+                    sp.textContent = digits[i];
+                    sp.classList.remove('flip');
+                    void sp.offsetWidth; // reflow
+                    sp.classList.add('flip');
+                }
+            });
+        }
+
+        updateRuntime();
+        setInterval(updateRuntime, 1000);
+    });
+})();
+</script>
+
+<!-- ===== 导航栏滚动收缩 / Lightbox / 打字机 / 搜索快捷键 / blockquote / 卡片增强 / 页脚格言 ===== -->
+<style>
+/* ---- 导航栏滚动收缩 ---- */
+.header {
+    transition: box-shadow 0.3s ease, background 0.3s ease, backdrop-filter 0.3s ease;
+}
+.header.scrolled {
+    --header-height: 52px;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+.header.scrolled .nav {
+    line-height: 52px;
+}
+
+/* ---- 搜索键盘快捷键提示 ---- */
+.search-shortcut {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--secondary);
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+.search-shortcut kbd {
+    display: inline-block;
+    padding: 1px 5px;
+    background: var(--tertiary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 10px;
+    font-family: inherit;
+    line-height: 1.6;
+}
+#searchbox {
+    position: relative;
+}
+
+/* ---- 搜索结果飞入动效 ---- */
+#searchResults li {
+    animation: slideInSearch 0.2s ease both;
+}
+#searchResults li:nth-child(1) { animation-delay: 0.02s; }
+#searchResults li:nth-child(2) { animation-delay: 0.05s; }
+#searchResults li:nth-child(3) { animation-delay: 0.08s; }
+#searchResults li:nth-child(4) { animation-delay: 0.11s; }
+#searchResults li:nth-child(5) { animation-delay: 0.14s; }
+@keyframes slideInSearch {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- blockquote 引号装饰 + 类型 badge ---- */
+.post-content blockquote {
+    position: relative;
+}
+.post-content blockquote::before {
+    content: '\201C';
+    position: absolute;
+    top: -8px;
+    left: 8px;
+    font-size: 48px;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.25;
+    font-family: Georgia, serif;
+    pointer-events: none;
+    user-select: none;
+}
+/* 类型 blockquote：> [!TIP] / [!NOTE] / [!WARN] */
+.post-content blockquote.bq-tip {
+    border-left-color: #3db88a;
+    background: rgba(61, 184, 138, 0.08);
+}
+.post-content blockquote.bq-note {
+    border-left-color: var(--accent);
+    background: var(--accent-soft);
+}
+.post-content blockquote.bq-warn {
+    border-left-color: #e8855a;
+    background: rgba(232, 133, 90, 0.08);
+}
+.bq-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    margin-top: 0;
+    width: fit-content;
+}
+.bq-badge-tip  { background: rgba(61,184,138,0.18); color: #2a9d6a; }
+.bq-badge-note { background: var(--accent-soft); color: var(--accent); }
+.bq-badge-warn { background: rgba(232,133,90,0.18); color: #c0622e; }
+
+/* ---- Lightbox 图片灯箱 ---- */
+#lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    z-index: 9000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+    backdrop-filter: blur(4px);
+    animation: lbFadeIn 0.2s ease;
+}
+#lightbox-overlay.open {
+    display: flex;
+}
+@keyframes lbFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+#lightbox-img {
+    max-width: 90vw;
+    max-height: 88vh;
+    border-radius: var(--radius);
+    box-shadow: 0 20px 80px rgba(0,0,0,0.8);
+    animation: lbZoomIn 0.22s ease;
+    object-fit: contain;
+}
+@keyframes lbZoomIn {
+    from { transform: scale(0.88); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+}
+#lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    font-size: 28px;
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
+    line-height: 1;
+    transition: transform 0.15s ease, color 0.15s ease;
+    user-select: none;
+}
+#lightbox-close:hover {
+    transform: scale(1.15);
+    color: #fff;
+}
+
+/* ---- post-content 图片 hover 游标 ---- */
+.post-content img:not(.link img) {
+    cursor: zoom-in;
+}
+
+/* ---- 首页 Profile 打字机光标 ---- */
+.typewriter-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: var(--accent);
+    vertical-align: text-bottom;
+    margin-left: 2px;
+    animation: blink 0.8s step-end infinite;
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+/* ---- 文章卡片分类顶部渐变条 ---- */
+.post-entry::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 40px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+.post-entry[data-section="know"]::after {
+    background: linear-gradient(to bottom, var(--accent-soft), transparent);
+}
+.post-entry[data-section="journal"]::after {
+    background: linear-gradient(to bottom, rgba(232,133,90,0.13), transparent);
+}
+.post-entry[data-section="cases"]::after {
+    background: linear-gradient(to bottom, rgba(61,184,138,0.13), transparent);
+}
+.post-entry:hover::after {
+    opacity: 1;
+}
+
+/* ---- 页脚格言 ---- */
+.footer-quote {
+    font-size: 12px;
+    color: var(--secondary);
+    font-style: italic;
+    opacity: 0.75;
+    margin-top: 4px;
+    transition: opacity 0.4s ease;
+    cursor: default;
+    user-select: none;
+}
+.footer-quote:hover {
+    opacity: 1;
+}
+</style>
+
+<script>
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+
+        /* ---- 导航栏滚动收缩 ---- */
+        var header = document.querySelector('.header');
+        if (header) {
+            var ticking = false;
+            window.addEventListener('scroll', function () {
+                if (!ticking) {
+                    requestAnimationFrame(function () {
+                        header.classList.toggle('scrolled', window.scrollY > 40);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        }
+
+        /* ---- 搜索键盘快捷键（/ 键或 Ctrl+K 聚焦） ---- */
+        var searchInput = document.querySelector('#searchbox input');
+        if (searchInput) {
+            // 注入快捷键提示
+            var hint = document.createElement('span');
+            hint.className = 'search-shortcut';
+            hint.innerHTML = '<kbd>/</kbd>';
+            searchInput.parentNode.style.position = 'relative';
+            searchInput.parentNode.appendChild(hint);
+            // 隐藏已聚焦时的提示
+            searchInput.addEventListener('focus', function () { hint.style.display = 'none'; });
+            searchInput.addEventListener('blur', function () { hint.style.display = ''; });
+        }
+        document.addEventListener('keydown', function (e) {
+            if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                if (searchInput) { e.preventDefault(); searchInput.focus(); }
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                if (searchInput) { e.preventDefault(); searchInput.focus(); }
+            }
+        });
+
+        /* ---- blockquote 类型徽章（识别 [!TIP] [!NOTE] [!WARN] 首行） ---- */
+        document.querySelectorAll('.post-content blockquote').forEach(function (bq) {
+            var first = bq.querySelector('p:first-child');
+            if (!first) return;
+            var txt = first.textContent.trim();
+            var map = {
+                '[!TIP]':  { cls: 'bq-tip',  badgeCls: 'bq-badge-tip',  icon: '💡', label: 'Tip'  },
+                '[!NOTE]': { cls: 'bq-note', badgeCls: 'bq-badge-note', icon: '📌', label: 'Note' },
+                '[!WARN]': { cls: 'bq-warn', badgeCls: 'bq-badge-warn', icon: '⚠️', label: 'Warn' },
+                '[!WARNING]': { cls: 'bq-warn', badgeCls: 'bq-badge-warn', icon: '⚠️', label: 'Warning' },
+            };
+            var match = Object.keys(map).find(function (k) { return txt.startsWith(k); });
+            if (!match) return;
+            var cfg = map[match];
+            bq.classList.add(cfg.cls);
+            var badge = document.createElement('p');
+            badge.className = 'bq-badge ' + cfg.badgeCls;
+            badge.innerHTML = cfg.icon + ' ' + cfg.label;
+            bq.insertBefore(badge, first);
+            // 去掉原来的 [!XXX] 标记文字
+            first.textContent = first.textContent.replace(match, '').trim();
+            if (!first.textContent) first.remove();
+        });
+
+        /* ---- 图片 Lightbox ---- */
+        var overlay = document.createElement('div');
+        overlay.id = 'lightbox-overlay';
+        var lbImg = document.createElement('img');
+        lbImg.id = 'lightbox-img';
+        lbImg.alt = 'preview';
+        var closeBtn = document.createElement('span');
+        closeBtn.id = 'lightbox-close';
+        closeBtn.innerHTML = '&times;';
+        overlay.appendChild(lbImg);
+        overlay.appendChild(closeBtn);
+        document.body.appendChild(overlay);
+
+        function openLightbox(src, alt) {
+            lbImg.src = src;
+            lbImg.alt = alt || '';
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            overlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('.post-content img:not(.link img)').forEach(function (img) {
+            img.addEventListener('click', function () {
+                openLightbox(img.src, img.alt);
+            });
+        });
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay || e.target === closeBtn) closeLightbox();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        /* ---- 首页 Profile 打字机动效 ---- */
+        var subtitleEl = document.querySelector('.profile .profile_inner > span');
+        if (subtitleEl) {
+            var original = subtitleEl.textContent;
+            subtitleEl.textContent = '';
+            var cursor = document.createElement('span');
+            cursor.className = 'typewriter-cursor';
+            subtitleEl.appendChild(cursor);
+            var i = 0;
+            function typeChar() {
+                if (i < original.length) {
+                    cursor.before(original[i]);
+                    i++;
+                    setTimeout(typeChar, 55 + Math.random() * 40);
+                }
+            }
+            setTimeout(typeChar, 600);
+        }
+
+        /* ---- 💬 每日固定格言（同天看同一条，点击手动切换） ---- */
+        var quotes = [
+            '读书破万卷，下笔如有神。',
+            'Stay hungry, stay foolish.',
+            '纸上得来终觉浅，绝知此事要躬行。',
+            'The best time to plant a tree was 20 years ago. The second best time is now.',
+            '不积跬步，无以至千里。',
+            'Code is like humor. When you have to explain it, it\'s bad.',
+            '路漫漫其修远兮，吾将上下而求索。',
+            'First, solve the problem. Then, write the code.',
+            '知之者不如好之者，好之者不如乐之者。',
+            'Make it work, make it right, make it fast.',
+            '仰之弥高，钻之弥坚。',
+            'In theory, there is no difference between theory and practice. In practice, there is.',
+            '博学之，审问之，慎思之，明辨之，笃行之。',
+            'The only way to do great work is to love what you do.',
+            '千里之行，始于足下。',
+            'Premature optimization is the root of all evil.',
+            '学而不思则罔，思而不学则殆。',
+            'Write code as if the next person to maintain it is a violent psychopath who knows where you live.',
+            '好学近乎知，力行近乎仁，知耻近乎勇。',
+            'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+        ];
+        var footer = document.querySelector('.footer');
+        if (footer) {
+            var q = document.createElement('div');
+            q.className = 'footer-quote';
+            // dayKey = year*10000 + month*100 + day，保证同天显示同一条
+            var now = new Date();
+            var dayKey = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+            var idx = dayKey % quotes.length;
+            q.textContent = '"' + quotes[idx] + '"';
+            q.title = '点击换一条';
+            q.style.cursor = 'pointer';
+            q.addEventListener('click', function () {
+                idx = (idx + 1) % quotes.length;
+                q.style.opacity = '0';
+                setTimeout(function () {
+                    q.textContent = '"' + quotes[idx] + '"';
+                    q.style.opacity = '';
+                }, 200);
+            });
+            footer.appendChild(q);
+        }
+
+    });
+})();
+</script>
+
+<!-- ===== 🚀 火箭回到顶部 ===== -->
+<style>
+#rocket-back-top {
+    position: fixed;
+    right: 28px;
+    bottom: 32px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.22);
+    z-index: 500;
+    opacity: 0;
+    transform: translateY(12px) scale(0.85);
+    transition: opacity 0.28s ease, transform 0.28s ease, background 0.2s ease;
+    pointer-events: none;
+    user-select: none;
+}
+#rocket-back-top.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+#rocket-back-top:hover {
+    background: var(--accent);
+    filter: brightness(1.15);
+    transform: translateY(-3px) scale(1.08);
+}
+@keyframes rocketLaunch {
+    0%   { transform: translateY(0)    scale(1);    opacity: 1; }
+    30%  { transform: translateY(-8px) scale(1.15); opacity: 1; }
+    100% { transform: translateY(-120vh) scale(0.6); opacity: 0; }
+}
+#rocket-back-top.launching {
+    animation: rocketLaunch 0.7s cubic-bezier(0.4,0,0.2,1) forwards;
+    pointer-events: none;
+}
+</style>
+<script>
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        var btn = document.createElement('button');
+        btn.id = 'rocket-back-top';
+        btn.setAttribute('aria-label', '回到顶部');
+        btn.innerHTML = '🚀';
+        document.body.appendChild(btn);
+
+        function updateVisibility() {
+            btn.classList.toggle('visible', window.scrollY > 300);
+        }
+
+        window.addEventListener('scroll', updateVisibility, { passive: true });
+        updateVisibility();
+
+        btn.addEventListener('click', function () {
+            btn.classList.remove('launching');
+            void btn.offsetWidth; // reflow 重置动画
+            btn.classList.add('launching');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // 动画结束后重置状态
+            btn.addEventListener('animationend', function onEnd() {
+                btn.classList.remove('launching');
+                btn.classList.remove('visible');
+                btn.removeEventListener('animationend', onEnd);
+            });
+        });
+    });
+})();
+</script>
+
+<!-- ===== 🔍 搜索关键词高亮 ===== -->
+<style>
+mark.search-highlight {
+    background: rgba(var(--accent-rgb, 99,102,241), 0.22);
+    color: var(--accent);
+    border-radius: 3px;
+    padding: 0 2px;
+    font-weight: 600;
+    font-style: normal;
+}
+</style>
+<script>
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        var searchInput = document.querySelector('#searchbox input');
+        var resultsList = document.querySelector('#searchResults');
+        if (!searchInput || !resultsList) return;
+
+        function escapeRegExp(s) {
+            return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function highlightNode(node, re) {
+            if (node.nodeType === 3) {
+                // 文本节点：正则替换
+                var val = node.nodeValue;
+                if (!re.test(val)) return;
+                re.lastIndex = 0;
+                var frag = document.createDocumentFragment();
+                var last = 0, m;
+                re.lastIndex = 0;
+                while ((m = re.exec(val)) !== null) {
+                    if (m.index > last) frag.appendChild(document.createTextNode(val.slice(last, m.index)));
+                    var mark = document.createElement('mark');
+                    mark.className = 'search-highlight';
+                    mark.textContent = m[0];
+                    frag.appendChild(mark);
+                    last = re.lastIndex;
+                    if (!re.global) break;
+                }
+                if (last < val.length) frag.appendChild(document.createTextNode(val.slice(last)));
+                node.parentNode.replaceChild(frag, node);
+            } else if (node.nodeType === 1 && node.nodeName !== 'MARK' && node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE') {
+                Array.from(node.childNodes).forEach(function (child) { highlightNode(child, re); });
+            }
+        }
+
+        function removeHighlights(container) {
+            container.querySelectorAll('mark.search-highlight').forEach(function (m) {
+                var parent = m.parentNode;
+                parent.replaceChild(document.createTextNode(m.textContent), m);
+                parent.normalize();
+            });
+        }
+
+        function doHighlight() {
+            var kw = searchInput.value.trim();
+            removeHighlights(resultsList);
+            if (!kw) return;
+            var re = new RegExp(escapeRegExp(kw), 'gi');
+            Array.from(resultsList.children).forEach(function (li) {
+                highlightNode(li, re);
+            });
+        }
+
+        // MutationObserver 监听搜索结果 DOM 变化
+        var observer = new MutationObserver(function () {
+            // 防抖：避免 highlight 触发 mutation 造成死循环
+            var kw = searchInput.value.trim();
+            if (!kw) return;
+            var re = new RegExp(escapeRegExp(kw), 'gi');
+            // 只处理新增节点
+            resultsList.querySelectorAll('li:not([data-highlighted])').forEach(function (li) {
+                li.setAttribute('data-highlighted', '1');
+                highlightNode(li, re);
+            });
+        });
+        observer.observe(resultsList, { childList: true, subtree: false });
+
+        searchInput.addEventListener('input', function () {
+            // 清空 data-highlighted，重新高亮
+            resultsList.querySelectorAll('[data-highlighted]').forEach(function (el) { el.removeAttribute('data-highlighted'); });
+            doHighlight();
+        });
+    });
+})();
+</script>
+
+<!-- ===== 📑 TOC 折叠面包屑 ===== -->
+<style>
+/* 二级 TOC 列表默认折叠 */
+.toc ul ul {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+}
+.toc ul ul.toc-open {
+    max-height: 800px;
+    opacity: 1;
+}
+/* 一级条目有子项时显示折叠指示 */
+.toc li.has-children > a::before {
+    content: '▸';
+    display: inline-block;
+    margin-right: 4px;
+    font-size: 9px;
+    transition: transform 0.2s ease;
+    color: var(--secondary);
+}
+.toc li.has-children.toc-expanded > a::before {
+    transform: rotate(90deg);
+}
+</style>
+<script>
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        var tocLinks = Array.from(document.querySelectorAll('.toc li a'));
+        if (!tocLinks.length) return;
+
+        // 标记有子项的 li，并给二级 ul 加折叠类
+        document.querySelectorAll('.toc li').forEach(function (li) {
+            var childUl = li.querySelector(':scope > ul');
+            if (childUl) {
+                li.classList.add('has-children');
+                // 初始折叠
+                childUl.classList.remove('toc-open');
+                // 点击一级链接展开/收起
+                var a = li.querySelector(':scope > a');
+                if (a) {
+                    a.addEventListener('click', function (e) {
+                        var isOpen = childUl.classList.toggle('toc-open');
+                        li.classList.toggle('toc-expanded', isOpen);
+                    });
+                }
+            }
+        });
+
+        // 滚动时自动展开当前节的祖先
+        var headings = tocLinks.map(function (a) {
+            try { return document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1))); } catch(e) { return null; }
+        }).filter(Boolean);
+
+        var obs = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                var id = entry.target.id;
+                var link = tocLinks.find(function (a) {
+                    try { return decodeURIComponent(a.getAttribute('href').slice(1)) === id; } catch(e) { return false; }
+                });
+                if (!link) return;
+                // 展开所有祖先 ul
+                var el = link.parentElement; // li
+                while (el) {
+                    if (el.tagName === 'UL' && el.closest('.toc')) {
+                        el.classList.add('toc-open');
+                        var parentLi = el.parentElement;
+                        if (parentLi && parentLi.tagName === 'LI') parentLi.classList.add('toc-expanded');
+                    }
+                    el = el.parentElement;
+                    if (el && el.classList && el.classList.contains('toc')) break;
+                }
+            });
+        }, { rootMargin: '-10% 0px -75% 0px' });
+
+        headings.forEach(function (h) { obs.observe(h); });
+    });
+})();
+</script>
+
+<!-- ===== 📄 上下篇 flex 卡片样式 ===== -->
+<style>
+/* 容器：flex 水平排列，间距 16px */
+.paginav-cards {
+    display: flex;
+    gap: 16px;
+    margin: 40px 0 0;
+    flex-wrap: wrap;
+}
+/* 卡片公共样式 */
+.paginav-card {
+    flex: 1;
+    min-width: 220px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--entry);
+    overflow: hidden;
+    text-decoration: none !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.paginav-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+}
+/* 顶部分类色条 */
+.paginav-card-bar {
+    height: 4px;
+    width: 100%;
+    flex-shrink: 0;
+}
+.paginav-bar-know    { background: linear-gradient(90deg, var(--accent), #a78bfa); }
+.paginav-bar-journal { background: linear-gradient(90deg, #e8855a, #f5c87a); }
+.paginav-bar-cases   { background: linear-gradient(90deg, #3db88a, #5dd6b0); }
+/* 默认色条（其他分区） */
+.paginav-card-bar:not([class*="paginav-bar-know"]):not([class*="paginav-bar-journal"]):not([class*="paginav-bar-cases"]) {
+    background: linear-gradient(90deg, var(--accent), var(--accent));
+    opacity: 0.6;
+}
+/* 卡片内容区 */
+.paginav-card-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 18px 16px;
+}
+/* 方向提示 */
+.paginav-card-dir {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--secondary);
+    margin-bottom: 2px;
+}
+.paginav-next .paginav-card-dir {
+    justify-content: flex-end;
+}
+/* 分类标签 */
+.paginav-card-section {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    width: fit-content;
+}
+.paginav-section-know    { background: var(--accent-soft); color: var(--accent); }
+.paginav-section-journal { background: rgba(232,133,90,0.13); color: #c0622e; }
+.paginav-section-cases   { background: rgba(61,184,138,0.13); color: #2a9d6a; }
+.paginav-section-know:is([class]),
+.paginav-section-journal:is([class]),
+.paginav-section-cases:is([class]) { /* already handled */ }
+/* 标题 */
+.paginav-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+    line-height: 1.4;
+    margin-top: 2px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    transition: color 0.15s ease;
+}
+.paginav-card:hover .paginav-card-title {
+    color: var(--accent);
+}
+/* 摘要预览 */
+.paginav-card-summary {
+    font-size: 12px;
+    color: var(--secondary);
+    line-height: 1.5;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin-top: 4px;
+}
+/* 右对齐（下一篇） */
+.paginav-next .paginav-card-inner {
+    align-items: flex-end;
+    text-align: right;
+}
+.paginav-next .paginav-card-section {
+    align-self: flex-end;
+}
+</style>
+
+<!-- ===== ✨ Nav 传送门特效 ===== -->
+<style>
+/* link-box 扫光效果 */
+.link-box {
+    position: relative;
+    overflow: hidden;
+}
+.link-box::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        105deg,
+        transparent 30%,
+        rgba(255,255,255,0.10) 50%,
+        transparent 70%
+    );
+    background-size: 200% 100%;
+    background-position: -100% 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    border-radius: inherit;
+}
+.link-box:hover::after {
+    opacity: 1;
+    animation: linkBoxSweep 0.6s ease forwards;
+}
+@keyframes linkBoxSweep {
+    0%   { background-position: -100% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* link 内部箭头滑入 */
+.link {
+    position: relative;
+    overflow: hidden;
+}
+.link::after {
+    content: '→';
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%) translateX(24px);
+    font-size: 16px;
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none;
+}
+.link:hover::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+/* 悬停时内容轻微左移，为箭头腾位 */
+.link:hover .name,
+.link:hover .description {
+    transform: translateX(-4px);
+    transition: transform 0.2s ease;
+}
+.link .name,
+.link .description {
+    transition: transform 0.2s ease;
+}
+</style>

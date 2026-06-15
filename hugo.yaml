@@ -106,13 +106,13 @@ params:
   ShowBreadCrumbs: true
   DateFormat: "January 2, 2006"
   buildDate: "2024-11-25"
-  ShowReadingTime: true
+  ShowReadingTime: false
   ShowWordCount: false
 
   # toc
   showtoc: true
   tocopen: true
-  disableScrollToTop: false
+  disableScrollToTop: true
 
   # content
   ShowCodeCopyButtons: true

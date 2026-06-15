@@ -12,8 +12,16 @@
 }
 
 .dark .header {
-    background: rgba(29, 30, 32, 0.85);
+    background: rgba(13, 14, 18, 0.88);
     border-bottom-color: var(--border);
+}
+
+/* 滚动后导航栏收缩动效 */
+.header.scrolled {
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+}
+.dark .header.scrolled {
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
 }
 
 .nav {

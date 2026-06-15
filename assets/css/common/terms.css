@@ -1,7 +1,14 @@
+.terms-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 0;
+}
+
 .terms-tags li {
     display: inline-block;
-    margin: 10px;
     font-weight: 500;
+    /* 字体大小由 JS 动态注入 data-count，通过 CSS var 缩放 */
 }
 
 .terms-tags a {
