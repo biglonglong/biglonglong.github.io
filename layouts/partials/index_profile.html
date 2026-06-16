@@ -27,10 +27,12 @@
                     {{- end }}
                 {{- end }}
                 <img draggable="false" src="{{ $img.Permalink }}" alt="{{ .imageTitle | default "profile image" }}" title="{{ .imageTitle }}"
-                    height="{{ .imageHeight | default 150 }}" width="{{ .imageWidth | default 150 }}" />
+                    height="{{ .imageHeight | default 150 }}" width="{{ .imageWidth | default 150 }}"
+                    decoding="async" fetchpriority="high" />
             {{- else }}
             <img draggable="false" src="{{ .imageUrl | absURL }}" alt="{{ .imageTitle | default "profile image" }}" title="{{ .imageTitle }}"
-                height="{{ .imageHeight | default 150 }}" width="{{ .imageWidth | default 150 }}" />
+                height="{{ .imageHeight | default 150 }}" width="{{ .imageWidth | default 150 }}"
+                decoding="async" fetchpriority="high" />
             {{- end }}
 
             {{/* 卫星图标：按顺序排列，CSS 通过 nth-child 分配初始角度 */}}

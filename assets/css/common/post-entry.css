@@ -39,18 +39,40 @@
     padding: var(--gap) var(--gap) var(--gap) calc(var(--gap) + 4px);
     background: var(--entry);
     border-radius: var(--radius);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    /* 只保留 transform 和 border-color 过渡，box-shadow 改由 ::before 处理 */
+    transition: transform 0.25s ease, border-color 0.25s ease;
     border: 1px solid var(--border);
     /* 左侧默认色条 */
     border-left: 4px solid var(--accent);
     overflow: hidden;
+    /* 隔离子树布局/绘制，减少重排范围 */
+    contain: layout style;
+    /* 提示浏览器提前提升为合成层 */
+    will-change: transform;
+}
+
+/* 用 ::before 预渲染发光阴影层，hover 时只切换 opacity（GPU 合成，零重绘） */
+/* 骨架屏状态下 ::before 由骨架屏闪光覆盖，故限定为非骨架状态 */
+.post-entry:not(.skeleton)::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), -4px 0 14px -2px var(--card-glow, rgba(99,102,241,0.35));
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+    z-index: 0;
 }
 
 .post-entry:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     border-color: var(--accent);
     border-left-color: var(--accent);
+}
+
+.post-entry:not(.skeleton):hover::before {
+    opacity: 1;
 }
 
 /* 阅读时间 badge：hover 时右上角淡入 */
@@ -76,8 +98,8 @@
     transform: translateY(0);
 }
 
-.dark .post-entry:hover {
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+.dark .post-entry:not(.skeleton)::before {
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5), -4px 0 16px -2px var(--card-glow, rgba(99,102,241,0.45));
 }
 
 .post-entry:active {
@@ -88,18 +110,23 @@
 /* 分类专属色条：know=蓝紫，journal=橙暖，cases=青绿 */
 .post-entry[data-section="know"] {
     border-left-color: var(--accent);
+    --card-glow: rgba(99, 102, 241, 0.38);
 }
 .post-entry[data-section="journal"] {
     border-left-color: #e8855a;
+    --card-glow: rgba(232, 133, 90, 0.38);
 }
 .dark .post-entry[data-section="journal"] {
     border-left-color: #f0a070;
+    --card-glow: rgba(240, 160, 112, 0.38);
 }
 .post-entry[data-section="cases"] {
     border-left-color: #3db88a;
+    --card-glow: rgba(61, 184, 138, 0.38);
 }
 .dark .post-entry[data-section="cases"] {
     border-left-color: #4ecba0;
+    --card-glow: rgba(78, 203, 160, 0.38);
 }
 
 .tag-entry .entry-cover {
@@ -162,4 +189,98 @@
 .entry-cover a {
     color: var(--secondary);
     box-shadow: 0 1px 0 var(--primary);
+}
+
+/* ===== 文章卡片骨架屏：进入视口前显示闪光占位 ===== */
+@keyframes shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position:  400px 0; }
+}
+
+.post-entry.skeleton {
+    /* 覆盖真实内容，用渐变闪光代替 */
+    background: var(--entry) !important;
+}
+
+.post-entry.skeleton::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--accent-soft) 40%,
+        transparent 80%
+    );
+    background-size: 800px 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+/* 骨架屏时隐藏真实文字内容 */
+.post-entry.skeleton .entry-header,
+.post-entry.skeleton .entry-content,
+.post-entry.skeleton .entry-footer,
+.post-entry.skeleton .read-time-badge {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+/* 移除 skeleton 后淡入 */
+.post-entry:not(.skeleton) .entry-header,
+.post-entry:not(.skeleton) .entry-content,
+.post-entry:not(.skeleton) .entry-footer {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* ===== 卡片交错入场动画 ===== */
+@keyframes cardFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 卡片进入视口时触发入场，延迟由 JS 写入 --card-index 变量 */
+.post-entry.card-enter {
+    animation: cardFadeUp 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--card-index, 0) * 60ms);
+}
+
+/* 尊重系统减弱动效设置 */
+@media (prefers-reduced-motion: reduce) {
+    .post-entry.skeleton::before { animation: none; }
+    .post-entry.card-enter { animation: none; }
+}
+
+/* ===== 文章卡片点击波纹效果 ===== */
+@keyframes rippleOut {
+    0%   { transform: scale(0);  opacity: 0.22; }
+    60%  { transform: scale(3);  opacity: 0.10; }
+    100% { transform: scale(5);  opacity: 0; }
+}
+
+.post-entry .ripple-dot {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    pointer-events: none;
+    transform: scale(0);
+    animation: rippleOut 0.55s ease-out forwards;
+    z-index: 1;
+    margin-left: -18px;
+    margin-top: -18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .post-entry .ripple-dot { display: none; }
 }

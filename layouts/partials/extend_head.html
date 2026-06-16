@@ -30,10 +30,14 @@
 </script>
 {{ end }}
 
-<!-- 中文正文字体：Noto Serif SC（仅加载 400/700 两字重，减少请求） -->
+<!-- 中文正文字体：Noto Serif SC — 非阻塞加载，不阻塞首屏渲染 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap"
+      rel="stylesheet" media="print" onload="this.media='all'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+</noscript>
 
 <!-- Busuanzi -->
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
@@ -49,6 +53,7 @@
     height: 100vh;
     pointer-events: none;
     z-index: 0;
+    will-change: contents;
 }
 /* profile 区域内容浮在星空上方 */
 .profile {
@@ -106,6 +111,30 @@
 
         function lerp(a, b, t) { return a + (b - a) * t; }
 
+        // ---- 离屏缓存：为大星绘制发光晕，避免每帧创建 RadialGradient ----
+        // glowCache[size] = OffscreenCanvas（若不支持则退化为普通 canvas）
+        const glowCache = {};
+        function getGlow(r, cr, cg, cb) {
+            const key = `${r}_${cr}_${cg}_${cb}`;
+            if (glowCache[key]) return glowCache[key];
+            const sz = Math.ceil(r * 3) * 2 + 2;
+            let oc;
+            try { oc = new OffscreenCanvas(sz, sz); } catch(_) { oc = document.createElement('canvas'); oc.width = sz; oc.height = sz; }
+            const oc_ctx = oc.getContext('2d');
+            const cx2 = sz / 2, cy2 = sz / 2;
+            const grd = oc_ctx.createRadialGradient(cx2, cy2, 0, cx2, cy2, r * 3);
+            grd.addColorStop(0, `rgba(${cr},${cg},${cb},0.5)`);
+            grd.addColorStop(1, 'transparent');
+            oc_ctx.beginPath();
+            oc_ctx.arc(cx2, cy2, r * 3, 0, Math.PI * 2);
+            oc_ctx.fillStyle = grd;
+            oc_ctx.fill();
+            glowCache[key] = oc;
+            return oc;
+        }
+        // 主题变化时清空缓存（颜色改变）
+        function clearGlowCache() { for (const k in glowCache) delete glowCache[k]; }
+
         function resize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -122,18 +151,29 @@
             }));
         }
 
-        function frame() {
-            // 每帧 themeBlend 向目标靠近 6%，实现柔和颜色过渡
+        let _lastCr = -1, _lastBlend = -1;
+        // 帧率节流：目标 30fps（约 33ms/帧），高刷屏下避免无效渲染
+        const TARGET_FPS = 30;
+        const FRAME_INTERVAL = 1000 / TARGET_FPS;
+        let _lastFrameTime = 0;
+
+        function frame(timestamp) {
+            raf = requestAnimationFrame(frame);
+            // 未达到目标帧间隔则跳过
+            if (timestamp - _lastFrameTime < FRAME_INTERVAL) return;
+            _lastFrameTime = timestamp;
+
             const targetBlend = isDark() ? 1 : 0;
             themeBlend += (targetBlend - themeBlend) * 0.06;
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // 用 themeBlend 插值星星颜色和亮度
             const opacity = lerp(0.22, 1, themeBlend);
-            // 颜色：浅色 rgb(60,80,160)，深色 rgb(210,222,255)
             const cr = Math.round(lerp(60, 210, themeBlend));
             const cg = Math.round(lerp(80, 222, themeBlend));
             const cb = Math.round(lerp(160, 255, themeBlend));
+
+            // 主题颜色变化时清除发光缓存
+            if (cr !== _lastCr) { clearGlowCache(); _lastCr = cr; }
 
             stars.forEach(s => {
                 s.alpha += s.da;
@@ -141,37 +181,51 @@
                 s.y += s.vy;
                 if (s.y < -2) s.y = canvas.height + 2;
 
-                const a = (s.alpha * opacity).toFixed(3);
-                const c = `rgba(${cr},${cg},${cb},${a})`;
+                const a = +(s.alpha * opacity).toFixed(3);
 
-                // 大一点的星加发光晕
+                // 大星：用离屏缓存的发光晕 bitmap 绘制，无需每帧重建 RadialGradient
                 if (s.r > 1.1) {
-                    const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 3);
-                    grd.addColorStop(0, c);
-                    grd.addColorStop(1, 'transparent');
-                    ctx.beginPath();
-                    ctx.arc(s.x, s.y, s.r * 3, 0, Math.PI * 2);
-                    ctx.fillStyle = grd;
-                    ctx.fill();
+                    const glowBitmap = getGlow(s.r, cr, cg, cb);
+                    const sz = glowBitmap.width;
+                    ctx.globalAlpha = a;
+                    ctx.drawImage(glowBitmap, s.x - sz / 2, s.y - sz / 2);
+                    ctx.globalAlpha = 1;
                 }
 
                 ctx.beginPath();
                 ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-                ctx.fillStyle = c;
+                ctx.fillStyle = `rgba(${cr},${cg},${cb},${a})`;
                 ctx.fill();
             });
-            raf = requestAnimationFrame(frame);
         }
 
         function init() {
             resize();
             makeStars(180);
             cancelAnimationFrame(raf);
-            frame();
+            _lastFrameTime = 0; // 重置节流时钟，确保下一帧立即渲染
+            raf = requestAnimationFrame(frame);
         }
 
+        // resize 加 debounce(300ms)，避免连续触发重建星星
+        let _resizeTimer;
+        window.addEventListener('resize', function () {
+            clearTimeout(_resizeTimer);
+            _resizeTimer = setTimeout(init, 300);
+        });
+
         init();
-        window.addEventListener('resize', init);
+
+        // 页面隐藏时暂停 RAF，恢复可见时重启，避免无效 GPU 消耗
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                cancelAnimationFrame(raf);
+            } else {
+                cancelAnimationFrame(raf);
+                _lastFrameTime = 0;
+                raf = requestAnimationFrame(frame);
+            }
+        });
     });
 })();
 </script>
@@ -237,23 +291,30 @@
         const cy = canvas.height / 2;
         const isDark = () => document.body.classList.contains('dark');
 
-        function drawOrbits() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // 画各轨道圆圈（不重复画相同半径）
+        // 轨道离屏缓存：只在主题切换时重绘，避免每帧 clearRect+stroke
+        let orbitBitmap = null;
+        let _lastOrbitDark = null;
+
+        function buildOrbitBitmap() {
+            let oc;
+            try { oc = new OffscreenCanvas(canvas.width, canvas.height); }
+            catch(_) { oc = document.createElement('canvas'); oc.width = canvas.width; oc.height = canvas.height; }
+            const oc_ctx = oc.getContext('2d');
+            const dark = isDark();
             const drawn = new Set();
             config.forEach(({ radius }) => {
                 if (drawn.has(radius)) return;
                 drawn.add(radius);
-                ctx.beginPath();
-                ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-                ctx.strokeStyle = isDark()
-                    ? 'rgba(150,165,200,0.15)'
-                    : 'rgba(120,130,180,0.12)';
-                ctx.setLineDash([4, 8]);
-                ctx.lineWidth = 1;
-                ctx.stroke();
-                ctx.setLineDash([]);
+                oc_ctx.beginPath();
+                oc_ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                oc_ctx.strokeStyle = dark ? 'rgba(150,165,200,0.15)' : 'rgba(120,130,180,0.12)';
+                oc_ctx.setLineDash([4, 8]);
+                oc_ctx.lineWidth = 1;
+                oc_ctx.stroke();
+                oc_ctx.setLineDash([]);
             });
+            orbitBitmap = oc;
+            _lastOrbitDark = dark;
         }
 
         function tick(ts) {
@@ -273,7 +334,12 @@
                 sat.style.transform = `translate(${x}px, ${y}px)`;
             });
 
-            drawOrbits();
+            // 轨道只在主题切换时重建（isDark 变化），复用 bitmap
+            const dark = isDark();
+            if (orbitBitmap === null || dark !== _lastOrbitDark) buildOrbitBitmap();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(orbitBitmap, 0, 0);
+
             requestAnimationFrame(tick);
         }
 
@@ -318,15 +384,28 @@
     left: 0;
     width: 0%;
     height: 2px;
-    background: linear-gradient(90deg, var(--accent), #a78bfa);
+    /* 浅色：暖蓝紫，暗色：冷月蓝（通过 JS 切换 CSS 变量） */
+    background: var(--progress-gradient, linear-gradient(90deg, #6366f1, #a78bfa));
     z-index: 200;
-    transition: width 0.1s linear;
+    transition: width 0.12s linear, background 0.5s ease, opacity 0.3s ease;
     pointer-events: none;
     opacity: 0;
     border-radius: 0 2px 2px 0;
+    /* 末端发光点 */
+    box-shadow: 0 0 6px 1px var(--progress-glow, rgba(99,102,241,0.6));
 }
 #reading-progress.visible {
     opacity: 1;
+}
+/* 浅色主题：蓝紫渐变 */
+:root {
+    --progress-gradient: linear-gradient(90deg, #6366f1, #a78bfa);
+    --progress-glow: rgba(99, 102, 241, 0.55);
+}
+/* 暗色主题：冷月蓝渐变 */
+.dark {
+    --progress-gradient: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
+    --progress-glow: rgba(56, 189, 248, 0.5);
 }
 
 /* 页面切换顶部进度条 */
@@ -377,7 +456,7 @@
         updateProgress();
     });
 
-    /* ---- 图片懒加载 + 模糊渐入 ---- */
+    /* ---- 图片懒加载 + 模糊渐入 + 异步解码 ---- */
     document.addEventListener('DOMContentLoaded', function () {
         const imgs = document.querySelectorAll('.post-content img');
         if (!imgs.length) return;
@@ -386,10 +465,12 @@
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
                 const img = entry.target;
-                // 添加 loading 状态
-                img.classList.add('lazy-loading');
+                // decoding=async：让浏览器在空闲时解码大图，不阻塞主线程
+                img.decoding = 'async';
                 // 设置 loading=lazy（原生懒加载）
                 img.loading = 'lazy';
+                // 添加 loading 状态（模糊占位）
+                img.classList.add('lazy-loading');
                 // 图片加载完成后移除模糊
                 if (img.complete && img.naturalWidth > 0) {
                     img.classList.remove('lazy-loading');
@@ -397,10 +478,13 @@
                     img.addEventListener('load', () => {
                         img.classList.remove('lazy-loading');
                     }, { once: true });
+                    img.addEventListener('error', () => {
+                        img.classList.remove('lazy-loading');
+                    }, { once: true });
                 }
                 obs.unobserve(img);
             });
-        }, { rootMargin: '80px' });
+        }, { rootMargin: '120px' });
 
         imgs.forEach(img => obs.observe(img));
     });
@@ -519,11 +603,24 @@
 .code-block-wrap {
     position: relative;
 }
-.code-collapse-btn {
+/* 折叠时按钮绝对居中 */
+.code-block-wrap.collapsed .code-collapse-btn {
     position: absolute;
-    right: 10px;
+    left: 50%;
+    bottom: 18px;
+    right: auto;
+    transform: translateX(-50%);
+}
+/* 展开时按钮固定在右下角 */
+.code-block-wrap:not(.collapsed) .code-collapse-btn {
+    position: absolute;
+    right: 12px;
     bottom: 10px;
-    padding: 3px 10px;
+    left: auto;
+    transform: none;
+}
+.code-collapse-btn {
+    padding: 4px 14px;
     font-size: 11px;
     font-weight: 500;
     cursor: pointer;
@@ -532,19 +629,31 @@
     border: 1px solid var(--border);
     border-radius: 12px;
     z-index: 5;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease,
+                left 0.25s ease, right 0.25s ease, transform 0.25s ease, bottom 0.25s ease;
     user-select: none;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.10);
 }
 .code-collapse-btn:hover {
     background: var(--accent-soft);
     color: var(--accent);
     border-color: var(--accent);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
 }
 .code-block-wrap.collapsed .highlight pre {
     max-height: 200px;
     overflow: hidden;
     -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+}
+/* 展开时恢复 mask */
+.code-block-wrap:not(.collapsed) .highlight pre {
+    -webkit-mask-image: none;
+    mask-image: none;
+    max-height: none;
+    overflow: auto;
 }
 
 /* ---- TOC 激活项平滑动效 ---- */
@@ -588,21 +697,24 @@
 (function () {
     document.addEventListener('DOMContentLoaded', function () {
 
-        /* ---- 标签云字体缩放 ---- */
-        var tagItems = document.querySelectorAll('.terms-tags li[data-count]');
-        if (tagItems.length) {
-            var counts = Array.from(tagItems).map(function(li) { return +li.dataset.count; });
-            var min = Math.min.apply(null, counts);
-            var max = Math.max.apply(null, counts);
-            tagItems.forEach(function(li) {
-                var c = +li.dataset.count;
-                var ratio = max > min ? (c - min) / (max - min) : 0.5;
-                // 字体范围 13px ~ 22px
-                var fs = 13 + Math.round(ratio * 9);
-                var a = li.querySelector('a');
-                if (a) a.style.fontSize = fs + 'px';
-            });
-        }
+        /* ---- 标签云字体缩放（空闲时执行，非首屏关键路径） ---- */
+        var _idleCb = typeof requestIdleCallback === 'function' ? requestIdleCallback : function(fn) { setTimeout(fn, 100); };
+        _idleCb(function() {
+            var tagItems = document.querySelectorAll('.terms-tags li[data-count]');
+            if (tagItems.length) {
+                var counts = Array.from(tagItems).map(function(li) { return +li.dataset.count; });
+                var min = Math.min.apply(null, counts);
+                var max = Math.max.apply(null, counts);
+                tagItems.forEach(function(li) {
+                    var c = +li.dataset.count;
+                    var ratio = max > min ? (c - min) / (max - min) : 0.5;
+                    // 字体范围 13px ~ 22px
+                    var fs = 13 + Math.round(ratio * 9);
+                    var a = li.querySelector('a');
+                    if (a) a.style.fontSize = fs + 'px';
+                });
+            }
+        });
 
         /* ---- 代码块折叠（超过 200px 才显示按钮） ---- */
         document.querySelectorAll('.post-content .highlight').forEach(function(hl) {
@@ -614,32 +726,54 @@
             wrap.appendChild(hl);
             var btn = document.createElement('button');
             btn.className = 'code-collapse-btn';
-            btn.textContent = '展开';
+            btn.textContent = 'Expand';
             wrap.appendChild(btn);
             btn.addEventListener('click', function() {
                 var col = wrap.classList.toggle('collapsed');
-                btn.textContent = col ? '展开' : '收起';
+                btn.textContent = col ? 'Expand' : 'Collapse';
             });
         });
 
-        /* ---- TOC 激活项高亮（平滑渐入） ---- */
+        /* ---- TOC：高亮 + 折叠展开（合并为单个 Observer，减少监听器） ---- */
         var tocLinks = Array.from(document.querySelectorAll('.toc li a'));
         if (tocLinks.length) {
-            var headings = tocLinks.map(function(a) {
+            var tocHeadings = tocLinks.map(function(a) {
                 try { return document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1))); } catch(e) { return null; }
             }).filter(Boolean);
 
-            var obs = new IntersectionObserver(function(entries) {
+            // 查找 link 对应的 tocLink 对象
+            function findTocLink(id) {
+                return tocLinks.find(function(a) {
+                    try { return decodeURIComponent(a.getAttribute('href').slice(1)) === id; } catch(e) { return false; }
+                });
+            }
+
+            var tocObs = new IntersectionObserver(function(entries) {
                 entries.forEach(function(entry) {
                     var id = entry.target.id;
-                    var link = tocLinks.find(function(a) {
-                        try { return decodeURIComponent(a.getAttribute('href').slice(1)) === id; } catch(e) { return false; }
-                    });
-                    if (link) link.classList.toggle('active', entry.isIntersecting);
-                });
-            }, { rootMargin: '-10% 0px -80% 0px' });
+                    var link = findTocLink(id);
+                    if (!link) return;
 
-            headings.forEach(function(h) { obs.observe(h); });
+                    // 1. 高亮激活
+                    link.classList.toggle('active', entry.isIntersecting);
+
+                    // 2. 进入视口时展开所有祖先 ul
+                    if (entry.isIntersecting) {
+                        var el = link.parentElement;
+                        while (el) {
+                            if (el.tagName === 'UL' && el.closest('.toc')) {
+                                el.classList.add('toc-open');
+                                var parentLi = el.parentElement;
+                                if (parentLi && parentLi.tagName === 'LI') parentLi.classList.add('toc-expanded');
+                            }
+                            el = el.parentElement;
+                            if (el && el.classList && el.classList.contains('toc')) break;
+                        }
+                    }
+                });
+            }, { rootMargin: '-10% 0px -75% 0px' });
+
+            tocHeadings.forEach(function(h) { tocObs.observe(h); });
         }
 
         /* ---- 页脚运行时间翻牌动效 ---- */
@@ -724,7 +858,7 @@
 .search-shortcut {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     font-size: 11px;
     color: var(--secondary);
     position: absolute;
@@ -732,16 +866,20 @@
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.18s ease;
 }
 .search-shortcut kbd {
     display: inline-block;
     padding: 1px 5px;
     background: var(--tertiary);
     border: 1px solid var(--border);
+    border-bottom-width: 2px;
     border-radius: 4px;
     font-size: 10px;
     font-family: inherit;
     line-height: 1.6;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.12);
 }
 #searchbox {
     position: relative;
@@ -759,6 +897,27 @@
 @keyframes slideInSearch {
     from { opacity: 0; transform: translateY(-8px); }
     to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- 搜索无结果占位提示 ---- */
+#search-empty-hint {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 28px 0 20px;
+    color: var(--secondary);
+    font-size: 13px;
+    animation: slideInSearch 0.2s ease both;
+}
+#search-empty-hint.show { display: flex; }
+#search-empty-hint .search-empty-icon {
+    font-size: 28px;
+    opacity: 0.5;
+}
+#search-empty-hint .search-empty-kw {
+    font-weight: 600;
+    color: var(--primary);
 }
 
 /* ---- blockquote 引号装饰 + 类型 badge ---- */
@@ -841,6 +1000,41 @@
     from { transform: scale(0.88); opacity: 0; }
     to   { transform: scale(1);    opacity: 1; }
 }
+@keyframes lbSlideLeft {
+    from { transform: translateX(40px) scale(0.96); opacity: 0; }
+    to   { transform: translateX(0)    scale(1);    opacity: 1; }
+}
+@keyframes lbSlideRight {
+    from { transform: translateX(-40px) scale(0.96); opacity: 0; }
+    to   { transform: translateX(0)     scale(1);    opacity: 1; }
+}
+#lightbox-img.slide-left  { animation: lbSlideLeft  0.2s ease; }
+#lightbox-img.slide-right { animation: lbSlideRight 0.2s ease; }
+/* 翻图方向指示箭头 */
+#lightbox-prev, #lightbox-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 28px;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    padding: 10px 16px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+    user-select: none;
+    z-index: 9001;
+    opacity: 0;
+}
+#lightbox-prev { left: 20px; }
+#lightbox-next { right: 20px; }
+#lightbox-overlay.open #lightbox-prev,
+#lightbox-overlay.open #lightbox-next { opacity: 1; }
+#lightbox-prev:hover, #lightbox-next:hover {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+}
+#lightbox-prev.hidden, #lightbox-next.hidden { opacity: 0; pointer-events: none; }
 #lightbox-close {
     position: fixed;
     top: 20px;
@@ -887,6 +1081,7 @@
     opacity: 0;
     transition: opacity 0.25s ease;
     pointer-events: none;
+    z-index: 1;
 }
 .post-entry[data-section="know"]::after {
     background: linear-gradient(to bottom, var(--accent-soft), transparent);
@@ -936,18 +1131,20 @@
             }, { passive: true });
         }
 
-        /* ---- 搜索键盘快捷键（/ 键或 Ctrl+K 聚焦） ---- */
+        /* ---- 搜索键盘快捷键（/ 键或 Ctrl/Cmd+K 聚焦） ---- */
         var searchInput = document.querySelector('#searchbox input');
         if (searchInput) {
-            // 注入快捷键提示
+            // 根据系统平台显示对应快捷键（Mac 用 ⌘，其他用 Ctrl）
+            var isMac = /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent);
+            var modKey = isMac ? '⌘' : 'Ctrl';
             var hint = document.createElement('span');
             hint.className = 'search-shortcut';
-            hint.innerHTML = '<kbd>/</kbd>';
+            hint.innerHTML = '<kbd>' + modKey + '</kbd><kbd>K</kbd>';
             searchInput.parentNode.style.position = 'relative';
             searchInput.parentNode.appendChild(hint);
-            // 隐藏已聚焦时的提示
-            searchInput.addEventListener('focus', function () { hint.style.display = 'none'; });
-            searchInput.addEventListener('blur', function () { hint.style.display = ''; });
+            // 聚焦时隐藏提示，失焦时显示
+            searchInput.addEventListener('focus', function () { hint.style.opacity = '0'; hint.style.pointerEvents = 'none'; });
+            searchInput.addEventListener('blur', function () { hint.style.opacity = ''; hint.style.pointerEvents = ''; });
         }
         document.addEventListener('keydown', function (e) {
             if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
@@ -982,7 +1179,7 @@
             if (!first.textContent) first.remove();
         });
 
-        /* ---- 图片 Lightbox ---- */
+        /* ---- 图片 Lightbox（支持键盘左右翻图） ---- */
         var overlay = document.createElement('div');
         overlay.id = 'lightbox-overlay';
         var lbImg = document.createElement('img');
@@ -991,31 +1188,66 @@
         var closeBtn = document.createElement('span');
         closeBtn.id = 'lightbox-close';
         closeBtn.innerHTML = '&times;';
+        // 翻图按钮
+        var prevBtn = document.createElement('span');
+        prevBtn.id = 'lightbox-prev';
+        prevBtn.innerHTML = '&#10094;'; // ❮
+        var nextBtn = document.createElement('span');
+        nextBtn.id = 'lightbox-next';
+        nextBtn.innerHTML = '&#10095;'; // ❯
+        overlay.appendChild(prevBtn);
         overlay.appendChild(lbImg);
+        overlay.appendChild(nextBtn);
         overlay.appendChild(closeBtn);
         document.body.appendChild(overlay);
 
-        function openLightbox(src, alt) {
-            lbImg.src = src;
-            lbImg.alt = alt || '';
+        // 收集当前页所有可展示图片
+        var lbImgs = Array.from(document.querySelectorAll('.post-content img:not(.link img)'));
+        var lbCurrentIdx = 0;
+
+        function updateNavBtns() {
+            prevBtn.classList.toggle('hidden', lbCurrentIdx <= 0);
+            nextBtn.classList.toggle('hidden', lbCurrentIdx >= lbImgs.length - 1);
+        }
+
+        function openLightbox(idx, slideDir) {
+            lbCurrentIdx = idx;
+            var img = lbImgs[idx];
+            if (!img) return;
+            lbImg.classList.remove('slide-left', 'slide-right');
+            void lbImg.offsetWidth; // reflow
+            if (slideDir) lbImg.classList.add(slideDir);
+            lbImg.src = img.src;
+            lbImg.alt = img.alt || '';
             overlay.classList.add('open');
             document.body.style.overflow = 'hidden';
+            updateNavBtns();
         }
         function closeLightbox() {
             overlay.classList.remove('open');
             document.body.style.overflow = '';
         }
 
-        document.querySelectorAll('.post-content img:not(.link img)').forEach(function (img) {
-            img.addEventListener('click', function () {
-                openLightbox(img.src, img.alt);
-            });
+        lbImgs.forEach(function (img, idx) {
+            img.addEventListener('click', function () { openLightbox(idx, null); });
+        });
+
+        prevBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (lbCurrentIdx > 0) openLightbox(lbCurrentIdx - 1, 'slide-right');
+        });
+        nextBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (lbCurrentIdx < lbImgs.length - 1) openLightbox(lbCurrentIdx + 1, 'slide-left');
         });
         overlay.addEventListener('click', function (e) {
             if (e.target === overlay || e.target === closeBtn) closeLightbox();
         });
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') closeLightbox();
+            if (!overlay.classList.contains('open')) return;
+            if (e.key === 'Escape') { closeLightbox(); }
+            else if (e.key === 'ArrowLeft'  && lbCurrentIdx > 0) { openLightbox(lbCurrentIdx - 1, 'slide-right'); }
+            else if (e.key === 'ArrowRight' && lbCurrentIdx < lbImgs.length - 1) { openLightbox(lbCurrentIdx + 1, 'slide-left'); }
         });
 
         /* ---- 首页 Profile 打字机动效 ---- */
@@ -1037,7 +1269,8 @@
             setTimeout(typeChar, 600);
         }
 
-        /* ---- 💬 每日固定格言（同天看同一条，点击手动切换） ---- */
+        /* ---- 💬 每日固定格言（空闲时执行，非首屏关键路径） ---- */
+        _idleCb(function() {
         var quotes = [
             '读书破万卷，下笔如有神。',
             'Stay hungry, stay foolish.',
@@ -1081,7 +1314,75 @@
             });
             footer.appendChild(q);
         }
+        }); // end _idleCb for quotes
 
+    });
+})();
+
+/* ---- 文章卡片骨架屏 + 交错入场动画：进入视口时依次淡入上升 ---- */
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        var cards = Array.from(document.querySelectorAll('.post-entry'));
+        if (!cards.length) return;
+
+        // 每批次（每次 IntersectionObserver 回调）内的入场序号，实现交错效果
+        var batchIndex = 0;
+        var batchTimer = null;
+
+        // 对尚未在视口内的卡片加骨架屏类
+        var skeletonObs = new IntersectionObserver(function (entries) {
+            // 收集本次回调中所有进入视口的卡片
+            var entering = entries.filter(function(e) { return e.isIntersecting; });
+            if (!entering.length) return;
+
+            // 判断是否是"新批次"（上一批次结束超过 120ms 则重置序号）
+            clearTimeout(batchTimer);
+            batchTimer = setTimeout(function() { batchIndex = 0; }, 120);
+
+            entering.forEach(function (entry) {
+                var el = entry.target;
+                // 写入当前序号作为延迟变量
+                el.style.setProperty('--card-index', batchIndex);
+                batchIndex++;
+
+                requestAnimationFrame(function () {
+                    el.classList.remove('skeleton');
+                    el.classList.add('card-enter');
+                    // 动画结束后清理类（避免影响后续 hover 变换）
+                    el.addEventListener('animationend', function onEnd() {
+                        el.classList.remove('card-enter');
+                        el.style.removeProperty('--card-index');
+                        el.removeEventListener('animationend', onEnd);
+                    });
+                });
+                skeletonObs.unobserve(el);
+            });
+        }, { rootMargin: '0px 0px 80px 0px', threshold: 0 });
+
+        cards.forEach(function (card) {
+            // 初始化加骨架类
+            card.classList.add('skeleton');
+            skeletonObs.observe(card);
+        });
+    });
+})();
+
+/* ---- 文章卡片点击波纹效果 ---- */
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.post-entry').forEach(function (card) {
+            card.addEventListener('mousedown', function (e) {
+                // 忽略链接/按钮本身的事件冒泡
+                if (e.target.closest('a, button')) return;
+                var rect = card.getBoundingClientRect();
+                var dot = document.createElement('span');
+                dot.className = 'ripple-dot';
+                dot.style.left = (e.clientX - rect.left) + 'px';
+                dot.style.top  = (e.clientY - rect.top)  + 'px';
+                card.appendChild(dot);
+                dot.addEventListener('animationend', function () { dot.remove(); });
+            });
+        });
     });
 })();
 </script>
@@ -1181,6 +1482,29 @@ mark.search-highlight {
         var resultsList = document.querySelector('#searchResults');
         if (!searchInput || !resultsList) return;
 
+        // 注入"无结果"占位节点（插在 resultsList 后面）
+        var emptyHint = document.getElementById('search-empty-hint');
+        if (!emptyHint) {
+            emptyHint = document.createElement('div');
+            emptyHint.id = 'search-empty-hint';
+            emptyHint.innerHTML =
+                '<span class="search-empty-icon">🔍</span>' +
+                '<span>未找到「<span class="search-empty-kw"></span>」的相关内容</span>';
+            resultsList.parentNode.insertBefore(emptyHint, resultsList.nextSibling);
+        }
+        var emptyKwEl = emptyHint.querySelector('.search-empty-kw');
+
+        function updateEmptyHint() {
+            var kw = searchInput.value.trim();
+            var hasResults = resultsList.children.length > 0;
+            if (kw && !hasResults) {
+                if (emptyKwEl) emptyKwEl.textContent = kw;
+                emptyHint.classList.add('show');
+            } else {
+                emptyHint.classList.remove('show');
+            }
+        }
+
         function escapeRegExp(s) {
             return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
@@ -1232,13 +1556,14 @@ mark.search-highlight {
         var observer = new MutationObserver(function () {
             // 防抖：避免 highlight 触发 mutation 造成死循环
             var kw = searchInput.value.trim();
-            if (!kw) return;
+            if (!kw) { updateEmptyHint(); return; }
             var re = new RegExp(escapeRegExp(kw), 'gi');
             // 只处理新增节点
             resultsList.querySelectorAll('li:not([data-highlighted])').forEach(function (li) {
                 li.setAttribute('data-highlighted', '1');
                 highlightNode(li, re);
             });
+            updateEmptyHint();
         });
         observer.observe(resultsList, { childList: true, subtree: false });
 
@@ -1246,6 +1571,8 @@ mark.search-highlight {
             // 清空 data-highlighted，重新高亮
             resultsList.querySelectorAll('[data-highlighted]').forEach(function (el) { el.removeAttribute('data-highlighted'); });
             doHighlight();
+            // 延迟一帧检测，等搜索框 JS 更新结果后再判空
+            requestAnimationFrame(updateEmptyHint);
         });
     });
 })();
@@ -1280,17 +1607,13 @@ mark.search-highlight {
 <script>
 (function () {
     document.addEventListener('DOMContentLoaded', function () {
-        var tocLinks = Array.from(document.querySelectorAll('.toc li a'));
-        if (!tocLinks.length) return;
-
-        // 标记有子项的 li，并给二级 ul 加折叠类
+        // TOC 折叠标记：标记有子项的 li，给二级 ul 加折叠能力
+        // （Observer 已在上方大脚本中统一处理，此处只做点击展开/收起）
         document.querySelectorAll('.toc li').forEach(function (li) {
             var childUl = li.querySelector(':scope > ul');
             if (childUl) {
                 li.classList.add('has-children');
-                // 初始折叠
                 childUl.classList.remove('toc-open');
-                // 点击一级链接展开/收起
                 var a = li.querySelector(':scope > a');
                 if (a) {
                     a.addEventListener('click', function (e) {
@@ -1300,35 +1623,6 @@ mark.search-highlight {
                 }
             }
         });
-
-        // 滚动时自动展开当前节的祖先
-        var headings = tocLinks.map(function (a) {
-            try { return document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1))); } catch(e) { return null; }
-        }).filter(Boolean);
-
-        var obs = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
-                if (!entry.isIntersecting) return;
-                var id = entry.target.id;
-                var link = tocLinks.find(function (a) {
-                    try { return decodeURIComponent(a.getAttribute('href').slice(1)) === id; } catch(e) { return false; }
-                });
-                if (!link) return;
-                // 展开所有祖先 ul
-                var el = link.parentElement; // li
-                while (el) {
-                    if (el.tagName === 'UL' && el.closest('.toc')) {
-                        el.classList.add('toc-open');
-                        var parentLi = el.parentElement;
-                        if (parentLi && parentLi.tagName === 'LI') parentLi.classList.add('toc-expanded');
-                    }
-                    el = el.parentElement;
-                    if (el && el.classList && el.classList.contains('toc')) break;
-                }
-            });
-        }, { rootMargin: '-10% 0px -75% 0px' });
-
-        headings.forEach(function (h) { obs.observe(h); });
     });
 })();
 </script>
@@ -1448,6 +1742,88 @@ mark.search-highlight {
     align-self: flex-end;
 }
 </style>
+
+<!-- ===== 🏷️ 标签悬浮预览气泡 ===== -->
+<style>
+/* 标签悬浮预览气泡 */
+#tag-preview-bubble {
+    position: fixed;
+    z-index: 8000;
+    background: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--secondary);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    white-space: nowrap;
+    max-width: 200px;
+}
+#tag-preview-bubble.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+#tag-preview-bubble .tag-bubble-name {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 13px;
+    display: block;
+    margin-bottom: 2px;
+}
+#tag-preview-bubble .tag-bubble-count {
+    color: var(--secondary);
+}
+</style>
+<script>
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        var bubble = document.createElement('div');
+        bubble.id = 'tag-preview-bubble';
+        bubble.innerHTML = '<span class="tag-bubble-name"></span><span class="tag-bubble-count"></span>';
+        document.body.appendChild(bubble);
+
+        var nameEl  = bubble.querySelector('.tag-bubble-name');
+        var countEl = bubble.querySelector('.tag-bubble-count');
+        var hideTimer;
+
+        function showBubble(anchor) {
+            clearTimeout(hideTimer);
+            var tag   = anchor.dataset.tag;
+            var count = anchor.dataset.count;
+            if (!tag || count === undefined) return;
+            nameEl.textContent  = '#' + tag;
+            countEl.textContent = count + ' 篇文章';
+            // 定位到链接正上方
+            var rect = anchor.getBoundingClientRect();
+            bubble.style.left = Math.min(rect.left, window.innerWidth - 220) + 'px';
+            bubble.style.top  = (rect.top - bubble.offsetHeight - 8 + window.scrollY) + 'px';
+            // 先定位再展示（offsetHeight 需要已挂载）
+            requestAnimationFrame(function () {
+                bubble.style.top = (rect.top + window.scrollY - bubble.offsetHeight - 8) + 'px';
+                bubble.classList.add('visible');
+            });
+        }
+
+        function hideBubble() {
+            hideTimer = setTimeout(function () {
+                bubble.classList.remove('visible');
+            }, 80);
+        }
+
+        document.addEventListener('mouseover', function (e) {
+            var a = e.target.closest('.post-tags a[data-count]');
+            if (a) showBubble(a);
+        });
+        document.addEventListener('mouseout', function (e) {
+            if (e.target.closest('.post-tags a[data-count]')) hideBubble();
+        });
+    });
+})();
+</script>
 
 <!-- ===== ✨ Nav 传送门特效 ===== -->
 <style>

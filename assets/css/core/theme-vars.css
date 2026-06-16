@@ -28,13 +28,52 @@
     --secondary: rgb(155, 156, 157);
     --tertiary: rgb(65, 66, 68);
     --content: rgb(196, 196, 197);
-    --code-block-bg: rgb(46, 46, 51);
+    /* 代码块背景：与 entry 拉开差距，提升暗色下可读性 */
+    --code-block-bg: rgb(30, 31, 38);
     --code-bg: rgb(55, 56, 62);
     --border: rgb(51, 51, 51);
+    /* 代码块细边框：增加视觉层次感 */
+    --code-block-border: rgba(255, 255, 255, 0.07);
     /* dark mode 强调色：偏冷月蓝 */
     --accent: #7b8fe8;
     --accent-soft: rgba(123, 143, 232, 0.12);
     --accent-glow: rgba(123, 143, 232, 0.4);
+}
+
+/* ---- 主题切换平滑过渡（仅颜色，不影响布局动画） ---- */
+/* 使用 :where() 降低优先级，不覆盖组件自身的 transition */
+:where(body),
+:where(.header),
+:where(.post-entry),
+:where(.entry-content),
+:where(.entry-footer),
+:where(.entry-header),
+:where(.nav),
+:where(.footer),
+:where(.related-posts),
+:where(.paginav-card),
+:where(.toc) {
+    transition:
+        background-color 0.35s ease,
+        color 0.35s ease,
+        border-color 0.35s ease !important;
+}
+
+/* 尊重系统减弱动效设置 */
+@media (prefers-reduced-motion: reduce) {
+    :where(body),
+    :where(.header),
+    :where(.post-entry),
+    :where(.entry-content),
+    :where(.entry-footer),
+    :where(.entry-header),
+    :where(.nav),
+    :where(.footer),
+    :where(.related-posts),
+    :where(.paginav-card),
+    :where(.toc) {
+        transition: none !important;
+    }
 }
 
 .list {

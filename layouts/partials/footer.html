@@ -122,9 +122,11 @@
         copybutton.innerHTML = '{{- i18n "code_copy" | default "copy" }}';
 
         function copyingDone() {
-            copybutton.innerHTML = '{{- i18n "code_copied" | default "copied!" }}';
+            copybutton.innerHTML = '✓ copied!';
+            copybutton.classList.add('copied');
             setTimeout(() => {
                 copybutton.innerHTML = '{{- i18n "code_copy" | default "copy" }}';
+                copybutton.classList.remove('copied');
             }, 2000);
         }
 
