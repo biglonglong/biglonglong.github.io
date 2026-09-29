@@ -3,7 +3,7 @@
 #terminal-container {
     width: 100%;
     max-width: 800px;
-    margin: 20px auto;
+    margin: 40px auto 20px;
     border-radius: 8px;
     overflow: hidden;
     font-family: 'Fira Code', 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
