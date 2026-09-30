@@ -28,8 +28,8 @@
   {{- with .Lastmod }}
     <meta property="article:modified_time" {{ .Format $ISO8601 | printf "content=%q" | safeHTMLAttr }}>
   {{- end }}
-  {{- range .GetTerms "tags" | first 6 }}
-    <meta property="article:tag" content="{{ .Page.Title | plainify }}">
+  {{- range first 6 (.Params.tags | default slice) }}
+    <meta property="article:tag" content="{{ . | plainify }}">
   {{- end }}
 {{- else }}
   <meta property="og:type" content="website">
@@ -58,14 +58,6 @@
 {{- with .Params.videos }}
   {{- range . | first 6 }}
     <meta property="og:video" content="{{ . | absURL }}">
-  {{- end }}
-{{- end }}
-
-{{- range .GetTerms "series" }}
-  {{- range .Pages | first 7 }}
-    {{- if ne $ . }}
-      <meta property="og:see_also" content="{{ .Permalink }}">
-    {{- end }}
   {{- end }}
 {{- end }}
 

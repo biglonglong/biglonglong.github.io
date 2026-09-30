@@ -22,9 +22,6 @@
     <div class="post-meta">
       <div class="post-meta-details">
       {{- partial "post_meta.html" . -}}
-      {{- partial "translation_list.html" . -}}
-      {{- partial "edit_post.html" . -}}
-      {{- partial "post_canonical.html" . -}}
       </div>
       <span class="meta-busuanzi" id="busuanzi_container_page_pv"><span class="meta-separator" aria-hidden="true">·</span><span id="busuanzi_value_page_pv">0</span> times read</span>
     </div>
@@ -45,18 +42,13 @@
   {{- end }}
 
   <footer class="post-footer">
-    {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}
     <ul class="post-tags">
-      {{- range ($.GetTerms $tags) }}
-      {{- $count := len .Pages }}
-      <li><a href="{{ .Permalink }}" data-tag="{{ .LinkTitle }}" data-count="{{ $count }}">{{ .LinkTitle }}</a></li>
+      {{- range .Params.tags }}
+      <li><a href="{{ "explore/" | relLangURL }}?tag={{ . | urlquery }}">{{ . }}</a></li>
       {{- end }}
     </ul>
     {{- if (.Param "ShowPostNavLinks") }}
     {{- partial "post_nav_links.html" . }}
-    {{- end }}
-    {{- if (and site.Params.ShowShareButtons (ne .Params.disableShare true)) }}
-    {{- partial "share_icons.html" . -}}
     {{- end }}
   </footer>
 

@@ -2,7 +2,7 @@ import { onIdle } from './utils.js';
 document.addEventListener('DOMContentLoaded', () => {
 /* ---- 标签云字体缩放（空闲时执行，非首屏关键路径） ---- */
 onIdle(function() {
-    var tagItems = document.querySelectorAll('.terms-tags li[data-count]');
+    var tagItems = document.querySelectorAll('.explore-tag-list li[data-count]');
     if (tagItems.length) {
         var counts = Array.from(tagItems).map(function(li) { return +li.dataset.count; });
         var min = Math.min.apply(null, counts);

@@ -111,36 +111,3 @@
     align-self: flex-end;
 }
 
-/* 标签悬浮预览气泡 */
-#tag-preview-bubble {
-    position: fixed;
-    z-index: 8000;
-    background: var(--entry);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-    padding: 8px 14px;
-    font-size: 12px;
-    color: var(--secondary);
-    pointer-events: none;
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.18s ease, transform 0.18s ease;
-    white-space: nowrap;
-    max-width: 200px;
-}
-#tag-preview-bubble.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-#tag-preview-bubble .tag-bubble-name {
-    font-weight: 700;
-    color: var(--accent);
-    font-size: 13px;
-    display: block;
-    margin-bottom: 2px;
-}
-#tag-preview-bubble .tag-bubble-count {
-    color: var(--secondary);
-}
-

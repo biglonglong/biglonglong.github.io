@@ -1,0 +1,14 @@
+{{- $counts := newScratch }}
+{{- range . }}
+    {{- range .Params.tags }}
+        {{- $counts.Add . 1 }}
+    {{- end }}
+{{- end }}
+<ul class="explore-tag-list">
+    <li><a href="{{ "explore/" | relLangURL }}" data-tag="">All</a></li>
+    {{- range $tag, $count := $counts.Values }}
+    <li data-count="{{ $count }}">
+        <a href="?tag={{ $tag | urlquery }}" data-tag="{{ $tag }}">{{ $tag }} <sup>{{ $count }}</sup></a>
+    </li>
+    {{- end }}
+</ul>

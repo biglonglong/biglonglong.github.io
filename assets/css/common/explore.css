@@ -1,0 +1,47 @@
+.explore-tags,
+.explore-archive {
+    margin-top: 24px;
+}
+
+.explore-tags a[aria-current="true"] {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.explore-archive [hidden] { display: none; }
+
+.explore-archive {
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+}
+
+.explore-archive .archive-year {
+    margin: 28px 0 0 8px;
+    padding-left: 20px;
+    border-left: 2px solid var(--border);
+}
+
+.explore-archive .archive-year-header {
+    position: relative;
+    margin: 0 0 12px;
+}
+
+.explore-archive .archive-year-header::before {
+    content: '';
+    position: absolute;
+    left: -27px;
+    top: 0.55em;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+.explore-archive .archive-month-header {
+    flex: 0 0 130px;
+}
+
+@media (max-width: 600px) {
+    .explore-archive .archive-month-header { flex-basis: auto; }
+}

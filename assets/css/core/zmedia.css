@@ -4,11 +4,6 @@
         --gap: 14px;
     }
 
-    /* post-entry */
-    .first-entry {
-        min-height: 260px;
-    }
-
     /* archive */
     .archive-month {
         flex-direction: column;
@@ -42,15 +37,9 @@
     }
 }
 
-@media screen and (max-width: 340px) {
-    .share-buttons {
-        justify-content: unset;
-    }
-}
-
 @media (prefers-reduced-motion) {
-    /* terms; profile-mode; post-single; post-entry; post-entry; search; search */
-    .terms-tags a:active,
+    /* profile-mode; post-single; post-entry; search */
+    .explore-tag-list a:active,
     .button:active,
     .post-entry:active,
     #searchResults .focus,

@@ -92,13 +92,6 @@
     margin-top: 10px;
 }
 
-.post-meta .i18n_list li {
-    display: inline-flex;
-    list-style: none;
-    margin: auto 3px;
-    box-shadow: 0 1px 0 var(--secondary);
-}
-
 .breadcrumbs a {
     font-size: 16px;
 }
@@ -432,7 +425,6 @@
 }
 
 .post-tags a,
-.share-buttons,
 .paginav {
     border-radius: var(--radius);
     background: var(--code-bg);
@@ -456,23 +448,6 @@
 
 .paginav a:hover {
     background: var(--accent-soft);
-}
-
-.share-buttons {
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    overflow-x: auto;
-    gap: 10px;
-}
-
-.share-buttons li,
-.share-buttons a {
-    display: inline-flex;
-}
-
-.share-buttons a:not(:last-of-type) {
-    margin-inline-end: 12px;
 }
 
 h1:hover .anchor,

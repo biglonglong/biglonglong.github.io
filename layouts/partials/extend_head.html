@@ -24,11 +24,14 @@
     | resources.Concat "css/features/site.css" -}}
 {{- partial "assets/style.html" $featureStyles -}}
 {{- partial "assets/script.html" "js/site.js" -}}
-{{- if and .IsHome site.Params.profileMode.enabled -}}
+{{- if .IsHome -}}
     {{- partial "assets/style.html" "css/features/profile.css" -}}
     {{- partial "assets/script.html" "js/profile.js" -}}
 {{- end -}}
 {{- with .File -}}
+    {{- if eq $.Layout "explore" -}}
+        {{- partial "assets/script.html" "js/features/explore-filter.js" -}}
+    {{- end -}}
     {{- if eq .Path "nav.md" -}}
         {{- partial "assets/style.html" "css/features/nav.css" -}}
         {{- partial "assets/script.html" "js/nav.js" -}}

@@ -1,0 +1,32 @@
+{{- define "main" }}
+<section class="explore-tags" aria-label="Browse by tag">
+    {{- $pages := where site.RegularPages "Section" "posts" }}
+    {{- partial "explore/tags.html" $pages }}
+</section>
+
+<section class="explore-archive" aria-label="Posts by date">
+    {{- $pages := where site.RegularPages "Section" "posts" }}
+    {{- range $pages.GroupByPublishDate "2006" }}
+    {{- if ne .Key "0001" }}
+    {{- $year := .Key }}
+    <div class="archive-year">
+        <h3 class="archive-year-header" id="{{ $year }}">{{ $year }} <sup class="archive-count">{{ len .Pages }}</sup></h3>
+        {{- range .Pages.GroupByPublishDate "January" }}
+        <div class="archive-month">
+            <h4 class="archive-month-header" id="{{ $year }}-{{ .Key }}">{{ .Key }} <sup class="archive-count">{{ len .Pages }}</sup></h4>
+            <div class="archive-posts">
+                {{- range .Pages }}
+                <div class="archive-entry" data-tags="{{ delimit .Params.tags "|" }}">
+                    <h5 class="archive-entry-title">{{ .Title }}</h5>
+                    <div class="archive-meta">{{ partial "post_meta.html" . }}</div>
+                    <a class="entry-link" aria-label="Open {{ .Title | plainify }}" href="{{ .RelPermalink }}"></a>
+                </div>
+                {{- end }}
+            </div>
+        </div>
+        {{- end }}
+    </div>
+    {{- end }}
+    {{- end }}
+</section>
+{{- end }}

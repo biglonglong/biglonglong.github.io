@@ -1,51 +1,47 @@
 ---
+title: Nav
 layout: nav
-showToc: false
-hidemeta: true
-ShowBreadCrumbs: false
-noProse: true
-friendsTitle: Friends
-documentsTitle: Document
+linkGroups:
+  - title: Friends
+    links:
+      - name: 喵二
+        url: https://www.miaoer.net/
+        image: https://static.miaoer.net/logo/avatar.webp
+        description: 缘，妙不可言
+      - name: 猫猫博客
+        url: https://catcat.blog/
+        image: https://catcat.blog/favicon/avatar-540.avif
+        description: 𝙄𝙩'𝙨 𝙩𝙝𝙚 𝙤𝙣𝙡𝙮 𝙉𝙀𝙀𝙏 𝙩𝙝𝙞𝙣𝙜 𝙩𝙤 𝙙𝙤…
+      - name: IMyself
+        url: https://blog.lmyself.top/
+        image: https://shadownc.github.io/assets/images/logo.jpg?t=c6b98c1a-40cb-416f-8ecf-f429271faeec
+        description: 一起进步
+      - name: 太陽と向日葵
+        url: https://www.cnblogs.com/lumia1998
+        image: https://raw.githubusercontent.com/lumia1998/pic/master/blog/头像.jpg
+        description: 世界正安静下来，准备它的冬日休眠
+  - title: Document
+    links:
+      - name: 小林coding
+        url: https://www.xiaolincoding.com/
+        image: https://cdn.xiaolincoding.com/icon.webp
+        description: 图解408，让天下没有难懂的八股文
+      - name: LeetCode
+        url: https://leetcode.cn/problemset/
+        image: https://assets.leetcode.cn/aliyun-lc-upload/uploaded_files/2021/03/73c9f099-abbe-4d94-853f-f8abffd459cd/leetcode.png
+        description: 全球极客挚爱的技术成长平台
+      - name: LINUX TUTORIAL
+        url: https://dunwu.github.io/linux-tutorial/
+        image: https://dunwu.github.io/linux-tutorial/images/dunwu-logo-100.png
+        description: 📚 linux-tutorial 是一个 Linux 教程
+      - name: 千古前端图文
+        url: https://web.qianguyihao.com/
+        image: https://img.smyhvae.com/20200919-blog-bg.jpg
+        description: 超详细的 Web 前端入门到进阶知识库
 studyHeading:
   title: Random Study
   url: https://csdiy.wiki/
   description: No one insists you read in full. If you need, read it!
-links:
-  friends:
-    - name: 喵二
-      url: https://www.miaoer.net/
-      image: https://static.miaoer.net/logo/avatar.webp
-      description: 缘，妙不可言
-    - name: 猫猫博客
-      url: https://catcat.blog/
-      image: https://catcat.blog/favicon/avatar-540.avif
-      description: 𝙄𝙩'𝙨 𝙩𝙝𝙚 𝙤𝙣𝙡𝙮 𝙉𝙀𝙀𝙏 𝙩𝙝𝙞𝙣𝙜 𝙩𝙤 𝙙𝙤…
-    - name: IMyself
-      url: https://blog.lmyself.top/
-      image: https://shadownc.github.io/assets/images/logo.jpg?t=c6b98c1a-40cb-416f-8ecf-f429271faeec
-      description: 一起进步
-    - name: 太陽と向日葵
-      url: https://www.cnblogs.com/lumia1998
-      image: https://raw.githubusercontent.com/lumia1998/pic/master/blog/头像.jpg
-      description: 世界正安静下来，准备它的冬日休眠
-  
-  documents:
-    - name: 小林coding
-      url: https://www.xiaolincoding.com/
-      image: https://cdn.xiaolincoding.com/icon.webp
-      description: 图解408，让天下没有难懂的八股文
-    - name: LeetCode
-      url: https://leetcode.cn/problemset/
-      image: https://assets.leetcode.cn/aliyun-lc-upload/uploaded_files/2021/03/73c9f099-abbe-4d94-853f-f8abffd459cd/leetcode.png
-      description: 全球极客挚爱的技术成长平台
-    - name: LINUX TUTORIAL
-      url: https://dunwu.github.io/linux-tutorial/
-      image: https://dunwu.github.io/linux-tutorial/images/dunwu-logo-100.png
-      description: 📚 linux-tutorial 是一个 Linux 教程
-    - name: 千古前端图文
-      url: https://web.qianguyihao.com/
-      image: https://img.smyhvae.com/20200919-blog-bg.jpg
-      description: 超详细的 Web 前端入门到进阶知识库
 studyResources:
   - label: "Github - notes-python3（lijin-THU）"
     url: "https://github.com/lijin-THU/notes-python3"

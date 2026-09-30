@@ -35,8 +35,6 @@
 </button>
 {{- end }}
 
-{{- partial "extend_footer.html" . }}
-
-{{- if (and (eq .Kind "page") (ne .Layout "archives") (ne .Layout "search") (.Param "ShowCodeCopyButtons")) }}
+{{- if (and (eq .Kind "page") (ne .Layout "search") (.Param "ShowCodeCopyButtons")) }}
 <span id="code-copy-settings" hidden data-label="{{ i18n "code_copy" | default "copy" }}"></span>
 {{- end }}

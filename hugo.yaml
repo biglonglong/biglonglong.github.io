@@ -4,7 +4,8 @@ title: 龙犊&小窝🪹~
 copyright: "[biglonglong](https://github.com/biglonglong)🐲"
 
 # prioritize loading
-mainsections: ["posts", "en"]
+mainsections: ["posts"]
+disableKinds: [taxonomy, term]
 
 # default language page
 languageCode: en
@@ -18,7 +19,6 @@ languages:
     languagedirection: # rtl
     params: # one of two
       profileMode:
-        enabled: true
         title: biglonglong
         subtitle: "USTCer🎓 | noter📝 | coder🧑‍💻️ | beginner💪"
         note: "没有女朋友👸，没有约会💞，我和我的电脑💻，日夜相对🌓..."
@@ -27,21 +27,13 @@ languages:
         imageWidth: 275
         imageHeight: 275
         buttons:
-        - name: Tags
-          url: "/home/tags"
+        - name: Explore
+          url: "/home/explore/"
         - name: Know
           url: "/home/posts/know"
         - name: Terminal
           url: "/home/terminal"
 
-      homeInfoParams:
-        Title:
-        Content: >    
-
-    taxonomies:
-      category: categories
-      tag: tags
-      series: series
     menu:
       main:
         - identifier: home
@@ -124,7 +116,6 @@ params:
   openweatherApiKey: "e6b9d8edc04a0cae91059e1fe12052d0"
 
   # card
-  ShowRssButtonInSectionTermList: false
   hideSummary: false
   hidemeta: false
   
@@ -162,13 +153,8 @@ params:
   # footer
   hideFooter: false
   ShowPostNavLinks: true
-  ShowShareButtons: false
 
   # other
-  displayFullLangName: true
-  disableSpecial1stPost: false
-  ShowAllPagesInArchive: true
-  ShowPageNums: false 
   
   socialIcons:
     - name: email

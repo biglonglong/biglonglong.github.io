@@ -1,17 +1,17 @@
-.terms-tags {
+.explore-tag-list {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     padding: 8px 0;
 }
 
-.terms-tags li {
+.explore-tag-list li {
     display: inline-block;
     font-weight: 500;
     /* 字体大小由 JS 动态注入 data-count，通过 CSS var 缩放 */
 }
 
-.terms-tags a {
+.explore-tag-list a {
     display: block;
     padding: 3px 12px;
     background: var(--tertiary);
@@ -22,7 +22,7 @@
                 box-shadow 0.2s ease;
 }
 
-.terms-tags a:hover {
+.explore-tag-list a:hover {
     background: var(--accent-soft);
     color: var(--accent);
     border-color: var(--accent);
@@ -30,7 +30,7 @@
     box-shadow: 0 4px 12px var(--accent-glow);
 }
 
-.terms-tags a:active {
+.explore-tag-list a:active {
     transform: scale(0.95) translateY(0);
     box-shadow: none;
 }

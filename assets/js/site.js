@@ -11,5 +11,4 @@ import './features/cards.js';
 import './features/section-links.js';
 import './features/back-top.js';
 import './features/toc.js';
-import './features/tag-preview.js';
 import './features/lightbox.js';
